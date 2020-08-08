@@ -6,7 +6,18 @@ namespace BrowserDriverInstaller\Enum;
 
 use MyCLabs\Enum\Enum;
 
-/** @internal */
+/**
+ * @method static self WINDOWS()
+ * @method static self BSD()
+ * @method static self DARWIN()
+ * @method static self SOLARIS()
+ * @method static self LINUX()
+ * @method static self UNKNOWN()
+ *
+ * @extends Enum<string>
+ *
+ * @internal
+ */
 final class OperatingSystemFamily extends Enum
 {
     public const WINDOWS = 'Windows';

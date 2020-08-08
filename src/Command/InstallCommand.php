@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace BrowserDriverInstaller\Command;
 
+use BrowserDriverInstaller\Enum\BrowserName;
+use BrowserDriverInstaller\Enum\OperatingSystem;
 use BrowserDriverInstaller\Enum\OperatingSystemFamily;
+use BrowserDriverInstaller\Factory\BrowserFactory;
 use BrowserDriverInstaller\ValueObject\Browser;
+use BrowserDriverInstaller\ValueObject\Version;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -20,20 +24,21 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
-use UnexpectedValueException;
 use ZipArchive;
+use function implode;
+use const PHP_OS_FAMILY;
 
 final class InstallCommand extends Command
 {
     public const SUCCESS = 0;
     public const FAILURE = 1;
 
-    private const BROWSER = 'browser';
+    private const BROWSER_NAME = 'browser';
     private const DRIVER_VERSION = 'driver-version';
     private const BROWSER_PATH = 'browser-path';
     private const LATEST = 'latest';
     private const AUTO = 'auto';
-    private const OS_FAMILY = 'os-family';
+    private const OPERATING_SYSTEM = 'os';
     private const CHROMEDRIVER_API_URL = 'https://chromedriver.storage.googleapis.com';
     private const CHROMEDRIVER_API_VERSION_ENDPOINT = self::CHROMEDRIVER_API_URL . '/LATEST_RELEASE';
     private const BIN_DIRECTORY = __DIR__ . '/../../bin';
@@ -45,18 +50,24 @@ final class InstallCommand extends Command
     private HttpClientInterface $httpClient;
     private Filesystem $filesystem;
     private ZipArchive $zip;
+    /**
+     * @var BrowserFactory
+     */
+    private BrowserFactory $browserFactory;
 
     public function __construct(
         string $name,
         HttpClientInterface $httpClient,
         Filesystem $filesystem,
-        ZipArchive $zip
+        ZipArchive $zip,
+        BrowserFactory $browserFactory
     ) {
-        parent::__construct($name);
-
         $this->httpClient = $httpClient;
         $this->filesystem = $filesystem;
         $this->zip = $zip;
+        $this->browserFactory = $browserFactory;
+
+        parent::__construct($name);
     }
 
     protected function configure() : void
@@ -64,18 +75,14 @@ final class InstallCommand extends Command
         $this->setDescription('Installs browser driver to let panther control the browser.');
 
         $this->addOption(
-            self::BROWSER,
+            self::BROWSER_NAME,
             null,
-            InputOption::VALUE_REQUIRED,
+            InputOption::VALUE_OPTIONAL,
             sprintf(
                 'The browser for which to install the driver (%s)',
-                implode('|', [
-                    Browser::GOOGLE_CHROME,
-                    Browser::CHROMIUM,
-                    Browser::FIREFOX
-                ])
+                implode('|', $this->browserFactory->registeredBrowsers())
             ),
-            Browser::GOOGLE_CHROME
+            self::AUTO
         );
 
         $this->addOption(
@@ -94,29 +101,25 @@ final class InstallCommand extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             sprintf(
-                'The path to the browser to determine the correct driver version when --%s=%s',
+                'The path to the browser to determine the correct driver version when --%s=%s (%s)',
                 self::DRIVER_VERSION,
-                self::AUTO
+                self::AUTO,
+                implode('|', ['<path-to-browser>', self::AUTO])
             ),
-            Browser::GOOGLE_CHROME
+            self::AUTO
         );
 
-        // TODO: Refactor to provide less confusing options (Windows|MacOS|Linux)
         $this->addOption(
-            self::OS_FAMILY,
+            self::OPERATING_SYSTEM,
             null,
             InputOption::VALUE_OPTIONAL,
             sprintf(
-                'The OS family used for installing the correct browser driver (%s)',
-                implode('|', [
-                    OperatingSystemFamily::WINDOWS,
-                    OperatingSystemFamily::BSD,
-                    OperatingSystemFamily::DARWIN,
-                    OperatingSystemFamily::SOLARIS,
-                    OperatingSystemFamily::LINUX,
-                ])
+                'The operating system used for installing the correct browser driver (%s)',
+                implode('|', OperatingSystem::toArray())
             ),
-            PHP_OS_FAMILY
+            OperatingSystem::fromOperatingSystemFamily(
+                new OperatingSystemFamily(PHP_OS_FAMILY)
+            )->getValue()
         );
     }
 
@@ -126,69 +129,73 @@ final class InstallCommand extends Command
 
         $io->note('This command is experimental. Use at your own discretion.');
 
-        $browser = $input->getOption(self::BROWSER);
+        $browserName = new BrowserName($input->getOption(self::BROWSER_NAME));
         $driverVersion = $input->getOption(self::DRIVER_VERSION);
         $browserPath = $input->getOption(self::BROWSER_PATH);
-        $osFamily = $input->getOption(self::OS_FAMILY);
+        $operatingSystem = new OperatingSystem($input->getOption(self::OPERATING_SYSTEM));
 
         if ($driverVersion === self::AUTO) {
             try {
-                $browserVersion = (new BrowserVersionResolverFactory())->getResolver(
-                    new Browser($browser, $browserPath, $osFamily)
-                )->resolveVersion();
+                $browser = $this->browserFactory->createFromNameAndPathAndOperationSystem(
+                    $browserName,
+                    $browserPath,
+                    $operatingSystem
+                );
 
                 if ($io->isVerbose()) {
-                    $io->writeln(sprintf('Browser version "%s" found.', $browserVersion));
+                    $io->writeln(sprintf('Browser version "%s" found.', $browser->version()->toBuildString()));
                 }
 
-                // TODO: refactor to get matching driver version for $browser
-                $driverVersion = $this->getMatchingChromeDriverVersion($browserVersion);
+                $driverVersion = $this->getMatchingChromeDriverVersion($browser);
             } catch (Throwable $exception) {
                 return $this->fail(
                     $io,
                     sprintf(
-                        'Could not determine browser version. Specify the browser path with "--%s" or manually specify a driver version with "--%s".',
+                        'Could not determine %s version. Specify the %s path with "--%s" or manually specify a driver version with "--%s".',
+                        $browserName->getValue(),
+                        $browserName->getValue(),
                         self::BROWSER_PATH,
                         self::DRIVER_VERSION
                     ),
                     $exception
                 );
             }
-        } else if ($driverVersion === self::LATEST) {
-            try {
-                // TODO: refactor to get latest driver version for $browser
-                $driverVersion = $this->getLatestChromeDriverVersion();
-            } catch (Throwable $exception) {
-                return $this->fail($io, 'Unable to get the latest chrome version from API endpoint.', $exception);
-            }
         } else {
-            try {
-                $driverVersion = $this->parseDriverVersion($driverVersion);
-            } catch (Throwable $exception) {
-                return $this->fail(
-                    $io,
-                    'Unable to parse provided driver version.',
-                    $exception
-                );
+            if ($driverVersion === self::LATEST) {
+                try {
+                    // TODO: refactor to get latest driver version for $browserName
+                    $driverVersion = $this->getLatestChromeDriverVersion();
+                } catch (Throwable $exception) {
+                    return $this->fail($io, 'Unable to get the latest chrome version from API endpoint.', $exception);
+                }
+            } else {
+                try {
+                    $driverVersion = Version::fromString($driverVersion);
+                } catch (Throwable $exception) {
+                    return $this->fail(
+                        $io,
+                        'Unable to parse provided driver version.',
+                        $exception
+                    );
+                }
             }
         }
 
         if ($io->isVerbose()) {
-            $io->writeln(sprintf('Downloading browser driver version "%s".', $driverVersion));
+            $io->writeln(sprintf('Downloading browserName driver version "%s".', $driverVersion->toString()));
         }
 
         try {
             $this->downloadChromeDriverZip(
                 $driverVersion,
-                $osFamily,
+                $operatingSystem,
                 $io->createProgressBar()
             );
             $io->writeln(' Download complete.');
-
         } catch (Throwable $exception) {
             return $this->fail(
                 $io,
-                sprintf('Unable to download browser driver version "%s".', $driverVersion),
+                sprintf('Unable to download browserName driver version "%s".', $driverVersion->toString()),
                 $exception
             );
         }
@@ -215,7 +222,6 @@ final class InstallCommand extends Command
                 sprintf('Unable to remove the downloaded file at "%s".', self::DOWNLOAD_FILE_LOCATION),
                 $exception
             );
-
         }
 
         $io->success(sprintf('Chrome driver %s successfully installed.', $driverVersion));
@@ -229,34 +235,14 @@ final class InstallCommand extends Command
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    private function getMatchingChromeDriverVersion(string $chromeVersion) : string
+    private function getMatchingChromeDriverVersion(Browser $browser) : Version
     {
         $response = $this->httpClient->request(
             'GET',
-            sprintf('%s_%s', self::CHROMEDRIVER_API_VERSION_ENDPOINT, $chromeVersion)
+            sprintf('%s_%s', self::CHROMEDRIVER_API_VERSION_ENDPOINT, $browser->version()->toBuildString())
         );
 
-        return $this->parseDriverVersion($response->getContent());
-    }
-
-    /**
-     * @throws UnexpectedValueException
-     */
-    private function parseDriverVersion(string $driverVersion) : string
-    {
-        $success = preg_match('/\d+\.\d+\.\d+\.\d+/', $driverVersion, $output);
-
-        if ($success === false) {
-            throw new UnexpectedValueException(preg_last_error_msg());
-        }
-
-        if ($success === 0) {
-            throw new RuntimeException(
-                sprintf('Given driver version "%s" could not be parsed.', $driverVersion)
-            );
-        }
-
-        return reset($output);
+        return Version::fromString($response->getContent());
     }
 
     /**
@@ -265,20 +251,20 @@ final class InstallCommand extends Command
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    private function getLatestChromeDriverVersion() : string
+    private function getLatestChromeDriverVersion() : Version
     {
         $response = $this->httpClient->request('GET', self::CHROMEDRIVER_API_VERSION_ENDPOINT);
 
-        return $this->parseDriverVersion($response->getContent());
+        return Version::fromString($response->getContent());
     }
 
-    private function getChromeDriverBinaryName(string $osFamily) : string
+    private function getChromeDriverBinaryName(OperatingSystem $operatingSystem) : string
     {
-        if ($osFamily === OperatingSystemFamily::WINDOWS) {
+        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
             return self::CHROMEDRIVER_BINARY_WINDOWS;
         }
 
-        if ($osFamily === OperatingSystemFamily::DARWIN) {
+        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
             return self::CHROMEDRIVER_BINARY_MAC;
         }
 
@@ -290,8 +276,8 @@ final class InstallCommand extends Command
      * @throws TransportExceptionInterface
      */
     private function downloadChromeDriverZip(
-        string $chromeDriverVersion,
-        string $osFamily,
+        Version $chromeDriverVersion,
+        OperatingSystem $operatingSystem,
         ProgressBar $progressBar
     ) : void {
         if (!$this->filesystem->exists(self::BIN_DIRECTORY)) {
@@ -303,8 +289,8 @@ final class InstallCommand extends Command
             sprintf(
                 '%s/%s/%s.zip',
                 self::CHROMEDRIVER_API_URL,
-                $chromeDriverVersion,
-                $this->getChromeDriverBinaryName($osFamily)
+                $chromeDriverVersion->toString(),
+                $this->getChromeDriverBinaryName($operatingSystem)
             )
         );
 

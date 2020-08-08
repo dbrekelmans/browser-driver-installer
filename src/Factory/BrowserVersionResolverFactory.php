@@ -4,44 +4,31 @@ declare(strict_types=1);
 
 namespace BrowserDriverInstaller\Factory;
 
-use BrowserDriverInstaller\BrowserVersionResolver\UnixGoogleChromeBrowserVersionResolver;
-use BrowserDriverInstaller\BrowserVersionResolverInterface;
-use BrowserDriverInstaller\Enum\OperatingSystemFamily;
+use BrowserDriverInstaller\BrowserVersionResolver\BrowserVersionResolver;
+use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Exception\NotImplemented;
-use BrowserDriverInstaller\ValueObject\Browser;
-use RuntimeException;
+use function Safe\sprintf;
 
-/**
- * @internal
- */
 final class BrowserVersionResolverFactory
 {
-    public function getResolver(Browser $browser) : BrowserVersionResolverInterface
-    {
-        switch ($browser->getType()) {
-            case Browser::GOOGLE_CHROME:
-                if ($browser->getOsFamily() === OperatingSystemFamily::WINDOWS) {
-                    throw $this->notImplemented($browser);
-                    // TODO: return new WindowsGoogleChromeBrowserVersionResolver();
-                }
+    /** @var array<BrowserVersionResolver>|BrowserVersionResolver[] $browserVersionResolvers */
+    private array $browserVersionResolvers;
 
-                return new UnixGoogleChromeBrowserVersionResolver($browser->getPath());
-            default:
-                throw $this->notImplemented($browser);
+    public function createFromBrowserName(BrowserName $browserName) : BrowserVersionResolver
+    {
+        foreach ($this->browserVersionResolvers as $browserVersionResolver) {
+            if ($browserVersionResolver->supportedBrowserName()->equals($browserName)) {
+                return $browserVersionResolver;
+            }
         }
+
+        throw new NotImplemented(
+            sprintf('No version resolver has been implemented for %s.', $browserName->getValue())
+        );
     }
 
-    /**
-     * @throws RuntimeException
-     */
-    private function notImplemented(Browser $browser) : NotImplemented
+    public function register(BrowserVersionResolver $browserVersionResolver) : void
     {
-        return new NotImplemented(
-            sprintf(
-                'Resolving the browser version of %s on %s has not yet been implemented.',
-                $browser->getType(),
-                $browser->getOsFamily()
-            )
-        );
+        $this->browserVersionResolvers[get_class($browserVersionResolver)] = $browserVersionResolver;
     }
 }

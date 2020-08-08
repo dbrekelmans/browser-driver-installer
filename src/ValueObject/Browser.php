@@ -4,38 +4,26 @@ declare(strict_types=1);
 
 namespace BrowserDriverInstaller\ValueObject;
 
-/**
- * @internal
- */
+use BrowserDriverInstaller\Enum\BrowserName;
+
 final class Browser
 {
-    public const GOOGLE_CHROME = 'google-chrome';
-    public const CHROMIUM = 'chromium';
-    public const FIREFOX = 'firefox';
+    private BrowserName $name;
+    private Version $version;
 
-    private $type;
-    private $path;
-    private $osFamily;
-
-    public function __construct(string $type, string $path, string $osFamily)
+    public function __construct(BrowserName $name, Version $version)
     {
-        $this->type = $type;
-        $this->path = $path;
-        $this->osFamily = $osFamily;
+        $this->name = $name;
+        $this->version = $version;
     }
 
-    public function getType() : string
+    public function name() : BrowserName
     {
-        return $this->type;
+        return $this->name;
     }
 
-    public function getPath() : string
+    public function version() : Version
     {
-        return $this->path;
-    }
-
-    public function getOsFamily() : string
-    {
-        return $this->osFamily;
+        return $this->version;
     }
 }
