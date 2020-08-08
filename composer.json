@@ -1,0 +1,50 @@
+{
+    "name": "dbrkelmans/browser-driver-installer",
+    "description": "Helps you install the appropriate browser driver.",
+    "homepage": "https://github.com/dbrekelmans/browser-driver-installer",
+    "authors": [
+        {
+            "name": "Daniël Brekelmans",
+            "homepage": "https://github.com/dbrekelmans"
+        },
+        {
+            "name": "Contributors",
+            "homepage": "https://github.com/dbrekelmans/browser-driver-installer/graphs/contributors"
+        }
+    ],
+    "keywords": [
+        "driver",
+        "browser-driver",
+        "chromedriver",
+        "geckodriver",
+        "google chrome",
+        "chromium",
+        "firefox"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^7.4",
+        "symfony/console": "^4.4 || ^5.1",
+        "thecodingmachine/safe": "^1.1"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master",
+        "vimeo/psalm": "^3.13",
+        "phpstan/phpstan": "^0.12.36",
+        "dbrekelmans/coding-standard": "^1.1",
+        "thecodingmachine/phpstan-strict-rules": "^0.12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BrowserDriverInstaller\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "BrowserDriverInstaller\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
