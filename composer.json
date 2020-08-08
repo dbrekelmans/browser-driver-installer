@@ -24,7 +24,12 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-zip": "*",
+        "myclabs/php-enum": "^1.7",
         "symfony/console": "^4.4 || ^5.1",
+        "symfony/filesystem": "^4.4 || ^5.1",
+        "symfony/http-client": "^4.4 || ^5.1",
+        "symfony/process": "^5.1",
         "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
