@@ -79,7 +79,7 @@ final class InstallCommand extends Command
             InputOption::VALUE_OPTIONAL,
             sprintf(
                 'The browser for which to install the driver (%s)',
-                implode('|', $this->browserFactory->registeredBrowsers())
+                implode('|', array_merge($this->browserFactory->registeredBrowsers(), [self::AUTO]))
             ),
             self::AUTO
         );
@@ -114,11 +114,9 @@ final class InstallCommand extends Command
             InputOption::VALUE_OPTIONAL,
             sprintf(
                 'The operating system used for installing the correct browser driver (%s)',
-                implode('|', OperatingSystem::toArray())
+                implode('|', array_merge(OperatingSystem::toArray(), [self::AUTO]))
             ),
-            OperatingSystem::fromFamily(
-                new OperatingSystemFamily(PHP_OS_FAMILY)
-            )->getValue()
+            self::AUTO
         );
     }
 
@@ -129,7 +127,15 @@ final class InstallCommand extends Command
         $io->note('This command is experimental. Use at your own discretion.');
 
         $driverVersion = $input->getOption(self::DRIVER_VERSION);
-        $operatingSystem = new OperatingSystem($input->getOption(self::OPERATING_SYSTEM));
+
+        $operatingSystem = $input->getOption(self::OPERATING_SYSTEM);
+        if ($operatingSystem === self::AUTO) {
+            $operatingSystem = OperatingSystem::fromFamily(
+                new OperatingSystemFamily(PHP_OS_FAMILY)
+            );
+        } else {
+            $operatingSystem = new OperatingSystem($operatingSystem);
+        }
 
         $browserName = $input->getOption(self::BROWSER_NAME);
         if ($browserName === self::AUTO) {
