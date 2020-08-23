@@ -24,8 +24,8 @@ final class BrowserVersionResolverFactory
             }
         }
 
-        throw new NotImplemented(
-            sprintf('No version resolver has been implemented for %s.', $browserName->getValue())
+        throw NotImplemented::feature(
+            sprintf('Automatically resolving %s version', $browserName->getValue())
         );
     }
 

@@ -46,9 +46,9 @@ final class GoogleChromeVersionResolver implements BrowserVersionResolver
             );
         }
 
-        throw new NotImplemented(
+        throw NotImplemented::feature(
             sprintf(
-                'Support for %s on %s is not yet implemented.',
+                'Automatically resolving %s version on %s',
                 $this->supportedBrowserName()->getValue(),
                 $operatingSystem
             )
