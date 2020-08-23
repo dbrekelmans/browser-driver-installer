@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-use BrowserDriverInstaller\BrowserVersionResolver\GoogleChromeVersionResolver;
 use BrowserDriverInstaller\Command\InstallCommand;
 use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Factory\BrowserFactory;
 use BrowserDriverInstaller\Factory\BrowserVersionResolverFactory;
+use BrowserDriverInstaller\Resolver\Version\Browser\GoogleChromeVersionResolver;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\NativeHttpClient;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\BrowserVersionResolver;
+namespace BrowserDriverInstaller\Resolver\Version\Browser;
 
 use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Enum\OperatingSystem;
@@ -18,7 +18,7 @@ interface BrowserVersionResolver
      * @throws NotImplemented If the operating system is not yet supported.
      */
     // TODO: Make $path non-nullable
-    public function resolveVersion(OperatingSystem $operatingSystem, ?string $path = null) : Version;
+    public function resolveFrom(OperatingSystem $operatingSystem, ?string $path = null) : Version;
 
     public function supportedBrowserName() : BrowserName;
 }

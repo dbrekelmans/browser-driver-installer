@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\BrowserVersionResolver;
+namespace BrowserDriverInstaller\Resolver\Version\Browser;
 
 use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Enum\OperatingSystem;
@@ -11,11 +11,12 @@ use BrowserDriverInstaller\ValueObject\Version;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+
 use function Safe\sprintf;
 
 final class GoogleChromeVersionResolver implements BrowserVersionResolver
 {
-    public function resolveVersion(OperatingSystem $operatingSystem, ?string $path = null) : Version
+    public function resolveFrom(OperatingSystem $operatingSystem, ?string $path = null) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             if ($path === null) {

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace BrowserDriverInstaller\Factory;
 
-use BrowserDriverInstaller\BrowserVersionResolver\BrowserVersionResolver;
 use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Exception\NotImplemented;
-use function Safe\sprintf;
+use BrowserDriverInstaller\Resolver\Version\Browser\BrowserVersionResolver;
+
 use function get_class;
+use function Safe\sprintf;
 
 final class BrowserVersionResolverFactory
 {

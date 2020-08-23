@@ -27,7 +27,7 @@ final class BrowserFactory
     ) : Browser {
         $versionResolver = $this->browserVersionResolverFactory->createFromBrowserName($name);
 
-        $version = $versionResolver->resolveVersion($operatingSystem, $path);
+        $version = $versionResolver->resolveFrom($operatingSystem, $path);
 
         return new Browser($name, $version);
     }
