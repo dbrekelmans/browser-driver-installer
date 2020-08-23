@@ -34,11 +34,11 @@
         "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
-        "roave/security-advisories": "dev-master",
-        "vimeo/psalm": "^3.13",
-        "phpstan/phpstan": "^0.12.36",
         "dbrekelmans/coding-standard": "^1.1",
-        "thecodingmachine/phpstan-strict-rules": "^0.12.0"
+        "phpstan/phpstan": "^0.12.36",
+        "roave/security-advisories": "dev-master",
+        "thecodingmachine/phpstan-strict-rules": "^0.12.0",
+        "vimeo/psalm": "^3.13"
     },
     "autoload": {
         "psr-4": {
