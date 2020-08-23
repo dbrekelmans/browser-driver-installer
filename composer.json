@@ -19,7 +19,8 @@
         "geckodriver",
         "google chrome",
         "chromium",
-        "firefox"
+        "firefox",
+        "browser"
     ],
     "license": "MIT",
     "require": {
