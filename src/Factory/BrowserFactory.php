@@ -13,9 +13,6 @@ final class BrowserFactory
 {
     /** @var array<BrowserName>|BrowserName[] */
     private array $browserNames = [];
-    /**
-     * @var BrowserVersionResolverFactory
-     */
     private BrowserVersionResolverFactory $browserVersionResolverFactory;
 
     public function __construct(BrowserVersionResolverFactory $browserVersionResolverFactory)

@@ -8,6 +8,7 @@ use BrowserDriverInstaller\BrowserVersionResolver\BrowserVersionResolver;
 use BrowserDriverInstaller\Enum\BrowserName;
 use BrowserDriverInstaller\Exception\NotImplemented;
 use function Safe\sprintf;
+use function get_class;
 
 final class BrowserVersionResolverFactory
 {
