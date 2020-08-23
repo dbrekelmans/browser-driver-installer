@@ -17,6 +17,7 @@ interface BrowserVersionResolver
      * @throws RuntimeException If the version could not be resolved.
      * @throws NotImplemented If the operating system is not yet supported.
      */
+    // TODO: Make $path non-nullable
     public function resolveVersion(OperatingSystem $operatingSystem, ?string $path = null) : Version;
 
     public function supportedBrowserName() : BrowserName;

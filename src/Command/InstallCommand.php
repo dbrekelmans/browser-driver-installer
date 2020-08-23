@@ -25,7 +25,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 use ZipArchive;
+
 use function implode;
+
 use const PHP_OS_FAMILY;
 
 final class InstallCommand extends Command
@@ -50,9 +52,6 @@ final class InstallCommand extends Command
     private HttpClientInterface $httpClient;
     private Filesystem $filesystem;
     private ZipArchive $zip;
-    /**
-     * @var BrowserFactory
-     */
     private BrowserFactory $browserFactory;
 
     public function __construct(
@@ -129,10 +128,20 @@ final class InstallCommand extends Command
 
         $io->note('This command is experimental. Use at your own discretion.');
 
-        $browserName = new BrowserName($input->getOption(self::BROWSER_NAME));
         $driverVersion = $input->getOption(self::DRIVER_VERSION);
-        $browserPath = $input->getOption(self::BROWSER_PATH);
         $operatingSystem = new OperatingSystem($input->getOption(self::OPERATING_SYSTEM));
+
+        $browserName = $input->getOption(self::BROWSER_NAME);
+        if ($browserName === self::AUTO) {
+            $browserName = $this->resolveBrowserName(); // TODO
+        } else {
+            $browserName = new BrowserName($browserName);
+        }
+
+        $browserPath = $input->getOption(self::BROWSER_PATH);
+        if ($browserPath === self::AUTO) {
+            $browserPath = $this->resolveBrowserPath($browserName, $operatingSystem);
+        }
 
         if ($driverVersion === self::AUTO) {
             try {
@@ -143,7 +152,7 @@ final class InstallCommand extends Command
                 );
 
                 if ($io->isVerbose()) {
-                    $io->writeln(sprintf('Browser version "%s" found.', $browser->version()->toBuildString()));
+                    $io->writeln(sprintf('%s %s found.', $browser->name(), $browser->version()->toBuildString()));
                 }
 
                 $driverVersion = $this->getMatchingChromeDriverVersion($browser);
@@ -160,29 +169,27 @@ final class InstallCommand extends Command
                     $exception
                 );
             }
+        } elseif ($driverVersion === self::LATEST) {
+            try {
+                // TODO: refactor to get latest driver version for $browserName
+                $driverVersion = $this->getLatestChromeDriverVersion();
+            } catch (Throwable $exception) {
+                return $this->fail($io, 'Unable to get the latest chrome version from API endpoint.', $exception);
+            }
         } else {
-            if ($driverVersion === self::LATEST) {
-                try {
-                    // TODO: refactor to get latest driver version for $browserName
-                    $driverVersion = $this->getLatestChromeDriverVersion();
-                } catch (Throwable $exception) {
-                    return $this->fail($io, 'Unable to get the latest chrome version from API endpoint.', $exception);
-                }
-            } else {
-                try {
-                    $driverVersion = Version::fromString($driverVersion);
-                } catch (Throwable $exception) {
-                    return $this->fail(
-                        $io,
-                        'Unable to parse provided driver version.',
-                        $exception
-                    );
-                }
+            try {
+                $driverVersion = Version::fromString($driverVersion);
+            } catch (Throwable $exception) {
+                return $this->fail(
+                    $io,
+                    'Unable to parse provided driver version.',
+                    $exception
+                );
             }
         }
 
         if ($io->isVerbose()) {
-            $io->writeln(sprintf('Downloading browserName driver version "%s".', $driverVersion->toString()));
+            $io->writeln(sprintf('Downloading %s %s.', '<driver-name>', $driverVersion->toBuildString()));
         }
 
         try {
@@ -191,11 +198,11 @@ final class InstallCommand extends Command
                 $operatingSystem,
                 $io->createProgressBar()
             );
-            $io->writeln(' Download complete.');
+            $io->writeln(' - Download complete.');
         } catch (Throwable $exception) {
             return $this->fail(
                 $io,
-                sprintf('Unable to download browserName driver version "%s".', $driverVersion->toString()),
+                sprintf('Unable to download %s %s.', '<driver-name>', $driverVersion->toString()),
                 $exception
             );
         }
@@ -224,7 +231,7 @@ final class InstallCommand extends Command
             );
         }
 
-        $io->success(sprintf('Chrome driver %s successfully installed.', $driverVersion));
+        $io->success(sprintf('Chrome driver %s successfully installed.', $driverVersion->toBuildString()));
 
         return self::SUCCESS;
     }
@@ -239,7 +246,7 @@ final class InstallCommand extends Command
     {
         $response = $this->httpClient->request(
             'GET',
-            sprintf('%s_%s', self::CHROMEDRIVER_API_VERSION_ENDPOINT, $browser->version()->toBuildString())
+            sprintf('%s_%s', self::CHROMEDRIVER_API_VERSION_ENDPOINT, $browser->version()->toString())
         );
 
         return Version::fromString($response->getContent());
@@ -289,7 +296,7 @@ final class InstallCommand extends Command
             sprintf(
                 '%s/%s/%s.zip',
                 self::CHROMEDRIVER_API_URL,
-                $chromeDriverVersion->toString(),
+                $chromeDriverVersion->toBuildString(),
                 $this->getChromeDriverBinaryName($operatingSystem)
             )
         );
@@ -357,5 +364,19 @@ final class InstallCommand extends Command
         }
 
         return self::FAILURE;
+    }
+
+    private function resolveBrowserName() : BrowserName
+    {
+        // TODO
+
+        return BrowserName::GOOGLE_CHROME();
+    }
+
+    private function resolveBrowserPath(BrowserName $browserName, OperatingSystem $operatingSystem) : string
+    {
+        // TODO
+
+        return 'google-chrome';
     }
 }
