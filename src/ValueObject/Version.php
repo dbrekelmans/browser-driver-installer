@@ -81,8 +81,12 @@ final class Version
 
     public function toBuildString() : string
     {
+        $versionString = $this->toString();
+
         if ($this->build !== null) {
-            $version[] = $this->build;
+            $versionString .= '.' . $this->build;
         }
+
+        return $versionString;
     }
 }
