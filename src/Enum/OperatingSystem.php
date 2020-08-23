@@ -21,13 +21,13 @@ final class OperatingSystem extends Enum
     public const MACOS = 'MacOS';
     public const LINUX = 'Linux';
 
-    public static function fromOperatingSystemFamily(OperatingSystemFamily $operatingSystemFamily) : self
+    public static function fromFamily(OperatingSystemFamily $family) : self
     {
-        if ($operatingSystemFamily->equals(OperatingSystemFamily::WINDOWS())) {
+        if ($family->equals(OperatingSystemFamily::WINDOWS())) {
             return self::WINDOWS();
         }
 
-        if ($operatingSystemFamily->equals(OperatingSystemFamily::DARWIN())) {
+        if ($family->equals(OperatingSystemFamily::DARWIN())) {
             return self::MACOS();
         }
 

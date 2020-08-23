@@ -116,7 +116,7 @@ final class InstallCommand extends Command
                 'The operating system used for installing the correct browser driver (%s)',
                 implode('|', OperatingSystem::toArray())
             ),
-            OperatingSystem::fromOperatingSystemFamily(
+            OperatingSystem::fromFamily(
                 new OperatingSystemFamily(PHP_OS_FAMILY)
             )->getValue()
         );
