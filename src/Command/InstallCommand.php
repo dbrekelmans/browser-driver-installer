@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Command;
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
+use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\Family;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
@@ -137,7 +138,7 @@ final class InstallCommand extends Command
         if ($browserName === self::AUTO) {
             $browserName = $this->resolveBrowserName(); // TODO
         } else {
-            $browserName = new Browser\Name($browserName);
+            $browserName = new BrowserName($browserName);
         }
 
         $browserPath = $input->getOption(self::BROWSER_PATH);
@@ -370,17 +371,10 @@ final class InstallCommand extends Command
         return self::FAILURE;
     }
 
-    private function resolveBrowserName() : Browser\Name
+    private function resolveBrowserName() : BrowserName
     {
         // TODO
 
-        return Browser\Name::GOOGLE_CHROME();
-    }
-
-    private function resolveBrowserPath(Browser\Name $browserName, OperatingSystem $operatingSystem) : string
-    {
-        // TODO
-
-        return 'google-chrome';
+        return BrowserName::GOOGLE_CHROME();
     }
 }

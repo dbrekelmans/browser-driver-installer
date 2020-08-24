@@ -9,35 +9,35 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
 final class Factory
 {
-    /** @var array<Name>|Name[] */
-    private array $browserNames = [];
-    private VersionResolverFactory $browserVersionResolverFactory;
+    /** @var array<BrowserName>|BrowserName[] */
+    private array $browsers = [];
+    private VersionResolverFactory $versionResolverFactory;
 
     public function __construct(VersionResolverFactory $browserVersionResolverFactory)
     {
-        $this->browserVersionResolverFactory = $browserVersionResolverFactory;
+        $this->versionResolverFactory = $browserVersionResolverFactory;
     }
 
     public function createFromNameAndPathAndOperationSystem(
-        Name $name,
+        BrowserName $browserName,
         string $path,
         OperatingSystem $operatingSystem
     ) : Browser {
-        $versionResolver = $this->browserVersionResolverFactory->createFromBrowserName($name);
+        $versionResolver = $this->versionResolverFactory->createBy($browserName);
 
         $version = $versionResolver->from($operatingSystem, $path);
 
-        return new Browser($name, $version);
+        return new Browser($browserName, $version);
     }
 
-    /** @return array<Name>|Name[] */
+    /** @return array<BrowserName>|BrowserName[] */
     public function registeredBrowsers() : array
     {
-        return (new ArrayObject($this->browserNames))->getArrayCopy();
+        return (new ArrayObject($this->browsers))->getArrayCopy();
     }
 
-    public function register(Name $browserName) : void
+    public function register(BrowserName $browserName) : void
     {
-        $this->browserNames[$browserName->getKey()] = $browserName->getValue();
+        $this->browsers[$browserName->getKey()] = $browserName->getValue();
     }
 }

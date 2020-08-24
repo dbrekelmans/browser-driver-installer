@@ -8,16 +8,16 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 
 final class Browser
 {
-    private Name $name;
+    private BrowserName $name;
     private Version $version;
 
-    public function __construct(Name $name, Version $version)
+    public function __construct(BrowserName $name, Version $version)
     {
         $this->name = $name;
         $this->version = $version;
     }
 
-    public function name() : Name
+    public function name() : BrowserName
     {
         return $this->name;
     }

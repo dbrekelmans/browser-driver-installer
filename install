@@ -18,9 +18,9 @@ $browserVersionResolverFactory = new Browser\VersionResolverFactory();
 $browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
 
 $browserFactory = new Browser\Factory($browserVersionResolverFactory);
-$browserFactory->register(Browser\Name::GOOGLE_CHROME());
-$browserFactory->register(Browser\Name::CHROMIUM());
-$browserFactory->register(Browser\Name::FIREFOX());
+$browserFactory->register(Browser\BrowserName::GOOGLE_CHROME());
+$browserFactory->register(Browser\BrowserName::CHROMIUM());
+$browserFactory->register(Browser\BrowserName::FIREFOX());
 
 $application->add(
     new InstallCommand(

@@ -11,14 +11,17 @@ use function Safe\sprintf;
 
 final class VersionResolverFactory
 {
-    /** @var array<VersionResolver>|VersionResolver[] $browserVersionResolvers */
-    private array $browserVersionResolvers;
+    /** @var array<VersionResolver>|VersionResolver[] $versionResolvers */
+    private array $versionResolvers;
 
-    public function createFromBrowserName(Name $browserName) : VersionResolver
+    /**
+     * @throws NotImplemented If no version resolver is implemented for browser
+     */
+    public function createBy(BrowserName $browserName) : VersionResolver
     {
-        foreach ($this->browserVersionResolvers as $browserVersionResolver) {
-            if ($browserVersionResolver->supportedBrowserName()->equals($browserName)) {
-                return $browserVersionResolver;
+        foreach ($this->versionResolvers as $versionResolver) {
+            if ($versionResolver->supportedBrowser()->equals($browserName)) {
+                return $versionResolver;
             }
         }
 
@@ -27,8 +30,8 @@ final class VersionResolverFactory
         );
     }
 
-    public function register(VersionResolver $browserVersionResolver) : void
+    public function register(VersionResolver $versionResolver) : void
     {
-        $this->browserVersionResolvers[get_class($browserVersionResolver)] = $browserVersionResolver;
+        $this->versionResolvers[get_class($versionResolver)] = $versionResolver;
     }
 }

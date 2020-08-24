@@ -8,5 +8,7 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
 interface PathResolver
 {
-    public function fromOperatingSystem(OperatingSystem $operatingSystem): string;
+    public function from(OperatingSystem $operatingSystem): string;
+
+    public function supportedBrowser() : BrowserName;
 }

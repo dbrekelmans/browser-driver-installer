@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
-use DBrekelmans\BrowserDriverInstaller\Browser\Name;
+use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
@@ -50,7 +50,7 @@ final class VersionResolver implements VersionResolverInterface
         throw NotImplemented::feature(
             sprintf(
                 'Automatically resolving %s version on %s',
-                $this->supportedBrowserName()->getValue(),
+                $this->supportedBrowser()->getValue(),
                 $operatingSystem
             )
         );
@@ -63,7 +63,7 @@ final class VersionResolver implements VersionResolverInterface
 
         if (!$process->isSuccessful()) {
             new RuntimeException(
-                sprintf('%s version could not be determined.', $this->supportedBrowserName()->getValue()),
+                sprintf('%s version could not be determined.', $this->supportedBrowser()->getValue()),
                 0,
                 new ProcessFailedException($process)
             );
@@ -72,8 +72,8 @@ final class VersionResolver implements VersionResolverInterface
         return Version::fromString($process->getOutput());
     }
 
-    public function supportedBrowserName() : Name
+    public function supportedBrowser() : BrowserName
     {
-        return Name::GOOGLE_CHROME();
+        return BrowserName::GOOGLE_CHROME();
     }
 }

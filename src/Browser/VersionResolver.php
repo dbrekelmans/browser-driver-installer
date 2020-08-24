@@ -18,5 +18,5 @@ interface VersionResolver
      */
     public function from(OperatingSystem $operatingSystem, string $path) : Version;
 
-    public function supportedBrowserName() : Name;
+    public function supportedBrowser() : BrowserName;
 }

@@ -13,7 +13,7 @@ use MyCLabs\Enum\Enum;
  *
  * @extends Enum<string>
  */
-final class Name extends Enum
+final class BrowserName extends Enum
 {
     public const GOOGLE_CHROME = 'Google Chrome';
     public const CHROMIUM = 'Chromium';
