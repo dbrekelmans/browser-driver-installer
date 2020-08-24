@@ -42,12 +42,12 @@
     },
     "autoload": {
         "psr-4": {
-            "BrowserDriverInstaller\\": "src/"
+            "DBrekelmans\\BrowserDriverInstaller\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BrowserDriverInstaller\\Tests\\": "tests/"
+            "DBrekelmans\\BrowserDriverInstaller\\Tests\\": "tests/"
         }
     },
     "config": {

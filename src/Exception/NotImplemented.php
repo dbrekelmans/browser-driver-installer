@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Exception;
+namespace DBrekelmans\BrowserDriverInstaller\Exception;
 
 use LogicException;
 

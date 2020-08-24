@@ -2,43 +2,41 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Factory;
+namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use ArrayObject;
-use BrowserDriverInstaller\Enum\BrowserName;
-use BrowserDriverInstaller\Enum\OperatingSystem;
-use BrowserDriverInstaller\ValueObject\Browser;
+use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-final class BrowserFactory
+final class Factory
 {
-    /** @var array<BrowserName>|BrowserName[] */
+    /** @var array<Name>|Name[] */
     private array $browserNames = [];
-    private BrowserVersionResolverFactory $browserVersionResolverFactory;
+    private VersionResolverFactory $browserVersionResolverFactory;
 
-    public function __construct(BrowserVersionResolverFactory $browserVersionResolverFactory)
+    public function __construct(VersionResolverFactory $browserVersionResolverFactory)
     {
         $this->browserVersionResolverFactory = $browserVersionResolverFactory;
     }
 
     public function createFromNameAndPathAndOperationSystem(
-        BrowserName $name,
+        Name $name,
         string $path,
         OperatingSystem $operatingSystem
     ) : Browser {
         $versionResolver = $this->browserVersionResolverFactory->createFromBrowserName($name);
 
-        $version = $versionResolver->resolveFrom($operatingSystem, $path);
+        $version = $versionResolver->from($operatingSystem, $path);
 
         return new Browser($name, $version);
     }
 
-    /** @return array<BrowserName>|BrowserName[] */
+    /** @return array<Name>|Name[] */
     public function registeredBrowsers() : array
     {
         return (new ArrayObject($this->browserNames))->getArrayCopy();
     }
 
-    public function register(BrowserName $browserName) : void
+    public function register(Name $browserName) : void
     {
         $this->browserNames[$browserName->getKey()] = $browserName->getValue();
     }

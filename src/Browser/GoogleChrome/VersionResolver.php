@@ -2,21 +2,22 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Resolver\Version\Browser;
+namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
-use BrowserDriverInstaller\Enum\BrowserName;
-use BrowserDriverInstaller\Enum\OperatingSystem;
-use BrowserDriverInstaller\Exception\NotImplemented;
-use BrowserDriverInstaller\ValueObject\Version;
+use DBrekelmans\BrowserDriverInstaller\Browser\Name;
+use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
 
 use function Safe\sprintf;
 
-final class GoogleChromeVersionResolver implements BrowserVersionResolver
+final class VersionResolver implements VersionResolverInterface
 {
-    public function resolveFrom(OperatingSystem $operatingSystem, ?string $path = null) : Version
+    public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             if ($path === null) {
@@ -71,8 +72,8 @@ final class GoogleChromeVersionResolver implements BrowserVersionResolver
         return Version::fromString($process->getOutput());
     }
 
-    public function supportedBrowserName() : BrowserName
+    public function supportedBrowserName() : Name
     {
-        return BrowserName::GOOGLE_CHROME();
+        return Name::GOOGLE_CHROME();
     }
 }

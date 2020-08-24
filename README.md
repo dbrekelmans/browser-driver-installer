@@ -1,6 +1,8 @@
 # browser-driver-installer
 Helps you install the appropriate browser driver 
 
+## Usage
+See `php install --help`.
 
 ## Auto
 * Find installed browsers (prompt if multiple found)

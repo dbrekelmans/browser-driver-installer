@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Enum;
+namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use MyCLabs\Enum\Enum;
 
@@ -13,7 +13,7 @@ use MyCLabs\Enum\Enum;
  *
  * @extends Enum<string>
  */
-final class BrowserName extends Enum
+final class Name extends Enum
 {
     public const GOOGLE_CHROME = 'Google Chrome';
     public const CHROMIUM = 'Chromium';

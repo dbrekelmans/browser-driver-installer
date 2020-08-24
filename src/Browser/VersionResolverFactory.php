@@ -2,21 +2,19 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Factory;
+namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
-use BrowserDriverInstaller\Enum\BrowserName;
-use BrowserDriverInstaller\Exception\NotImplemented;
-use BrowserDriverInstaller\Resolver\Version\Browser\BrowserVersionResolver;
+use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
 use function get_class;
 use function Safe\sprintf;
 
-final class BrowserVersionResolverFactory
+final class VersionResolverFactory
 {
-    /** @var array<BrowserVersionResolver>|BrowserVersionResolver[] $browserVersionResolvers */
+    /** @var array<VersionResolver>|VersionResolver[] $browserVersionResolvers */
     private array $browserVersionResolvers;
 
-    public function createFromBrowserName(BrowserName $browserName) : BrowserVersionResolver
+    public function createFromBrowserName(Name $browserName) : VersionResolver
     {
         foreach ($this->browserVersionResolvers as $browserVersionResolver) {
             if ($browserVersionResolver->supportedBrowserName()->equals($browserName)) {
@@ -29,7 +27,7 @@ final class BrowserVersionResolverFactory
         );
     }
 
-    public function register(BrowserVersionResolver $browserVersionResolver) : void
+    public function register(VersionResolver $browserVersionResolver) : void
     {
         $this->browserVersionResolvers[get_class($browserVersionResolver)] = $browserVersionResolver;
     }

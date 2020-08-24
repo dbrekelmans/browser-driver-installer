@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\ValueObject;
+namespace DBrekelmans\BrowserDriverInstaller;
 
 use InvalidArgumentException;
 use Safe\Exceptions\PcreException;
+
 use function implode;
 use function Safe\preg_match;
 use function Safe\sprintf;

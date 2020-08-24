@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Enum;
+namespace DBrekelmans\BrowserDriverInstaller\OperatingSystem;
 
 use MyCLabs\Enum\Enum;
 
@@ -21,13 +21,13 @@ final class OperatingSystem extends Enum
     public const MACOS = 'MacOS';
     public const LINUX = 'Linux';
 
-    public static function fromFamily(OperatingSystemFamily $family) : self
+    public static function fromFamily(Family $family) : self
     {
-        if ($family->equals(OperatingSystemFamily::WINDOWS())) {
+        if ($family->equals(Family::WINDOWS())) {
             return self::WINDOWS();
         }
 
-        if ($family->equals(OperatingSystemFamily::DARWIN())) {
+        if ($family->equals(Family::DARWIN())) {
             return self::MACOS();
         }
 

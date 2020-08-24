@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Command;
+namespace DBrekelmans\BrowserDriverInstaller\Command;
 
-use BrowserDriverInstaller\Enum\BrowserName;
-use BrowserDriverInstaller\Enum\OperatingSystem;
-use BrowserDriverInstaller\Enum\OperatingSystemFamily;
-use BrowserDriverInstaller\Factory\BrowserFactory;
-use BrowserDriverInstaller\ValueObject\Browser;
-use BrowserDriverInstaller\ValueObject\Version;
+use DBrekelmans\BrowserDriverInstaller\Browser;
+use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+use DBrekelmans\BrowserDriverInstaller\OperatingSystem\Family;
+use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -52,14 +51,14 @@ final class InstallCommand extends Command
     private HttpClientInterface $httpClient;
     private Filesystem $filesystem;
     private ZipArchive $zip;
-    private BrowserFactory $browserFactory;
+    private Browser\Factory $browserFactory;
 
     public function __construct(
         string $name,
         HttpClientInterface $httpClient,
         Filesystem $filesystem,
         ZipArchive $zip,
-        BrowserFactory $browserFactory
+        Browser\Factory $browserFactory
     ) {
         $this->httpClient = $httpClient;
         $this->filesystem = $filesystem;
@@ -71,7 +70,7 @@ final class InstallCommand extends Command
 
     protected function configure() : void
     {
-        $this->setDescription('Installs browser driver to let panther control the browser.');
+        $this->setDescription('Helps you install the appropriate browser driver.');
 
         $this->addOption(
             self::BROWSER_NAME,
@@ -89,7 +88,7 @@ final class InstallCommand extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             sprintf(
-                'The browser driver version to install (%s)',
+                'The driver version to install (%s)',
                 implode('|', ['<version>', self::LATEST, self::AUTO])
             ),
             self::AUTO
@@ -113,7 +112,7 @@ final class InstallCommand extends Command
             null,
             InputOption::VALUE_OPTIONAL,
             sprintf(
-                'The operating system used for installing the correct browser driver (%s)',
+                'The operating system for which to install the driver (%s)',
                 implode('|', array_merge(OperatingSystem::toArray(), [self::AUTO]))
             ),
             self::AUTO
@@ -123,15 +122,12 @@ final class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
-
-        $io->note('This command is experimental. Use at your own discretion.');
-
-        $driverVersion = $input->getOption(self::DRIVER_VERSION);
+        $io->note('This command is experimental.');
 
         $operatingSystem = $input->getOption(self::OPERATING_SYSTEM);
         if ($operatingSystem === self::AUTO) {
             $operatingSystem = OperatingSystem::fromFamily(
-                new OperatingSystemFamily(PHP_OS_FAMILY)
+                new Family(PHP_OS_FAMILY)
             );
         } else {
             $operatingSystem = new OperatingSystem($operatingSystem);
@@ -141,14 +137,16 @@ final class InstallCommand extends Command
         if ($browserName === self::AUTO) {
             $browserName = $this->resolveBrowserName(); // TODO
         } else {
-            $browserName = new BrowserName($browserName);
+            $browserName = new Browser\Name($browserName);
         }
 
         $browserPath = $input->getOption(self::BROWSER_PATH);
         if ($browserPath === self::AUTO) {
-            $browserPath = $this->resolveBrowserPath($browserName, $operatingSystem);
+            // TODO: Resolve browser path based on operating system
+            throw NotImplemented::feature('Automatically resolving browser path');
         }
 
+        $driverVersion = $input->getOption(self::DRIVER_VERSION);
         if ($driverVersion === self::AUTO) {
             try {
                 $browser = $this->browserFactory->createFromNameAndPathAndOperationSystem(
@@ -248,7 +246,7 @@ final class InstallCommand extends Command
      * @throws ServerExceptionInterface
      * @throws TransportExceptionInterface
      */
-    private function getMatchingChromeDriverVersion(Browser $browser) : Version
+    private function getMatchingChromeDriverVersion(Browser\Browser $browser) : Version
     {
         $response = $this->httpClient->request(
             'GET',
@@ -372,14 +370,14 @@ final class InstallCommand extends Command
         return self::FAILURE;
     }
 
-    private function resolveBrowserName() : BrowserName
+    private function resolveBrowserName() : Browser\Name
     {
         // TODO
 
-        return BrowserName::GOOGLE_CHROME();
+        return Browser\Name::GOOGLE_CHROME();
     }
 
-    private function resolveBrowserPath(BrowserName $browserName, OperatingSystem $operatingSystem) : string
+    private function resolveBrowserPath(Browser\Name $browserName, OperatingSystem $operatingSystem) : string
     {
         // TODO
 

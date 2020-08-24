@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\ValueObject;
+namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
-use BrowserDriverInstaller\Enum\BrowserName;
+use DBrekelmans\BrowserDriverInstaller\Version;
 
 final class Browser
 {
-    private BrowserName $name;
+    private Name $name;
     private Version $version;
 
-    public function __construct(BrowserName $name, Version $version)
+    public function __construct(Name $name, Version $version)
     {
         $this->name = $name;
         $this->version = $version;
     }
 
-    public function name() : BrowserName
+    public function name() : Name
     {
         return $this->name;
     }

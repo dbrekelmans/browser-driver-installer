@@ -1,0 +1,36 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use DBrekelmans\BrowserDriverInstaller\Browser;
+use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
+use DBrekelmans\BrowserDriverInstaller\Command\InstallCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpClient\NativeHttpClient;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$application = new Application();
+
+$browserVersionResolverFactory = new Browser\VersionResolverFactory();
+$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
+
+$browserFactory = new Browser\Factory($browserVersionResolverFactory);
+$browserFactory->register(Browser\Name::GOOGLE_CHROME());
+$browserFactory->register(Browser\Name::CHROMIUM());
+$browserFactory->register(Browser\Name::FIREFOX());
+
+$application->add(
+    new InstallCommand(
+        'driver',
+        new NativeHttpClient(),
+        new Filesystem(),
+        new ZipArchive(),
+        $browserFactory
+    )
+);
+
+$application->setDefaultCommand('driver');
+$application->run();

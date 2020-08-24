@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BrowserDriverInstaller\Enum;
+namespace DBrekelmans\BrowserDriverInstaller\OperatingSystem;
 
 use MyCLabs\Enum\Enum;
 
@@ -18,7 +18,7 @@ use MyCLabs\Enum\Enum;
  *
  * @internal
  */
-final class OperatingSystemFamily extends Enum
+final class Family extends Enum
 {
     public const WINDOWS = 'Windows';
     public const BSD = 'BSD';
