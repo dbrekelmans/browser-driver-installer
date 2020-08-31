@@ -17,9 +17,9 @@ use MyCLabs\Enum\Enum;
  */
 final class OperatingSystem extends Enum
 {
-    public const WINDOWS = 'Windows';
-    public const MACOS = 'MacOS';
-    public const LINUX = 'Linux';
+    public const WINDOWS = 'windows';
+    public const MACOS = 'macos';
+    public const LINUX = 'linux';
 
     public static function fromFamily(Family $family) : self
     {

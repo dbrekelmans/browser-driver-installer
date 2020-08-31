@@ -32,17 +32,19 @@ $driverVersionResolverFactory->register(new ChromeDriver\VersionResolver($httpCl
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
 
-// TODO: use symfony/dependency-injection container builder
+$browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
+$driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
+
 $application->add(
     new DriverCommand(
         $filesystem,
-        new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory),
-        new Driver\DriverFactory($driverVersionResolverFactory),
+        $browserFactory,
+        $driverFactory,
         $driverDownloaderFactory
     )
 );
 
-// TODO: Split commands into browser:google_chrome, browser:chromium, browser:firefox, driver:chrome, driver:gecko
+// TODO: Split commands into browser:google-chrome, browser:chromium, browser:firefox, driver:chrome, driver:gecko
 
 $application->setDefaultCommand('driver');
 $application->run();
