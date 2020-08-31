@@ -15,7 +15,7 @@ use MyCLabs\Enum\Enum;
  */
 final class BrowserName extends Enum
 {
-    public const GOOGLE_CHROME = 'Google Chrome';
-    public const CHROMIUM = 'Chromium';
-    public const FIREFOX = 'Firefox';
+    public const GOOGLE_CHROME = 'google chrome';
+    public const CHROMIUM = 'chromium';
+    public const FIREFOX = 'firefox';
 }

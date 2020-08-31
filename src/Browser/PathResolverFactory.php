@@ -11,16 +11,16 @@ use function Safe\sprintf;
 
 class PathResolverFactory
 {
-    /** @var array<PathResolver>|PathResolver[] $pathResolvers */
+    /** @var array<string, PathResolver>|PathResolver[] $pathResolvers */
     private array $pathResolvers;
 
     /**
      * @throws NotImplemented If no path resolver is implemented for browser
      */
-    public function createBy(BrowserName $browserName) : PathResolver
+    public function createFromName(BrowserName $browserName) : PathResolver
     {
         foreach ($this->pathResolvers as $pathResolver) {
-            if ($pathResolver->supportedBrowserName()->equals($browserName)) {
+            if ($pathResolver->supports($browserName)) {
                 return $pathResolver;
             }
         }

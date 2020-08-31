@@ -31,11 +31,11 @@ class PathResolver implements PathResolverInterface
             return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
         }
 
-        throw NotImplemented::feature(sprintf('Resolving %s path for %s', $this->supportedBrowser()->getValue(), $operatingSystem->getValue()));
+        throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
     }
 
-    public function supportedBrowser() : BrowserName
+    public function supports(BrowserName $browserName) : bool
     {
-        return BrowserName::GOOGLE_CHROME();
+        return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 }

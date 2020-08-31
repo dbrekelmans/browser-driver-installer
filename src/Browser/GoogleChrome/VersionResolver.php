@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
+use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
 
 use function Safe\sprintf;
 
@@ -20,28 +20,16 @@ final class VersionResolver implements VersionResolverInterface
     public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-            if ($path === null) {
-                $path = 'google-chrome';
-            }
-
             return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
         }
 
         if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-            if ($path === null) {
-                $path = '/Applications/Google\ Chrome.app';
-            }
-
             return $this->getVersionFromCommandLine(
                 sprintf('%s/Contents/MacOS/Google\ Chrome --version', $path)
             );
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            if ($path === null) {
-                $path = 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
-            }
-
             return $this->getVersionFromCommandLine(
                 sprintf('wmic datafile where name="%s" get Version /value', $path)
             );
@@ -49,9 +37,8 @@ final class VersionResolver implements VersionResolverInterface
 
         throw NotImplemented::feature(
             sprintf(
-                'Automatically resolving %s version on %s',
-                $this->supportedBrowser()->getValue(),
-                $operatingSystem
+                'Resolving version on %s',
+                $operatingSystem->getValue()
             )
         );
     }
@@ -63,7 +50,7 @@ final class VersionResolver implements VersionResolverInterface
 
         if (!$process->isSuccessful()) {
             new RuntimeException(
-                sprintf('%s version could not be determined.', $this->supportedBrowser()->getValue()),
+                sprintf('Version could not be determined.'),
                 0,
                 new ProcessFailedException($process)
             );
@@ -72,8 +59,8 @@ final class VersionResolver implements VersionResolverInterface
         return Version::fromString($process->getOutput());
     }
 
-    public function supportedBrowser() : BrowserName
+    public function supports(BrowserName $browserName) : bool
     {
-        return BrowserName::GOOGLE_CHROME();
+        return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 }

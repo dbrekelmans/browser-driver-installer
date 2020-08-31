@@ -37,6 +37,7 @@
         "dbrekelmans/coding-standard": "^1.1",
         "phpstan/phpstan": "^0.12.36",
         "roave/security-advisories": "dev-master",
+        "symfony/var-dumper": "^5.1",
         "thecodingmachine/phpstan-strict-rules": "^0.12.0",
         "vimeo/psalm": "^3.13"
     },

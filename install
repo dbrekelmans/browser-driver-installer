@@ -5,7 +5,9 @@ declare(strict_types=1);
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
-use DBrekelmans\BrowserDriverInstaller\Command\InstallCommand;
+use DBrekelmans\BrowserDriverInstaller\Command\DriverCommand;
+use DBrekelmans\BrowserDriverInstaller\Driver;
+use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\NativeHttpClient;
@@ -14,23 +16,29 @@ require __DIR__ . '/vendor/autoload.php';
 
 $application = new Application();
 
+$httpClient = new NativeHttpClient();
+
+$browserPathResolverFactory = new Browser\PathResolverFactory();
+$browserPathResolverFactory->register(new GoogleChrome\PathResolver());
+
 $browserVersionResolverFactory = new Browser\VersionResolverFactory();
 $browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
 
-$browserFactory = new Browser\Factory($browserVersionResolverFactory);
-$browserFactory->register(Browser\BrowserName::GOOGLE_CHROME());
-$browserFactory->register(Browser\BrowserName::CHROMIUM());
-$browserFactory->register(Browser\BrowserName::FIREFOX());
+$driverVersionResolverFactory = new Driver\VersionResolverFactory();
+$driverVersionResolverFactory->register(new ChromeDriver\VersionResolver($httpClient));
 
+// TODO: use symfony/dependency-injection container builder
 $application->add(
-    new InstallCommand(
-        'driver',
-        new NativeHttpClient(),
+    new DriverCommand(
+        $httpClient,
         new Filesystem(),
         new ZipArchive(),
-        $browserFactory
+        new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory),
+        new Driver\DriverFactory($driverVersionResolverFactory)
     )
 );
+
+// TODO: Split commands into browser:google_chrome, browser:chromium, browser:firefox, driver:chrome, driver:gecko
 
 $application->setDefaultCommand('driver');
 $application->run();

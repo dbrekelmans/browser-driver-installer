@@ -9,7 +9,6 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 
-/** @internal */
 interface VersionResolver
 {
     /**
@@ -18,5 +17,6 @@ interface VersionResolver
      */
     public function from(OperatingSystem $operatingSystem, string $path) : Version;
 
-    public function supportedBrowser() : BrowserName;
+    // TODO: Refactor to supports(OperatingSystem $operatingSystem).
+    public function supports(BrowserName $browserName) : bool;
 }
