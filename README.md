@@ -1,13 +1,15 @@
 # browser-driver-installer
-Helps you install the appropriate browser driver 
+This command-line tool helps you install browser drivers.
+A common use-case is to install a browser driver to run your functional test suite.
 
 ## Usage
-See `php install --help`.
+If you want to install a specific browser driver, you can use `php install driver:<driver-name>`.
+If you're not sure which driver you need, you can specify your browser, and the correct driver will automatically be installed `php install browser:<browser-name>`.
 
-## Auto
-* Find installed browsers (prompt if multiple found)
-* Determine browser version
-* Find matching driver version
-* Download and unpack driver
-* Set driver permissions
-* Ouptut `Installed <driver-name> <driver-version> for <browser-name> <browser-version> at <driver-path>`
+For a full list of available commands, run `php install list`.
+
+### Supported drivers
+* chromedriver (experimental)
+
+### Supported browsers
+* Google chrome (chromedriver) `php install browser:google-chrome`
