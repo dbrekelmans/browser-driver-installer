@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
-use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
-use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolver;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
 use function get_class;
@@ -14,7 +12,7 @@ use function Safe\sprintf;
 
 class VersionResolverFactory
 {
-    /** @var array<VersionResolver>|VersionResolver[] $versionResolvers */
+    /** @var array<string, VersionResolver>|VersionResolver[] $versionResolvers */
     private array $versionResolvers;
 
     /**
@@ -29,7 +27,7 @@ class VersionResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Automatically resolving %s version', $browser->name()->getValue())
+            sprintf('Resolving %s version', $browser->name()->getValue())
         );
     }
 

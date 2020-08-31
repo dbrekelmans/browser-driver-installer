@@ -17,6 +17,8 @@ require __DIR__ . '/vendor/autoload.php';
 $application = new Application();
 
 $httpClient = new NativeHttpClient();
+$filesystem = new Filesystem();
+$zipArchive = new ZipArchive();
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
@@ -27,14 +29,16 @@ $browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $driverVersionResolverFactory->register(new ChromeDriver\VersionResolver($httpClient));
 
+$driverDownloaderFactory = new Driver\DownloaderFactory();
+$driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
+
 // TODO: use symfony/dependency-injection container builder
 $application->add(
     new DriverCommand(
-        $httpClient,
-        new Filesystem(),
-        new ZipArchive(),
+        $filesystem,
         new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory),
-        new Driver\DriverFactory($driverVersionResolverFactory)
+        new Driver\DriverFactory($driverVersionResolverFactory),
+        $driverDownloaderFactory
     )
 );
 

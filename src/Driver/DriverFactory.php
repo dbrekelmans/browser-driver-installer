@@ -24,7 +24,7 @@ class DriverFactory
 
         $name = $this->getDriverNameForBrowser($browser);
 
-        return new Driver($name, $version);
+        return new Driver($name, $version, $browser->operatingSystem());
     }
 
     /**

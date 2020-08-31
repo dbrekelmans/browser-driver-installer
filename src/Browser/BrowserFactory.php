@@ -35,6 +35,6 @@ class BrowserFactory
         $versionResolver = $this->versionResolverFactory->createFromName($name);
         $version = $versionResolver->from($operatingSystem, $path);
 
-        return new Browser($name, $version);
+        return new Browser($name, $version, $operatingSystem);
     }
 }
