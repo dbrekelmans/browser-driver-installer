@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
-use DBrekelmans\BrowserDriverInstaller\Command\DriverCommand;
+use DBrekelmans\BrowserDriverInstaller\Command\GoogleChromeCommand;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 use Symfony\Component\Console\Application;
@@ -36,15 +36,7 @@ $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $brows
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 
 $application->add(
-    new DriverCommand(
-        $filesystem,
-        $browserFactory,
-        $driverFactory,
-        $driverDownloaderFactory
-    )
+    new GoogleChromeCommand($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory)
 );
 
-// TODO: Split commands into browser:google-chrome, browser:chromium, browser:firefox, driver:chrome, driver:gecko
-
-$application->setDefaultCommand('driver');
 $application->run();

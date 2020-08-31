@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Command;
 
-
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserFactory;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloaderFactory;
@@ -19,12 +18,12 @@ use Symfony\Component\Filesystem\Filesystem;
 
 use function Safe\sprintf;
 
-final class DriverCommand extends Command
+abstract class BrowserCommand extends Command
 {
-    private Filesystem $filesystem;
-    private BrowserFactory $browserFactory;
-    private DriverFactory $driverFactory;
-    private DownloaderFactory $driverDownloaderFactory;
+    protected Filesystem $filesystem;
+    protected BrowserFactory $browserFactory;
+    protected DriverFactory $driverFactory;
+    protected DownloaderFactory $driverDownloaderFactory;
 
     public function __construct(
         Filesystem $filesystem,
@@ -37,12 +36,14 @@ final class DriverCommand extends Command
         $this->driverFactory = $driverFactory;
         $this->driverDownloaderFactory = $driverDownloaderFactory;
 
-        parent::__construct('driver');
+        parent::__construct(sprintf('browser:%s', static::browserName()->getValue()));
     }
 
-    protected function configure() : void
+    abstract protected static function browserName() : BrowserName;
+
+    final protected function configure() : void
     {
-        $this->setDescription('Helps you install the appropriate browser driver.');
+        $this->setDescription(sprintf('Helps you install the driver for %s.', static::browserName()->getValue()));
 
         $this->setDefinition(
             new InputDefinition(
@@ -55,13 +56,12 @@ final class DriverCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    final protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->note('This command is experimental.');
+        $io->note('This command is experimental. Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues');
 
-        // TODO: defaults to google chrome. Move to separate command
-        $browserName = BrowserName::GOOGLE_CHROME();
+        $browserName = static::browserName();
         $installPath = $input->getArgument(Input\InstallPathArgument::name());
         $operatingSystem = new OperatingSystem($input->getOption(Input\OperatingSystemOption::name()));
         $browserPath = $input->getOption(Input\BrowserPathOption::name());
