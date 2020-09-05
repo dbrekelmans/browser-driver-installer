@@ -9,6 +9,9 @@ TODO
 ### Phive (recommended)
 TODO
 
+### Download PHAR
+TODO
+
 ### Composer
 `composer require --dev dbrekelmans/browser-driver-installer`
 
