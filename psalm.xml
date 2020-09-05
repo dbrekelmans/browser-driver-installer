@@ -8,6 +8,7 @@
 >
     <projectFiles>
         <directory name="src"/>
+        <directory name="tests"/>
         <file name="install.php"/>
         <ignoreFiles>
             <directory name="vendor"/>
