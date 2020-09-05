@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset
+        name="object-mapper"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <rule ref="dbrekelmans"/>
+
+    <file>src</file>
+    <file>tests</file>
+    <file>install.php</file>
+</ruleset>
