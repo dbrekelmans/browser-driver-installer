@@ -2,3 +2,4 @@
 /bin/
 /.phive/tools/
 /.build/
+.phpunit.result.cache
