@@ -5,20 +5,11 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Filesystem\Filesystem;
-
-use function Safe\sprintf;
-
-use const DIRECTORY_SEPARATOR;
 
 class InstallPathArgument extends InputArgument implements Argument
 {
-    private Filesystem $filesystem;
-
-    public function __construct(Filesystem $filesystem)
+    public function __construct()
     {
-        $this->filesystem = $filesystem;
-
         parent::__construct(
             self::name(),
             $this->mode()->getValue(),
@@ -34,7 +25,7 @@ class InstallPathArgument extends InputArgument implements Argument
 
     public function mode() : ArgumentMode
     {
-        return ArgumentMode::OPTIONAL();
+        return ArgumentMode::REQUIRED();
     }
 
     public function description() : string
@@ -44,17 +35,7 @@ class InstallPathArgument extends InputArgument implements Argument
 
     public function default() : ?string
     {
-        return $this->filesystem->readlink(
-            sprintf(
-                '%s%s..%s..%s..%sbin',
-                __DIR__,
-                DIRECTORY_SEPARATOR,
-                DIRECTORY_SEPARATOR,
-                DIRECTORY_SEPARATOR,
-                DIRECTORY_SEPARATOR
-            ),
-            true
-        );
+        return null;
     }
 
     public function shortcut() : ?string

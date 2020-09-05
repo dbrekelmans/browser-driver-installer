@@ -1,0 +1,15 @@
+{
+    "main": "install.php",
+    "output" : ".build/bdi.phar",
+    "chmod": "0755",
+    "files": [
+        "install.php"
+    ],
+    "directories": [
+        "src",
+        "vendor"
+    ],
+    "blacklist": [
+        "vendor/bin"
+    ]
+}

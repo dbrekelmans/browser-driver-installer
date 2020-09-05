@@ -44,7 +44,7 @@ class OperatingSystemOption extends InputOption implements Option
     public function description() : string
     {
         return sprintf(
-            'Operating system for which to install the driver (%s)',
+            'Operating system for which to install.php the driver (%s)',
             implode('|', OperatingSystem::toArray())
         );
     }
