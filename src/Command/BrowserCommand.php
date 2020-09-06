@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserFactory;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloaderFactory;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverFactory;
-use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -59,14 +58,17 @@ abstract class BrowserCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->note('This command is experimental. Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues');
+        $io->note(
+            'This command is experimental. Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues'
+        );
 
         $browserName = static::browserName();
-        $installPath = $input->getArgument(Input\InstallPathArgument::name());
-        $operatingSystem = new OperatingSystem($input->getOption(Input\OperatingSystemOption::name()));
-        $browserPath = $input->getOption(Input\BrowserPathOption::name());
 
-        if ($browserPath === null || $browserPath === '') {
+        $installPath = Input\InstallPathArgument::value($input);
+        $operatingSystem = Input\OperatingSystemOption::value($input);
+        $browserPath = Input\BrowserPathOption::value($input);
+
+        if ($browserPath === null) {
             $browser = $this->browserFactory->createFromNameAndOperatingSystem($browserName, $operatingSystem);
         } else {
             $browser = $this->browserFactory->createFromNameOperatingSystemAndPath(

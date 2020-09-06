@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
+use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 
-class InstallPathArgument extends InputArgument implements Argument
+use function is_string;
+
+/**
+ * @implements Argument<string>
+ */
+final class InstallPathArgument extends InputArgument implements Argument
 {
     public function __construct()
     {
@@ -38,8 +45,14 @@ class InstallPathArgument extends InputArgument implements Argument
         return null;
     }
 
-    public function shortcut() : ?string
+    public static function value(InputInterface $input)
     {
-        return null;
+        $value = $input->getArgument(self::name());
+
+        if (!is_string($value)) {
+            throw UnexpectedType::expected('string', $value);
+        }
+
+        return $value;
     }
 }

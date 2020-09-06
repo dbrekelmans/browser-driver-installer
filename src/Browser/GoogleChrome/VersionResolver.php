@@ -43,7 +43,7 @@ final class VersionResolver implements VersionResolverInterface
         );
     }
 
-    private function getVersionFromCommandLine($command) : Version
+    private function getVersionFromCommandLine(string $command) : Version
     {
         $process = Process::fromShellCommandline($command);
         $process->run();

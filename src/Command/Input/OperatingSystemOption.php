@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
+use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\Family;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use UnexpectedValueException;
 
 use function implode;
+use function is_string;
 use function Safe\sprintf;
 
 use const PHP_OS_FAMILY;
 
+/**
+ * @implements Option<OperatingSystem>
+ */
 final class OperatingSystemOption extends InputOption implements Option
 {
     public function __construct()
@@ -38,7 +45,7 @@ final class OperatingSystemOption extends InputOption implements Option
 
     public function mode() : OptionMode
     {
-        return OptionMode::OPTIONAL();
+        return OptionMode::REQUIRED();
     }
 
     public function description() : string
@@ -52,5 +59,26 @@ final class OperatingSystemOption extends InputOption implements Option
     public function default() : ?string
     {
         return OperatingSystem::fromFamily(new Family(PHP_OS_FAMILY))->getValue();
+    }
+
+    public static function value(InputInterface $input)
+    {
+        $value = $input->getOption(self::name());
+
+        if (!is_string($value)) {
+            throw UnexpectedType::expected('string', $value);
+        }
+
+        if (!OperatingSystem::isValid($value)) {
+            throw new UnexpectedValueException(
+                sprintf(
+                    'Unexpected value %s. Expected one of: %s',
+                    $value,
+                    implode(', ', OperatingSystem::toArray())
+                )
+            );
+        }
+
+        return new OperatingSystem($value);
     }
 }

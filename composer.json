@@ -30,6 +30,7 @@
         "symfony/console": "^5.1",
         "symfony/filesystem": "^5.1",
         "symfony/http-client": "^5.1",
+        "symfony/polyfill-php80": "^1.18",
         "symfony/process": "^5.1",
         "thecodingmachine/safe": "^1.1"
     },

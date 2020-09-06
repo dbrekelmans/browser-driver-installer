@@ -82,8 +82,8 @@ final class Downloader implements DownloaderInterface
             );
         }
 
+        $mode = 0755;
         try {
-            $mode = 0755;
             $this->filesystem->chmod($filePath, $mode);
         } catch (IOException $exception) {
             throw new RuntimeException(
@@ -186,7 +186,12 @@ final class Downloader implements DownloaderInterface
         }
 
         $filename = $this->zip->getNameIndex(0);
-        $file = $this->filesystem->readlink($unzipLocation . DIRECTORY_SEPARATOR . $filename, true);
+        $link = $unzipLocation . DIRECTORY_SEPARATOR . $filename;
+
+        $file = $this->filesystem->readlink($link, true);
+        if ($file === null) {
+            throw new RuntimeException(sprintf('Could not read link %s', $link));
+        }
 
         $success = $this->zip->close();
         if ($success !== true) {
