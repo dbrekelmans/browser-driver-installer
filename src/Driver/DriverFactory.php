@@ -8,7 +8,9 @@ use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
-class DriverFactory
+use function Safe\sprintf;
+
+final class DriverFactory
 {
     private VersionResolverFactory $versionResolverFactory;
 

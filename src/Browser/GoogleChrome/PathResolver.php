@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
+use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 
-class PathResolver implements PathResolverInterface
+use function Safe\sprintf;
+
+final class PathResolver implements PathResolverInterface
 {
     /**
      * @throws NotImplemented

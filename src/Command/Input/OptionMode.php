@@ -14,7 +14,7 @@ use MyCLabs\Enum\Enum;
  *
  * @extends Enum<int>
  */
-class OptionMode extends Enum
+final class OptionMode extends Enum
 {
     public const NONE = 1;
     public const REQUIRED = 2;

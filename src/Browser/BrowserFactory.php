@@ -6,7 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-class BrowserFactory
+final class BrowserFactory
 {
     private PathResolverFactory $pathResolverFactory;
     private VersionResolverFactory $versionResolverFactory;

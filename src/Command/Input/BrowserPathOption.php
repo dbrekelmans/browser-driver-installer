@@ -6,7 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class BrowserPathOption extends InputOption implements Option
+final class BrowserPathOption extends InputOption implements Option
 {
     public function __construct()
     {

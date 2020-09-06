@@ -14,7 +14,7 @@ use MyCLabs\Enum\Enum;
  *
  * @extends Enum<int>
  */
-class ArgumentMode extends Enum
+final class ArgumentMode extends Enum
 {
     public const REQUIRED = 1;
     public const OPTIONAL = 2;

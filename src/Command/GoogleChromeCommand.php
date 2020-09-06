@@ -6,7 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Command;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 
-class GoogleChromeCommand extends BrowserCommand
+final class GoogleChromeCommand extends BrowserCommand
 {
     protected static function browserName() : BrowserName
     {

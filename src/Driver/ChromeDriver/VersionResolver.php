@@ -19,7 +19,7 @@ use UnexpectedValueException;
 
 use function Safe\sprintf;
 
-class VersionResolver implements VersionResolverInterface
+final class VersionResolver implements VersionResolverInterface
 {
     private const VERSION_ENDPOINT = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
 

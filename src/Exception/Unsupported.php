@@ -6,7 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Exception;
 
 use InvalidArgumentException;
 
-class Unsupported extends InvalidArgumentException
+final class Unsupported extends InvalidArgumentException
 {
 
 }

@@ -9,7 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use function get_class;
 use function Safe\sprintf;
 
-class DownloaderFactory
+final class DownloaderFactory
 {
     /**
      * @var array<string, Downloader>|Downloader[]

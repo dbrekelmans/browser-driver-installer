@@ -26,7 +26,7 @@ use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
 
-class Downloader implements DownloaderInterface
+final class Downloader implements DownloaderInterface
 {
     private const DOWNLOAD_ENDPOINT = 'https://chromedriver.storage.googleapis.com';
     private const BINARY_LINUX = 'chromedriver_linux64';

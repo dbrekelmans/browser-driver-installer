@@ -13,7 +13,7 @@ use function Safe\sprintf;
 
 use const PHP_OS_FAMILY;
 
-class OperatingSystemOption extends InputOption implements Option
+final class OperatingSystemOption extends InputOption implements Option
 {
     public function __construct()
     {

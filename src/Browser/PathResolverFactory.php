@@ -9,7 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use function get_class;
 use function Safe\sprintf;
 
-class PathResolverFactory
+final class PathResolverFactory
 {
     /** @var array<string, PathResolver>|PathResolver[] $pathResolvers */
     private array $pathResolvers;

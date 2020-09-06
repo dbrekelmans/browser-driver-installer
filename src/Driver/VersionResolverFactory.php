@@ -10,7 +10,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use function get_class;
 use function Safe\sprintf;
 
-class VersionResolverFactory
+final class VersionResolverFactory
 {
     /** @var array<string, VersionResolver>|VersionResolver[] $versionResolvers */
     private array $versionResolvers;
