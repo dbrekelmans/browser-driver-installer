@@ -15,8 +15,6 @@ use MyCLabs\Enum\Enum;
  * @method static self UNKNOWN()
  *
  * @extends Enum<string>
- *
- * @internal
  */
 final class Family extends Enum
 {

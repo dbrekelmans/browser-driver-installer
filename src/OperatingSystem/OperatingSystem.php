@@ -12,8 +12,6 @@ use MyCLabs\Enum\Enum;
  * @method static self LINUX()
  *
  * @extends Enum<string>
- *
- * @internal
  */
 final class OperatingSystem extends Enum
 {
