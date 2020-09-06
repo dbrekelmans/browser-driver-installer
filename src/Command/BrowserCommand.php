@@ -48,7 +48,7 @@ abstract class BrowserCommand extends Command
         $this->setDefinition(
             new InputDefinition(
                 [
-                    new Input\InstallPathArgument($this->filesystem),
+                    new Input\InstallPathArgument(),
                     new Input\OperatingSystemOption(),
                     new Input\BrowserPathOption(),
                 ]
