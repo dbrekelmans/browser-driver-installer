@@ -19,7 +19,7 @@ class OperatingSystemTest extends TestCase
     }
 
     /**
-     * @return array<string, mixed>
+     * @psalm-return array<string, array{OperatingSystem, Family}>
      */
     public function fromFamilyDataProvider(): array
     {

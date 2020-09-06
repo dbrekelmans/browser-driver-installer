@@ -13,12 +13,14 @@ use function Safe\sprintf;
 
 final class Version
 {
+    private const DELIMITER = '.';
+
     private string $major;
     private string $minor;
     private string $patch;
     private ?string $build;
 
-    public function __construct(string $major, string $minor, string $patch, ?string $build)
+    private function __construct(string $major, string $minor, string $patch, ?string $build)
     {
         $this->major = $major;
         $this->minor = $minor;
@@ -42,15 +44,21 @@ final class Version
                 );
             }
 
+            if (!isset($matches['major'], $matches['minor'], $matches['patch'])) {
+                throw new InvalidArgumentException(
+                    sprintf('Could not parse version string "%s".', $versionString)
+                );
+            }
+
             return new self(
-                $matches['major'],
-                $matches['minor'],
-                $matches['patch'],
-                $matches['build'] ?? null
+                (string)$matches['major'],
+                (string)$matches['minor'],
+                (string)$matches['patch'],
+                isset($matches['build']) ? (string)$matches['build'] : null
             );
-        } catch (PcreException $e) {
+        } catch (PcreException $exception) {
             throw new InvalidArgumentException(
-                sprintf('Could not parse version string "%s".', $versionString), 0, $e
+                sprintf('Could not parse version string "%s".', $versionString), 0, $exception
             );
         }
     }
@@ -75,19 +83,19 @@ final class Version
         return $this->build;
     }
 
-    public function toString() : string
-    {
-        return implode('.', [$this->major, $this->minor, $this->patch]);
-    }
-
     public function toBuildString() : string
     {
         $versionString = $this->toString();
 
         if ($this->build !== null) {
-            $versionString .= '.' . $this->build;
+            $versionString .= self::DELIMITER . $this->build;
         }
 
         return $versionString;
+    }
+
+    public function toString() : string
+    {
+        return implode(self::DELIMITER, [$this->major, $this->minor, $this->patch]);
     }
 }

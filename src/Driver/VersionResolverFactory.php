@@ -13,7 +13,7 @@ use function Safe\sprintf;
 final class VersionResolverFactory
 {
     /** @var array<string, VersionResolver>|VersionResolver[] $versionResolvers */
-    private array $versionResolvers;
+    private array $versionResolvers = [];
 
     /**
      * @throws NotImplemented If no version resolver is implemented for browser

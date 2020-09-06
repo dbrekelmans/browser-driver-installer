@@ -12,7 +12,7 @@ use function Safe\sprintf;
 final class PathResolverFactory
 {
     /** @var array<string, PathResolver>|PathResolver[] $pathResolvers */
-    private array $pathResolvers;
+    private array $pathResolvers = [];
 
     /**
      * @throws NotImplemented If no path resolver is implemented for browser

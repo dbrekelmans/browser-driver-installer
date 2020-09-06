@@ -17,4 +17,12 @@
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
+    <issueHandlers>
+        <TooManyArguments>
+            <errorLevel type="suppress">
+                <!-- Error caused by BC layer -->
+                <referencedFunction name="Symfony\Component\Filesystem\Filesystem::tempnam"/>
+            </errorLevel>
+        </TooManyArguments>
+    </issueHandlers>
 </psalm>

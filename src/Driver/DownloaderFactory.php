@@ -14,7 +14,7 @@ final class DownloaderFactory
     /**
      * @var array<string, Downloader>|Downloader[]
      */
-    private array $downloaders;
+    private array $downloaders = [];
 
     public function createFromDriver(Driver $driver) : Downloader
     {
