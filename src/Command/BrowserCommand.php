@@ -43,7 +43,7 @@ abstract class BrowserCommand extends Command
 
     final protected function configure() : void
     {
-        $this->setDescription(sprintf('Helps you install.php the driver for %s.', static::browserName()->getValue()));
+        $this->setDescription(sprintf('Helps you install the driver for %s.', static::browserName()->getValue()));
 
         $this->setDefinition(
             new InputDefinition(
