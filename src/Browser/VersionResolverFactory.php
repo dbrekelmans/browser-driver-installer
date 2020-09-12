@@ -11,7 +11,10 @@ use function Safe\sprintf;
 
 final class VersionResolverFactory
 {
-    /** @var array<VersionResolver>|VersionResolver[] $versionResolvers */
+    /**
+     * @psalm-var array<class-string<VersionResolver>, VersionResolver>
+     * @var VersionResolver[] $versionResolvers
+     */
     private array $versionResolvers = [];
 
     /**
@@ -26,7 +29,7 @@ final class VersionResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Automatically resolving %s version', $browserName->getValue())
+            sprintf('Resolving %s version', $browserName->getValue())
         );
     }
 
