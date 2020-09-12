@@ -34,15 +34,22 @@ final class VersionResolverFactoryTest extends TestCase
 
     public function testSupportedVersionResolverIsReturned() : void
     {
-        $versionResolverA = $this->createStub(VersionResolver::class);
+        /** @var VersionResolver&Stub $versionResolverA */
+        $versionResolverA = $this->getMockBuilder(VersionResolver::class)->setMockClassName('A')->getMock();
         $versionResolverA->method('supports')->willReturn(false);
 
-        $versionResolverB = $this->createStub(VersionResolver::class);
+        /** @var VersionResolver&Stub $versionResolverB */
+        $versionResolverB = $this->getMockBuilder(VersionResolver::class)->setMockClassName('B')->getMock();
         $versionResolverB->method('supports')->willReturn(true);
+
+        /** @var VersionResolver&Stub $versionResolverC */
+        $versionResolverC = $this->getMockBuilder(VersionResolver::class)->setMockClassName('C')->getMock();
+        $versionResolverC->method('supports')->willReturn(false);
 
         $factory = new VersionResolverFactory();
         $factory->register($versionResolverA);
         $factory->register($versionResolverB);
+        $factory->register($versionResolverC);
 
         self::assertSame($versionResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
