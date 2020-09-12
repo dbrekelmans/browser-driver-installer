@@ -11,7 +11,10 @@ use function Safe\sprintf;
 
 final class PathResolverFactory
 {
-    /** @var array<string, PathResolver>|PathResolver[] $pathResolvers */
+    /**
+     * @psalm-var array<class-string<PathResolver>, PathResolver>
+     * @var PathResolver[] $pathResolvers
+     */
     private array $pathResolvers = [];
 
     /**
@@ -26,7 +29,7 @@ final class PathResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Automatically resolving %s version', $browserName->getValue())
+            sprintf('Resolving %s path', $browserName->getValue())
         );
     }
 
