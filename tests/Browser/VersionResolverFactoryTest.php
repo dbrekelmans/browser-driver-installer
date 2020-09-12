@@ -35,15 +35,15 @@ final class VersionResolverFactoryTest extends TestCase
     public function testSupportedVersionResolverIsReturned() : void
     {
         /** @var VersionResolver&Stub $versionResolverA */
-        $versionResolverA = $this->getMockBuilder(VersionResolver::class)->setMockClassName('A')->getMock();
+        $versionResolverA = $this->getMockBuilder(VersionResolver::class)->setMockClassName('VersionResolverA')->getMock();
         $versionResolverA->method('supports')->willReturn(false);
 
         /** @var VersionResolver&Stub $versionResolverB */
-        $versionResolverB = $this->getMockBuilder(VersionResolver::class)->setMockClassName('B')->getMock();
+        $versionResolverB = $this->getMockBuilder(VersionResolver::class)->setMockClassName('VersionResolverB')->getMock();
         $versionResolverB->method('supports')->willReturn(true);
 
         /** @var VersionResolver&Stub $versionResolverC */
-        $versionResolverC = $this->getMockBuilder(VersionResolver::class)->setMockClassName('C')->getMock();
+        $versionResolverC = $this->getMockBuilder(VersionResolver::class)->setMockClassName('VersionResolverC')->getMock();
         $versionResolverC->method('supports')->willReturn(false);
 
         $factory = new VersionResolverFactory();
@@ -57,11 +57,11 @@ final class VersionResolverFactoryTest extends TestCase
     public function testFirstSupportedVersionResolverIsReturned() : void
     {
         /** @var VersionResolver&Stub $versionResolverA */
-        $versionResolverA = $this->getMockBuilder(VersionResolver::class)->setMockClassName('A')->getMock();
+        $versionResolverA = $this->getMockBuilder(VersionResolver::class)->setMockClassName('VersionResolverA')->getMock();
         $versionResolverA->method('supports')->willReturn(true);
 
         /** @var VersionResolver&Stub $versionResolverB */
-        $versionResolverB = $this->getMockBuilder(VersionResolver::class)->setMockClassName('B')->getMock();
+        $versionResolverB = $this->getMockBuilder(VersionResolver::class)->setMockClassName('VersionResolverB')->getMock();
         $versionResolverB->method('supports')->willReturn(true);
 
         $factory = new VersionResolverFactory();

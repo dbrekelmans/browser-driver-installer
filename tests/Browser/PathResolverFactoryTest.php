@@ -35,15 +35,15 @@ final class PathResolverFactoryTest extends TestCase
     public function testSupportedPathResolverIsReturned() : void
     {
         /** @var PathResolver&Stub $PathResolverA */
-        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('A')->getMock();
+        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverA')->getMock();
         $PathResolverA->method('supports')->willReturn(false);
 
         /** @var PathResolver&Stub $PathResolverB */
-        $PathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('B')->getMock();
+        $PathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverB')->getMock();
         $PathResolverB->method('supports')->willReturn(true);
 
         /** @var PathResolver&Stub $PathResolverC */
-        $PathResolverC = $this->getMockBuilder(PathResolver::class)->setMockClassName('C')->getMock();
+        $PathResolverC = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverC')->getMock();
         $PathResolverC->method('supports')->willReturn(false);
 
         $factory = new PathResolverFactory();
@@ -57,16 +57,16 @@ final class PathResolverFactoryTest extends TestCase
     public function testFirstSupportedPathResolverIsReturned() : void
     {
         /** @var PathResolver&Stub $PathResolverA */
-        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('A')->getMock();
+        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverA')->getMock();
         $PathResolverA->method('supports')->willReturn(true);
 
-        /** @var PathResolver&Stub $PathResolverB */
-        $PathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('B')->getMock();
-        $PathResolverB->method('supports')->willReturn(true);
+        /** @var PathResolver&Stub $pathResolverB */
+        $pathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverB')->getMock();
+        $pathResolverB->method('supports')->willReturn(true);
 
         $factory = new PathResolverFactory();
         $factory->register($PathResolverA);
-        $factory->register($PathResolverB);
+        $factory->register($pathResolverB);
 
         self::assertSame($PathResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
