@@ -8,11 +8,14 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolverFactory;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class PathResolverFactoryTest extends TestCase
 {
+    use UniqueClassName;
+
     public function testNoPathResolverImplemented() : void
     {
         $factory = new PathResolverFactory();
@@ -35,15 +38,21 @@ final class PathResolverFactoryTest extends TestCase
     public function testSupportedPathResolverIsReturned() : void
     {
         /** @var PathResolver&Stub $PathResolverA */
-        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverA')->getMock();
+        $PathResolverA = $this->getMockBuilder(PathResolver::class)
+            ->setMockClassName(self::uniqueClassName(PathResolver::class))
+            ->getMock();
         $PathResolverA->method('supports')->willReturn(false);
 
         /** @var PathResolver&Stub $PathResolverB */
-        $PathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverB')->getMock();
+        $PathResolverB = $this->getMockBuilder(PathResolver::class)
+            ->setMockClassName(self::uniqueClassName(PathResolver::class))
+            ->getMock();
         $PathResolverB->method('supports')->willReturn(true);
 
         /** @var PathResolver&Stub $PathResolverC */
-        $PathResolverC = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverC')->getMock();
+        $PathResolverC = $this->getMockBuilder(PathResolver::class)
+            ->setMockClassName(self::uniqueClassName(PathResolver::class))
+            ->getMock();
         $PathResolverC->method('supports')->willReturn(false);
 
         $factory = new PathResolverFactory();
@@ -57,11 +66,15 @@ final class PathResolverFactoryTest extends TestCase
     public function testFirstSupportedPathResolverIsReturned() : void
     {
         /** @var PathResolver&Stub $PathResolverA */
-        $PathResolverA = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverA')->getMock();
+        $PathResolverA = $this->getMockBuilder(PathResolver::class)
+            ->setMockClassName(self::uniqueClassName(PathResolver::class))
+            ->getMock();
         $PathResolverA->method('supports')->willReturn(true);
 
         /** @var PathResolver&Stub $pathResolverB */
-        $pathResolverB = $this->getMockBuilder(PathResolver::class)->setMockClassName('PathResolverB')->getMock();
+        $pathResolverB = $this->getMockBuilder(PathResolver::class)
+            ->setMockClassName(self::uniqueClassName(PathResolver::class))
+            ->getMock();
         $pathResolverB->method('supports')->willReturn(true);
 
         $factory = new PathResolverFactory();
