@@ -7,6 +7,28 @@ on:
       - master
 
 jobs:
+  command:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: zip
+          coverage: none
+      - id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - run: composer install --no-interaction
+      - run: php install.php
   phpunit:
     runs-on: ubuntu-latest
     steps:
