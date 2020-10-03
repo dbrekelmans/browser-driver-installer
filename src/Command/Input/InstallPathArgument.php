@@ -44,6 +44,9 @@ final class InstallPathArgument extends InputArgument implements Argument
         return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function value(InputInterface $input)
     {
         $value = $input->getArgument(self::name());

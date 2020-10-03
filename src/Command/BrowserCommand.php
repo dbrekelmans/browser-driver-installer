@@ -57,9 +57,10 @@ abstract class BrowserCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->note(
-            'This command is experimental. Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues'
-        );
+        $io->note('
+            This command is experimental. 
+            Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues
+        ');
 
         $browserName = static::browserName();
 

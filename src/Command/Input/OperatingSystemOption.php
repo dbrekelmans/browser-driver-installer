@@ -59,6 +59,9 @@ final class OperatingSystemOption extends InputOption implements Option
         return OperatingSystem::fromFamily(new Family(PHP_OS_FAMILY))->getValue();
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function value(InputInterface $input)
     {
         $value = $input->getOption(self::name());

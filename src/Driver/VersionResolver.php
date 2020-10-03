@@ -17,8 +17,5 @@ interface VersionResolver
      */
     public function fromBrowser(Browser $browser) : Version;
 
-    // TODO
-//    public function latest(): Version;
-
     public function supports(Browser $browser) : bool;
 }

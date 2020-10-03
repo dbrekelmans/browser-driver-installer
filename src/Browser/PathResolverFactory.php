@@ -17,7 +17,7 @@ final class PathResolverFactory
     private array $pathResolvers = [];
 
     /**
-     * @throws NotImplemented If no path resolver is implemented for browser
+     * @throws NotImplemented If no path resolver is implemented for browser.
      */
     public function createFromName(BrowserName $browserName) : PathResolver
     {

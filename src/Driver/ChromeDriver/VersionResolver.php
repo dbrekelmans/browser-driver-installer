@@ -42,7 +42,12 @@ final class VersionResolver implements VersionResolverInterface
             );
 
             $content = $response->getContent();
-        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
+        } catch (ClientExceptionInterface
+                | RedirectionExceptionInterface
+                | ServerExceptionInterface
+                | TransportExceptionInterface
+                $exception
+        ) {
             throw new UnexpectedValueException(
                 'Something went wrong getting the driver version from the chromedriver API.',
                 0,
