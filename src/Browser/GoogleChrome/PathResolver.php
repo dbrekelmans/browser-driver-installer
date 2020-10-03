@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-
 use function Safe\sprintf;
 
 final class PathResolver implements PathResolverInterface

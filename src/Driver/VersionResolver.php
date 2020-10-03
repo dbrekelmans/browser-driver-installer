@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
-
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\Version;

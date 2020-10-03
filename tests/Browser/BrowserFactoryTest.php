@@ -24,7 +24,8 @@ final class BrowserFactoryTest extends TestCase
         self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
     }
 
-    public function testCreateFromNameOperatingSystem() : void {
+    public function testCreateFromNameOperatingSystem() : void
+    {
         $pathResolverFactory = new PathResolverFactory();
         $versionResolverFactory = new VersionResolverFactory();
 
@@ -43,7 +44,7 @@ final class BrowserFactoryTest extends TestCase
         $pathResolver = $this->createStub(PathResolver::class);
         $pathResolver->method('supports')->willReturn(true);
         $pathResolver->method('from')->willReturn('');
-        
+
         $pathResolverFactory->register($pathResolver);
 
         self::assertBrowser(

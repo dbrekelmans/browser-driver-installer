@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
 use function Safe\sprintf;
 
 final class DriverFactory

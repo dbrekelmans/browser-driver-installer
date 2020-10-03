@@ -10,12 +10,10 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
-
+use const PHP_OS_FAMILY;
 use function implode;
 use function is_string;
 use function Safe\sprintf;
-
-use const PHP_OS_FAMILY;
 
 /**
  * @implements Option<OperatingSystem>

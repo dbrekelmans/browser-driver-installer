@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
 use function get_class;
 use function Safe\sprintf;
 

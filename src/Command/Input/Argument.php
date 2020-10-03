@@ -16,6 +16,7 @@ interface Argument
 
     /**
      * @psalm-return T
+     * @return mixed
      *
      * @throws UnexpectedValueException
      */

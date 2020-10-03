@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-
 use function is_string;
 
 /**

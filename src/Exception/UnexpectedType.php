@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Exception;
 
 use Throwable;
 use UnexpectedValueException;
-
 use function get_debug_type;
 use function Safe\sprintf;
 

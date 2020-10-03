@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Exception;
 
 use LogicException;
-
 use function Safe\sprintf;
 
 /** @internal */
