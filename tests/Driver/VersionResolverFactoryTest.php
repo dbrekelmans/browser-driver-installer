@@ -2,13 +2,16 @@
 
 declare(strict_types=1);
 
-namespace DBrekelmans\BrowserDriverInstaller\Tests\Browser;
+namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver;
 
+use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
-use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver;
-use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolverFactory;
+use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolver;
+use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolverFactory;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
+use DBrekelmans\BrowserDriverInstaller\Version;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +24,13 @@ final class VersionResolverFactoryTest extends TestCase
         $factory = new VersionResolverFactory();
 
         $this->expectException(NotImplemented::class);
-        $factory->createFromName(BrowserName::GOOGLE_CHROME());
+        $factory->createFromBrowser(
+            new Browser(
+                BrowserName::GOOGLE_CHROME(),
+                Version::fromString('1.0.0'),
+                OperatingSystem::LINUX()
+            )
+        );
     }
 
     public function testRegisteredVersionResolverIsReturned() : void
@@ -32,7 +41,16 @@ final class VersionResolverFactoryTest extends TestCase
         $factory = new VersionResolverFactory();
         $factory->register($versionResolver);
 
-        self::assertSame($versionResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame(
+            $versionResolver,
+            $factory->createFromBrowser(
+                new Browser(
+                    BrowserName::GOOGLE_CHROME(),
+                    Version::fromString('1.0.0'),
+                    OperatingSystem::LINUX()
+                )
+            )
+        );
     }
 
     public function testSupportedVersionResolverIsReturned() : void
@@ -60,7 +78,16 @@ final class VersionResolverFactoryTest extends TestCase
         $factory->register($versionResolverB);
         $factory->register($versionResolverC);
 
-        self::assertSame($versionResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame(
+            $versionResolverB,
+            $factory->createFromBrowser(
+                new Browser(
+                    BrowserName::GOOGLE_CHROME(),
+                    Version::fromString('1.0.0'),
+                    OperatingSystem::LINUX()
+                )
+            )
+        );
     }
 
     public function testFirstSupportedVersionResolverIsReturned() : void
@@ -81,6 +108,15 @@ final class VersionResolverFactoryTest extends TestCase
         $factory->register($versionResolverA);
         $factory->register($versionResolverB);
 
-        self::assertSame($versionResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame(
+            $versionResolverA,
+            $factory->createFromBrowser(
+                new Browser(
+                    BrowserName::GOOGLE_CHROME(),
+                    Version::fromString('1.0.0'),
+                    OperatingSystem::LINUX()
+                )
+            )
+        );
     }
 }
