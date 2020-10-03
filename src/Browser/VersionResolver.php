@@ -17,6 +17,8 @@ interface VersionResolver
      */
     public function from(OperatingSystem $operatingSystem, string $path) : Version;
 
-    // TODO: Refactor to supports(OperatingSystem $operatingSystem).
+    /**
+     * TODO: Refactor to supports(OperatingSystem $operatingSystem).
+     */
     public function supports(BrowserName $browserName) : bool;
 }

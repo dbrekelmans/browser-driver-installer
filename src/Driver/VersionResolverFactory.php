@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
 use function get_class;
 use function Safe\sprintf;
 
@@ -16,7 +15,7 @@ final class VersionResolverFactory
     private array $versionResolvers = [];
 
     /**
-     * @throws NotImplemented If no version resolver is implemented for browser
+     * @throws NotImplemented If no version resolver is implemented for browser.
      */
     public function createFromBrowser(Browser $browser) : VersionResolver
     {

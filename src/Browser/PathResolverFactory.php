@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
 use function get_class;
 use function Safe\sprintf;
 
@@ -18,7 +17,7 @@ final class PathResolverFactory
     private array $pathResolvers = [];
 
     /**
-     * @throws NotImplemented If no path resolver is implemented for browser
+     * @throws NotImplemented If no path resolver is implemented for browser.
      */
     public function createFromName(BrowserName $browserName) : PathResolver
     {

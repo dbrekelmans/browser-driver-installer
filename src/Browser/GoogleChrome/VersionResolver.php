@@ -12,7 +12,6 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface

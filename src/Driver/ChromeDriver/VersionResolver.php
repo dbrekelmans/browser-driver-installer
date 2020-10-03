@@ -16,7 +16,6 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -43,7 +42,12 @@ final class VersionResolver implements VersionResolverInterface
             );
 
             $content = $response->getContent();
-        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
+        } catch (ClientExceptionInterface
+                | RedirectionExceptionInterface
+                | ServerExceptionInterface
+                | TransportExceptionInterface
+                $exception
+        ) {
             throw new UnexpectedValueException(
                 'Something went wrong getting the driver version from the chromedriver API.',
                 0,

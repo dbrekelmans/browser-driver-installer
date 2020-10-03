@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller;
 
 use InvalidArgumentException;
 use Safe\Exceptions\PcreException;
-
 use function implode;
 use function Safe\preg_match;
 use function Safe\sprintf;
@@ -34,11 +33,11 @@ final class Version
     public static function fromString(string $versionString) : self
     {
         try {
-            if (0 === preg_match(
-                    "/(?'major'\d+)\.(?'minor'\d+)\.(?'patch'\d+)(\.(?'build'\d+))?/",
-                    $versionString,
-                    $matches
-                )) {
+            if (preg_match(
+                "/(?'major'\d+)\.(?'minor'\d+)\.(?'patch'\d+)(\.(?'build'\d+))?/",
+                $versionString,
+                $matches
+            ) === 0) {
                 throw new InvalidArgumentException(
                     sprintf('Could not parse version string "%s".', $versionString)
                 );
@@ -51,14 +50,16 @@ final class Version
             }
 
             return new self(
-                (string)$matches['major'],
-                (string)$matches['minor'],
-                (string)$matches['patch'],
-                isset($matches['build']) ? (string)$matches['build'] : null
+                (string) $matches['major'],
+                (string) $matches['minor'],
+                (string) $matches['patch'],
+                isset($matches['build']) ? (string) $matches['build'] : null
             );
         } catch (PcreException $exception) {
             throw new InvalidArgumentException(
-                sprintf('Could not parse version string "%s".', $versionString), 0, $exception
+                sprintf('Could not parse version string "%s".', $versionString),
+                0,
+                $exception
             );
         }
     }

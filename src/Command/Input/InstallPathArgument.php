@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-
 use function is_string;
 
 /**
@@ -45,6 +44,9 @@ final class InstallPathArgument extends InputArgument implements Argument
         return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function value(InputInterface $input)
     {
         $value = $input->getArgument(self::name());
