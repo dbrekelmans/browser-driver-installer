@@ -6,6 +6,8 @@
 >
     <rule ref="dbrekelmans"/>
 
+    <config name="ignore_warnings_on_exit" value="1"/>
+
     <file>src</file>
     <file>tests</file>
     <file>install.php</file>
