@@ -11,7 +11,7 @@ trait UniqueClassName
     private static int $uniqueClassNameCounter = 0;
 
     /**
-     * @psalm-param class-name $className
+     * @psalm-param class-string $className
      */
     private static function uniqueClassName(string $className) : string
     {
