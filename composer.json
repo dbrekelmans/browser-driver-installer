@@ -1,5 +1,5 @@
 {
-    "name": "dbrkelmans/browser-driver-installer",
+    "name": "dbrekelmans/browser-driver-installer",
     "description": "Helps you install the appropriate browser driver.",
     "homepage": "https://github.com/dbrekelmans/browser-driver-installer",
     "authors": [
@@ -23,6 +23,9 @@
         "browser"
     ],
     "license": "MIT",
+    "bin": [
+        ".dist/bdi.phar"
+    ],
     "require": {
         "php": "^7.4",
         "ext-zip": "*",
@@ -35,14 +38,13 @@
         "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
-        "dbrekelmans/coding-standard": "^1.1",
+        "dbrekelmans/coding-standard": "^1.2",
         "phpstan/phpstan": "^0.12.36",
         "phpstan/phpstan-phpunit": "^0.12.16",
         "phpstan/phpstan-strict-rules": "^0.12.5",
         "phpunit/phpunit": "^9.3",
         "psalm/plugin-phpunit": "^0.12.1",
         "roave/security-advisories": "dev-master",
-        "symfony/var-dumper": "^5.1",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
         "thecodingmachine/phpstan-strict-rules": "^0.12.0",
         "vimeo/psalm": "^3.13"
