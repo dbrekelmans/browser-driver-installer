@@ -35,7 +35,7 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Sign PHAR
-        run: gpg -u "$GPG_ID" --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
+        run: gpg -u "$GPG_ID" --detach-sign --no-tty --output .dist/bdi.phar.asc .dist/bdi.phar
         env:
           GPG_ID: ${{ secrets.GPG_ID }}
       - uses: EndBug/add-and-commit@v5
