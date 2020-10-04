@@ -30,13 +30,15 @@ jobs:
       - run: composer install --no-interaction --no-dev --optimize-autoloader
       - run: phive install --force-accept-unsigned
       - run: .phive/tools/box compile
-      - run: |
+      - name: Configure GPG signing key
+        run: |
           mkdir -p ~/.gnupg/
-          printf "$GPG_SIGNING_KEY" > ~/.gnupg/private.key
+          echo "$GPG_SIGNING_KEY" > ~/.gnupg/private.key
           gpg --import ~/.gnupg/private.key
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
-      - run: gpg -u "$GPG_ID" --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
+      - name: Sign PHAR
+        run: gpg -u "$GPG_ID" --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
         env:
           GPG_ID: ${{ secrets.GPG_ID }}
       - uses: EndBug/add-and-commit@v5
