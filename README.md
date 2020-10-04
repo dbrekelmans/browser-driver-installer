@@ -6,11 +6,14 @@ A common use-case is to install a browser driver to run your functional test sui
 TODO
 
 ## Installation
+### Phive
+TODO
+
 ### Composer
 `composer require --dev dbrekelmans/browser-driver-installer`
 
-### Phive
-TODO
+### Download PHAR
+You can download the PHAR directly from the github [releases page](https://github.com/dbrekelmans/browser-driver-installer/releases).
 
 ## Usage
 If you want to install a specific browser driver, you can use `vendor/bin/bdi.phar driver:<driver-name>`.

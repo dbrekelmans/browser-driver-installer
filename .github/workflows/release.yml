@@ -1,0 +1,23 @@
+name: Attach PHAR to release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: bruceadams/get-release@v1
+          id: get_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.get_release.outputs.upload_url }}
+            asset_path: ./.dist/bdi.phar
+            asset_name: bdi.phar
+            asset_content_type: application/octet-stream
