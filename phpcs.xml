@@ -10,5 +10,5 @@
 
     <file>src</file>
     <file>tests</file>
-    <file>install.php</file>
+    <file>bdi.php</file>
 </ruleset>

@@ -1,9 +1,9 @@
 {
-    "main": "install.php",
-    "output" : ".build/bdi.phar",
+    "main": "bdi.php",
+    "output" : ".dist/bdi.phar",
     "chmod": "0755",
     "files": [
-        "install.php"
+        "bdi.php"
     ],
     "directories": [
         "src",
