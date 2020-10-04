@@ -1,7 +1,6 @@
 {
     "main": "bdi.php",
     "output" : ".dist/bdi.phar",
-    "chmod": "0755",
     "files": [
         "bdi.php"
     ],
