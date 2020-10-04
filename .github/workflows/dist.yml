@@ -31,7 +31,7 @@ jobs:
       - run: phive install --force-accept-unsigned
       - run: .phive/tools/box compile
       - name: Configure GPG signing key
-        run: echo "$GPG_SIGNING_KEY" | gpg --import --no-tty --batch --yes
+        run: echo "$GPG_SIGNING_KEY" | base64 --decode | gpg --import --no-tty --batch --yes
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Sign PHAR
