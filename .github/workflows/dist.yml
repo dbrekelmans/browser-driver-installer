@@ -27,7 +27,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install --no-interaction --no-dev --optimize-autoloader
-      - run: phive install
+      - run: phive install --force-accept-unsigned
       - run: .phive/tools/box compile
       - uses: EndBug/add-and-commit@v5
         with:
