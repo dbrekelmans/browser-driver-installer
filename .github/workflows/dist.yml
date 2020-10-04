@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - gpg-sign-phar
     paths-ignore:
       - ".dist/**"
 
