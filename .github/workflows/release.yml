@@ -37,7 +37,7 @@ jobs:
         env:
           GPG_ID: ${{ secrets.GPG_ID }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      - uses: bruceadams/get-release@v1
+      - uses: bruceadams/get-release@v1.2.1
         id: get_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
