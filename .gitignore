@@ -1,3 +1,4 @@
 /vendor/
+/.dist/
 /.phive/tools/
 .phpunit.result.cache

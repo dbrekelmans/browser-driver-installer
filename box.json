@@ -1,8 +1,8 @@
 {
-    "main": "bdi.php",
+    "main": "bdi",
     "output" : ".dist/bdi.phar",
     "files": [
-        "bdi.php"
+        "bdi"
     ],
     "directories": [
         "src",

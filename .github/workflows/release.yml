@@ -1,23 +1,57 @@
-name: Attach PHAR to release
+name: Attach release assets
 
 on:
   release:
     types: [created]
 
 jobs:
-  artifact:
+  build-and-upload-assets:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v2
-        - uses: bruceadams/get-release@v1
-          id: get_release
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        - uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.get_release.outputs.upload_url }}
-            asset_path: ./.dist/bdi.phar
-            asset_name: bdi.phar
-            asset_content_type: application/octet-stream
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          extensions: zip
+          coverage: none
+          tools: phive
+      - id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - run: composer install --no-interaction --no-dev --optimize-autoloader
+      - run: phive install --force-accept-unsigned
+      - run: .phive/tools/box compile
+      - name: Configure GPG signing key
+        run: echo "$GPG_SIGNING_KEY" | base64 --decode | gpg --import --no-tty --batch --yes
+        env:
+          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
+      - name: Sign PHAR
+        run: gpg --command-fd 0 --pinentry-mode loopback -u "$GPG_ID" --batch --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
+        env:
+          GPG_ID: ${{ secrets.GPG_ID }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - uses: bruceadams/get-release@v1
+        id: get_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: .dist/bdi.phar
+          asset_name: bdi.phar
+          asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: .dist/bdi.asc
+          asset_name: bdi.asc
+          asset_content_type: application/octet-stream

@@ -104,4 +104,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install --no-interaction --no-dev --optimize-autoloader
-      - run: php bdi.php browser:google-chrome . -vvv
+      - run: php bdi browser:google-chrome . -vvv

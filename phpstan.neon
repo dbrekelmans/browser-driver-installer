@@ -3,7 +3,7 @@ parameters:
 	paths:
 		- src
 		- tests
-		- bdi.php
+		- bdi
 
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon

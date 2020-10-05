@@ -24,7 +24,7 @@
     ],
     "license": "MIT",
     "bin": [
-        ".dist/bdi.phar"
+        "bdi"
     ],
     "require": {
         "php": "^7.4",

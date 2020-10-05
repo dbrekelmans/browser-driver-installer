@@ -9,7 +9,7 @@
     <projectFiles>
         <directory name="src"/>
         <directory name="tests"/>
-        <file name="bdi.php"/>
+        <file name="bdi"/>
         <ignoreFiles>
             <directory name="vendor"/>
         </ignoreFiles>
