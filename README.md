@@ -3,26 +3,38 @@ This command-line tool helps you install browser drivers.
 A common use-case is to install a browser driver to run your functional test suite.
 
 ## Why
-TODO
+While running automated testing tools in CI, you might currently install the latest version of your browser and
+browser driver. These can become out-of-sync (for example: a new driver is released, but the matching browser is only released
+a few days later).
+
+This tool installs a driver for you that will always work with your installed browser.
 
 ## Installation
 ### Phive
-`phive install dbrekelmans/browser-driver-installer`
+Install with `phive install bdi` or `phive install dbrekelmans/browser-driver-installer`.
+
+Run with `tools/bdi <command>`.
+
+_See https://github.com/phar-io/phive for information about phive itself._ 
 
 ### Composer
-`composer require --dev dbrekelmans/browser-driver-installer`
+Install with `composer require --dev dbrekelmans/browser-driver-installer`.
+
+Run with `vendor/bin/bdi <command>`
 
 ### Download PHAR
 You can download the PHAR directly from the github [releases page](https://github.com/dbrekelmans/browser-driver-installer/releases).
 
-## Usage
-If you want to install a specific browser driver, you can use `vendor/bin/bdi driver:<driver-name>`.
-If you're not sure which driver you need, you can specify your browser, and the correct driver will automatically be installed `vendor/bin/bdi browser:<browser-name>`.
+Run with `bdi.phar <command>`.
 
-For a full list of available commands, run `vendor/bin/bdi list`.
+## Usage
+If you want to install a specific browser driver, you can use `bdi driver:<driver-name>`.
+If you're not sure which driver you need, you can specify your browser, and the correct driver will automatically be installed `bdi browser:<browser-name>`.
+
+For a full list of available commands, run `bdi list`.
 
 ### Supported drivers
-* chromedriver (experimental)
+* chromedriver
 
 ### Supported browsers
-* Google chrome (chromedriver) `vendor/bin/bdi browser:google-chrome`
+* google-chrome
