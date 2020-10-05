@@ -35,7 +35,7 @@ jobs:
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Sign PHAR
-        run: echo "$GPG_PASSPHRASE" | gpg -u "$GPG_ID" --detach-sign --no-tty --batch --yes --output .dist/bdi.phar.asc .dist/bdi.phar
+        run: gpg --command-fd 0 --pinentry-mode loopback -u "$GPG_ID" --batch --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
         env:
           GPG_ID: ${{ secrets.GPG_ID }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
