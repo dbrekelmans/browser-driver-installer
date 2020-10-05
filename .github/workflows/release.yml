@@ -26,6 +26,8 @@ jobs:
       - run: composer install --no-interaction --no-dev --optimize-autoloader
       - run: phive install --force-accept-unsigned
       - run: .phive/tools/box compile
+      - name: Smoke test PHAR
+        run: .dist/bdi.phar
       - name: Configure GPG signing key
         run: echo "$GPG_SIGNING_KEY" | base64 --decode | gpg --import --no-tty --batch --yes
         env:
