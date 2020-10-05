@@ -2,9 +2,6 @@
 
 *.php diff=php
 
-# Binaries
-/.dist/** binary
-
 # Directories
 /.github export-ignore
 /.phive export-ignore
