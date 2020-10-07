@@ -1,6 +1,7 @@
 {
     "main": "bdi",
-    "output" : ".dist/bdi.phar",
+    "output": ".dist/bdi.phar",
+    "alias": "bdi.phar",
     "files": [
         "bdi"
     ],
