@@ -48,6 +48,14 @@ jobs:
           asset_path: .dist/bdi.phar
           asset_name: bdi.phar
           asset_content_type: application/octet-stream
+      - uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.get_release.outputs.upload_url }}
+            asset_path: .dist/bdi.phar.asc
+            asset_name: bdi.phar.asc
+            asset_content_type: application/octet-stream
       - uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.PAT }}
