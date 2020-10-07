@@ -2,7 +2,7 @@ name: Attach release assets
 
 on:
   release:
-    types: [created]
+    types: [ published ]
 
 jobs:
   build-and-upload-assets:
@@ -36,8 +36,7 @@ jobs:
         run: gpg --command-fd 0 --pinentry-mode loopback -u "$GPG_ID" --batch --detach-sign --output .dist/bdi.phar.asc .dist/bdi.phar
         env:
           GPG_ID: ${{ secrets.GPG_ID }}
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      - uses: bruceadams/get-release@v1.2.1
+      - uses: bruceadams/get-release@v1.2.2
         id: get_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,11 +48,9 @@ jobs:
           asset_path: .dist/bdi.phar
           asset_name: bdi.phar
           asset_content_type: application/octet-stream
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: peter-evans/repository-dispatch@v1
         with:
-          upload_url: ${{ steps.get_release.outputs.upload_url }}
-          asset_path: .dist/bdi.phar.asc
-          asset_name: bdi.phar.asc
-          asset_content_type: application/octet-stream
+          token: ${{ secrets.PAT }}
+          repository: dbrekelmans/bdi
+          event-type: release
+          client-payload: '{"tag_name": "${{ steps.get_release.outputs.tag_name }}", "release_name": "${{ steps.get_release.outputs.name }}", "prerelease": "${{ steps.get_release.outputs.prerelease }}", "body": "${{ steps.get_release.outputs.body }}"}'

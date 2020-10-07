@@ -18,9 +18,11 @@ Run with `tools/bdi <command>`.
 _See https://github.com/phar-io/phive for information about phive itself._ 
 
 ### Composer
-Install with `composer require --dev dbrekelmans/browser-driver-installer`.
+Install with `composer require --dev dbrekelmans/bdi`.
 
-Run with `vendor/bin/bdi <command>`
+Run with `vendor/bin/bdi <command>` or `vendor/bin/bdi.phar <command>`
+
+_To prevent dependency conflicts, `dbrekelmans/bdi` is a PHAR-only distribution. You can install the package including dependencies with `composer require --dev dbrekelmans/browser-driver-installer`_
 
 ### Download PHAR
 You can download the PHAR directly from the github [releases page](https://github.com/dbrekelmans/browser-driver-installer/releases).
