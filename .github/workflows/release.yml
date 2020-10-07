@@ -61,4 +61,4 @@ jobs:
           token: ${{ secrets.PAT }}
           repository: dbrekelmans/bdi
           event-type: release
-          client-payload: '{"tag_name": "${{ steps.get_release.outputs.tag_name }}", "release_name": "${{ steps.get_release.outputs.name }}", "prerelease": "${{ steps.get_release.outputs.prerelease }}", "body": "${{ steps.get_release.outputs.body }}"}'
+          client-payload: '{"tag_name": "${{ steps.get_release.outputs.tag_name }}", "release_name": "${{ steps.get_release.outputs.name }}", "prerelease": "${{ steps.get_release.outputs.prerelease }}"}'
