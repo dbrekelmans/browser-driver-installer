@@ -68,10 +68,8 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest() : Version
     {
-        //https://chromedriver.storage.googleapis.com/LATEST_RELEASE
-
-        $response = $this->httpClient->request('GET', 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE');
-        $versionString = $response->getContent(true);
+        $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
+        $versionString = $response->getContent();
 
         return Version::fromString($versionString);
     }
