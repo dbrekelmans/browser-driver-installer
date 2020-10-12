@@ -39,7 +39,7 @@ final class PathResolver implements PathResolverInterface
             try {
                 $process->mustRun();
             } catch (ProcessFailedException $exception) {
-                new RuntimeException(
+                throw new RuntimeException(
                     sprintf('Path could not be determined.'),
                     0,
                     $exception

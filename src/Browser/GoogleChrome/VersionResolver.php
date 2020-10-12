@@ -48,7 +48,7 @@ final class VersionResolver implements VersionResolverInterface
         $process->run();
 
         if (!$process->isSuccessful()) {
-            new RuntimeException(
+            throw new RuntimeException(
                 sprintf('Version could not be determined.'),
                 0,
                 new ProcessFailedException($process)
