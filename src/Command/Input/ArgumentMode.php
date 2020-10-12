@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use MyCLabs\Enum\Enum;
 
 /**
- * @method static self NONE()
  * @method static self REQUIRED()
  * @method static self OPTIONAL()
  * @method static self IS_ARRAY()

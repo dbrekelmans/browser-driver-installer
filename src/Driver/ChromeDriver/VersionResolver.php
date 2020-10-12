@@ -66,6 +66,16 @@ final class VersionResolver implements VersionResolverInterface
         }
     }
 
+    public function latest() : Version
+    {
+        //https://chromedriver.storage.googleapis.com/LATEST_RELEASE
+
+        $response = $this->httpClient->request('GET', 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE');
+        $versionString = $response->getContent(true);
+
+        return Version::fromString($versionString);
+    }
+
     public function supports(Browser $browser) : bool
     {
         // TODO: Maybe also chromium? Have to test if API works the same.
