@@ -30,7 +30,7 @@ final class VersionResolver implements VersionResolverInterface
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
             return $this->getVersionFromCommandLine(
-                sprintf('wmic datafile where name="%s" get Version /value', $path)
+                sprintf('(Get-Item "%s").VersionInfo.ProductVersion', $path)
             );
         }
 
