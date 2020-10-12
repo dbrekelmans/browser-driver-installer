@@ -12,6 +12,9 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
+
+use function addslashes;
+use function Safe\preg_replace;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -29,9 +32,19 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return $this->getVersionFromCommandLine(
-                sprintf('(Get-Item "%s").VersionInfo.ProductVersion', $path)
-            );
+            $process = Process::fromShellCommandline(sprintf('wmic datafile where name="%s" get Version /value', addslashes($path)));
+
+            try {
+                $process->mustRun();
+            } catch (ProcessFailedException $exception) {
+                throw new RuntimeException(
+                    sprintf('Version could not be determined.'),
+                    0,
+                    $exception
+                );
+            }
+
+            return Version::fromString(preg_replace("/[^\d\.]/", '', $process->getOutput()));
         }
 
         throw NotImplemented::feature(

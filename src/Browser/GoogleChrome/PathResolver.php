@@ -13,6 +13,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 use function Safe\sprintf;
+use function str_replace;
 
 final class PathResolver implements PathResolverInterface
 {
@@ -46,7 +47,7 @@ final class PathResolver implements PathResolverInterface
                 );
             }
 
-            return $process->getOutput();
+            return str_replace('"', '', $process->getOutput());
         }
 
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
