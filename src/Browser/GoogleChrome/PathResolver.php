@@ -45,6 +45,8 @@ final class PathResolver implements PathResolverInterface
                     $exception
                 );
             }
+
+            return $process->getOutput();
         }
 
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
