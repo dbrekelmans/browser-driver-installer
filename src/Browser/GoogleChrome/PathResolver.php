@@ -33,7 +33,7 @@ final class PathResolver implements PathResolverInterface
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
             $process = Process::fromShellCommandline(
-                '(Get-ItemProperty "Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Update").LastInstallerSuccessLaunchCmdLine'
+                'for /f "tokens=2*" %a in (\'reg query "HKEY_CURRENT_USER\SOFTWARE\Google\Update" /v LastInstallerSuccessLaunchCmdLine\') do @echo %b'
             );
 
             try {
