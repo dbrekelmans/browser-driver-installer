@@ -8,6 +8,9 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use RuntimeException;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 use function Safe\sprintf;
 
@@ -29,8 +32,19 @@ final class PathResolver implements PathResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            // TODO: check if file exists
-            return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
+            $process = Process::fromShellCommandline(
+                '(Get-ItemProperty "Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Update").LastInstallerSuccessLaunchCmdLine'
+            );
+
+            try {
+                $process->mustRun();
+            } catch (ProcessFailedException $exception) {
+                new RuntimeException(
+                    sprintf('Path could not be determined.'),
+                    0,
+                    $exception
+                );
+            }
         }
 
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
