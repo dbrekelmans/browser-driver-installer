@@ -16,6 +16,6 @@ use MyCLabs\Enum\Enum;
  */
 final class DriverName extends Enum
 {
-    public const CHROME = 'chrome driver';
-    public const GECKO = 'gecko driver';
+    public const CHROME = 'chromedriver';
+    public const GECKO = 'geckodriver';
 }

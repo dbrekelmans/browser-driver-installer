@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
-use DBrekelmans\BrowserDriverInstaller\Command\GoogleChromeCommand;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 use Symfony\Component\Console\Application;
@@ -27,7 +26,8 @@ $browserVersionResolverFactory = new Browser\VersionResolverFactory();
 $browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
-$driverVersionResolverFactory->register(new ChromeDriver\VersionResolver($httpClient));
+$chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
+$driverVersionResolverFactory->register($chromeDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
@@ -35,8 +35,7 @@ $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $htt
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 
-$application->add(
-    new GoogleChromeCommand($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory)
-);
+$application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
+$application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
 
 $application->run();

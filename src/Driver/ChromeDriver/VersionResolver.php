@@ -66,6 +66,14 @@ final class VersionResolver implements VersionResolverInterface
         }
     }
 
+    public function latest() : Version
+    {
+        $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
+        $versionString = $response->getContent();
+
+        return Version::fromString($versionString);
+    }
+
     public function supports(Browser $browser) : bool
     {
         // TODO: Maybe also chromium? Have to test if API works the same.
