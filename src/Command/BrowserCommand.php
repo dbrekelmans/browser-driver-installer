@@ -57,10 +57,6 @@ abstract class BrowserCommand extends Command
     final protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
-        $io->note('
-            This command is experimental. 
-            Please report any issues to https://github.com/dbrekelmans/browser-driver-installer/issues
-        ');
 
         $browserName = static::browserName();
 
@@ -94,7 +90,7 @@ abstract class BrowserCommand extends Command
         $filePath = $driverDownloader->download($driver, $installPath);
 
         $io->success(
-            sprintf('Chrome driver %s installed to %s', $driver->version()->toBuildString(), $filePath)
+            sprintf('%s %s installed to %s', $driver->name()->getValue(), $driver->version()->toBuildString(), $filePath)
         );
 
         return self::SUCCESS;
