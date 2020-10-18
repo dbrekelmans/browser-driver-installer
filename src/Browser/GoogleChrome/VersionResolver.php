@@ -71,7 +71,7 @@ final class VersionResolver implements VersionResolverInterface
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 
-    public function setProcess(string $command, Process $process)
+    public function setProcess(string $command, Process $process): void
     {
         $this->processes[$command] = $process;
     }

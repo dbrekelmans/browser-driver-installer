@@ -68,7 +68,7 @@ class VersionResolverTest extends TestCase
     }
 
     /**
-     * @return MockObject|Process
+     * @return MockObject&Process
      */
     private function getSuccessfulProcessMock(): Process
     {
