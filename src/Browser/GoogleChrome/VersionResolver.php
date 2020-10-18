@@ -14,9 +14,6 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use function Safe\sprintf;
 
-/**
- * @phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment
- */
 final class VersionResolver implements VersionResolverInterface
 {
     /** @var Process[] */
@@ -64,11 +61,6 @@ final class VersionResolver implements VersionResolverInterface
         return Version::fromString($process->getOutput());
     }
 
-    /**
-     * @param string $command
-     *
-     * @return Process<string>
-     */
     private function getProcess(string $command) : Process
     {
         return $this->processes[$command] ?? Process::fromShellCommandline($command);
@@ -79,10 +71,6 @@ final class VersionResolver implements VersionResolverInterface
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 
-    /**
-     * @param string $command
-     * @param Process<string> $process
-     */
     public function setProcess(string $command, Process $process) : void
     {
         $this->processes[$command] = $process;

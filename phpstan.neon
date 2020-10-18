@@ -4,6 +4,13 @@ parameters:
 		- src
 		- tests
 		- bdi
+	ignoreErrors:
+		-
+			message: '#Method .* return type has no value type specified in iterable type .*.#'
+			path: tests/Browser/GoogleChrome/VersionResolverTest.php
+		-
+			message: '#.* no value type specified in iterable type .*.#'
+			path: src/Browser/GoogleChrome/VersionResolver.php
 
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon
