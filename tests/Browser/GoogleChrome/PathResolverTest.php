@@ -11,23 +11,27 @@ use PHPUnit\Framework\TestCase;
 
 final class PathResolverTest extends TestCase
 {
-    public function testFromKnownOs()
+    private PathResolver $pathResolver;
+
+    protected function setUp(): void
     {
-        $pathResolver = new PathResolver();
-        $this->assertEquals('google-chrome', $pathResolver->from(OperatingSystem::LINUX()));
-        $this->assertEquals('/Applications/Google\ Chrome.app', $pathResolver->from(OperatingSystem::MACOS()));
-        $this->assertEquals('C:\Program Files (x86)\Google\Chrome\Application\chrome.exe', $pathResolver->from(OperatingSystem::WINDOWS()));
+        $this->pathResolver = new PathResolver();
     }
 
-    public function testSupportChrome()
+    public function testFromKnownOs(): void
     {
-        $pathResolver = new PathResolver();
-        $this->assertTrue($pathResolver->supports(BrowserName::GOOGLE_CHROME()));
+        $this->assertEquals('google-chrome', $this->pathResolver->from(OperatingSystem::LINUX()));
+        $this->assertEquals('/Applications/Google\ Chrome.app', $this->pathResolver->from(OperatingSystem::MACOS()));
+        $this->assertEquals('C:\Program Files (x86)\Google\Chrome\Application\chrome.exe', $this->pathResolver->from(OperatingSystem::WINDOWS()));
     }
 
-    public function testDoesNotSupportFirefox()
+    public function testSupportChrome(): void
     {
-        $pathResolver = new PathResolver();
-        $this->assertFalse($pathResolver->supports(BrowserName::FIREFOX()));
+        $this->assertTrue($this->pathResolver->supports(BrowserName::GOOGLE_CHROME()));
+    }
+
+    public function testDoesNotSupportFirefox(): void
+    {
+        $this->assertFalse($this->pathResolver->supports(BrowserName::FIREFOX()));
     }
 }

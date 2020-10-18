@@ -16,6 +16,9 @@ use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
+    /** @var Process[] */
+    private array $processes = [];
+
     public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
@@ -44,12 +47,12 @@ final class VersionResolver implements VersionResolverInterface
 
     private function getVersionFromCommandLine(string $command) : Version
     {
-        $process = Process::fromShellCommandline($command);
+        $process = $this->getProcess($command);
         $process->run();
 
         if (!$process->isSuccessful()) {
             new RuntimeException(
-                sprintf('Version could not be determined.'),
+                'Version could not be determined.',
                 0,
                 new ProcessFailedException($process)
             );
@@ -58,8 +61,18 @@ final class VersionResolver implements VersionResolverInterface
         return Version::fromString($process->getOutput());
     }
 
+    private function getProcess(string $command) : Process
+    {
+        return $this->processes[$command] ?? Process::fromShellCommandline($command);
+    }
+
     public function supports(BrowserName $browserName) : bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
+    }
+
+    public function setProcess(string $command, Process $process)
+    {
+        $this->processes[$command] = $process;
     }
 }
