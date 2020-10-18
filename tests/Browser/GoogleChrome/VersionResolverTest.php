@@ -23,19 +23,19 @@ class VersionResolverTest extends TestCase
 
     public function testSupportChrome() : void
     {
-        $this->assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
+        self::assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
     }
 
     public function testDoesNotSupportFirefox() : void
     {
-        $this->assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
+        self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
     }
 
     public function testFromLinux() : void
     {
         $this->versionResolver->setProcess('google-chrome --version', $this->getSuccessfulProcessMock());
 
-        $this->assertEquals(
+        self::assertEquals(
             Version::fromString('86.0.4240.80'),
             $this->versionResolver->from(OperatingSystem::LINUX(), 'google-chrome')
         );
@@ -48,7 +48,7 @@ class VersionResolverTest extends TestCase
             $this->getSuccessfulProcessMock()
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             Version::fromString('86.0.4240.80'),
             $this->versionResolver->from(OperatingSystem::MACOS(), '/Applications/Google\ Chrome.app')
         );
@@ -61,7 +61,7 @@ class VersionResolverTest extends TestCase
             $this->getSuccessfulProcessMock()
         );
 
-        $this->assertEquals(
+        self::assertEquals(
             Version::fromString('86.0.4240.80'),
             $this->versionResolver->from(
                 OperatingSystem::WINDOWS(),
@@ -71,15 +71,15 @@ class VersionResolverTest extends TestCase
     }
 
     /**
-     * @return MockObject&Process
+     * @return MockObject&Process<string>
      */
     private function getSuccessfulProcessMock() : Process
     {
         $processMock = $this->getMockBuilder(Process::class)->disableOriginalConstructor()->getMock();
-        $processMock->expects($this->any())
+        $processMock->expects(self::any())
             ->method('isSuccessful')
             ->willReturn(true);
-        $processMock->expects($this->any())
+        $processMock->expects(self::any())
             ->method('getOutput')
             ->willReturn('Google Chrome 86.0.4240.80');
 
