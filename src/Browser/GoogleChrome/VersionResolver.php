@@ -14,6 +14,9 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use function Safe\sprintf;
 
+/**
+ * @phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.UselessDocComment
+ */
 final class VersionResolver implements VersionResolverInterface
 {
     /** @var Process[] */
@@ -63,6 +66,7 @@ final class VersionResolver implements VersionResolverInterface
 
     /**
      * @param string $command
+     *
      * @return Process<string>
      */
     private function getProcess(string $command) : Process

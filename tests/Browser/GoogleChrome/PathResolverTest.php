@@ -22,7 +22,10 @@ final class PathResolverTest extends TestCase
     {
         self::assertEquals('google-chrome', $this->pathResolver->from(OperatingSystem::LINUX()));
         self::assertEquals('/Applications/Google\ Chrome.app', $this->pathResolver->from(OperatingSystem::MACOS()));
-        self::assertEquals('C:\Program Files (x86)\Google\Chrome\Application\chrome.exe', $this->pathResolver->from(OperatingSystem::WINDOWS()));
+        self::assertEquals(
+            'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
+            $this->pathResolver->from(OperatingSystem::WINDOWS())
+        );
     }
 
     public function testSupportChrome() : void
