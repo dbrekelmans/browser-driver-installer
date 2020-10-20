@@ -12,9 +12,7 @@ interface CommandLineEnvironment
      * Provides output of a command line if successful
      * Will throw RuntimeException if not successful
      *
-     * @param string $command
      * @throws RuntimeException
-     * @return string
      */
-    public function getCommandLineSuccessfulOutput(string $command): string;
+    public function getCommandLineSuccessfulOutput(string $command) : string;
 }

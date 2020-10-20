@@ -14,7 +14,7 @@ class ShellCommandLineEnvironment implements CommandLineEnvironment
     /**
      * @inheritDoc
      */
-    public function getCommandLineSuccessfulOutput(string $command): string
+    public function getCommandLineSuccessfulOutput(string $command) : string
     {
         $process = Process::fromShellCommandline($command);
         $process->run();

@@ -52,6 +52,7 @@ final class VersionResolver implements VersionResolverInterface
     {
         try {
             $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
+
             return Version::fromString($commandOutput);
         } catch (RuntimeException $exception) {
             throw new RuntimeException(
