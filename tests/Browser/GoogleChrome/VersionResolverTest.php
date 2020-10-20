@@ -6,19 +6,22 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome\VersionResolver;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Process;
 
 class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
+    /** @var MockObject&CommandLineEnvironment */
+    private $commandLineEnvMock;
 
     protected function setUp() : void
     {
-        $this->versionResolver = new VersionResolver();
+        $this->commandLineEnvMock = $this->getMockBuilder(CommandLineEnvironment::class)->getMock();
+        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
     }
 
     public function testSupportChrome() : void
@@ -33,7 +36,7 @@ class VersionResolverTest extends TestCase
 
     public function testFromLinux() : void
     {
-        $this->versionResolver->setProcess('google-chrome --version', $this->getSuccessfulProcessMock());
+        $this->mockCommandLineCommandOutput('google-chrome --version', 'Google Chrome 86.0.4240.80');
 
         self::assertEquals(
             Version::fromString('86.0.4240.80'),
@@ -43,9 +46,9 @@ class VersionResolverTest extends TestCase
 
     public function testFromMac() : void
     {
-        $this->versionResolver->setProcess(
+        $this->mockCommandLineCommandOutput(
             '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version',
-            $this->getSuccessfulProcessMock()
+            'Google Chrome 86.0.4240.80'
         );
 
         self::assertEquals(
@@ -56,9 +59,9 @@ class VersionResolverTest extends TestCase
 
     public function testFromWindows() : void
     {
-        $this->versionResolver->setProcess(
+        $this->mockCommandLineCommandOutput(
             'wmic datafile where name="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" get Version /value',
-            $this->getSuccessfulProcessMock()
+            'Google Chrome 86.0.4240.80'
         );
 
         self::assertEquals(
@@ -70,19 +73,12 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    /**
-     * @return MockObject&Process
-     */
-    private function getSuccessfulProcessMock() : Process
+    private function mockCommandLineCommandOutput(string $command, string $output) : void
     {
-        $processMock = $this->getMockBuilder(Process::class)->disableOriginalConstructor()->getMock();
-        $processMock->expects(self::any())
-            ->method('isSuccessful')
-            ->willReturn(true);
-        $processMock->expects(self::any())
-            ->method('getOutput')
-            ->willReturn('Google Chrome 86.0.4240.80');
-
-        return $processMock;
+        $this->commandLineEnvMock
+            ->expects(self::any())
+            ->method('getCommandLineSuccessfulOutput')
+            ->with($command)
+            ->willReturn($output);
     }
 }

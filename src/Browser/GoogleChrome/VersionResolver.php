@@ -6,18 +6,21 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    /** @var Process[] */
-    private array $processes = [];
+    private CommandLineEnvironment $commandLineEnvironment;
+
+    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    {
+        $this->commandLineEnvironment = $commandLineEnvironment;
+    }
 
     public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
@@ -47,32 +50,20 @@ final class VersionResolver implements VersionResolverInterface
 
     private function getVersionFromCommandLine(string $command) : Version
     {
-        $process = $this->getProcess($command);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            new RuntimeException(
+        try {
+            $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
+            return Version::fromString($commandOutput);
+        } catch (RuntimeException $exception) {
+            throw new RuntimeException(
                 'Version could not be determined.',
                 0,
-                new ProcessFailedException($process)
+                $exception
             );
         }
-
-        return Version::fromString($process->getOutput());
-    }
-
-    private function getProcess(string $command) : Process
-    {
-        return $this->processes[$command] ?? Process::fromShellCommandline($command);
     }
 
     public function supports(BrowserName $browserName) : bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
-    }
-
-    public function setProcess(string $command, Process $process) : void
-    {
-        $this->processes[$command] = $process;
     }
 }
