@@ -6,16 +6,22 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
+    private CommandLineEnvironment $commandLineEnvironment;
+
+    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    {
+        $this->commandLineEnvironment = $commandLineEnvironment;
+    }
+
     public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
@@ -44,18 +50,17 @@ final class VersionResolver implements VersionResolverInterface
 
     private function getVersionFromCommandLine(string $command) : Version
     {
-        $process = Process::fromShellCommandline($command);
-        $process->run();
+        try {
+            $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
 
-        if (!$process->isSuccessful()) {
-            new RuntimeException(
-                sprintf('Version could not be determined.'),
+            return Version::fromString($commandOutput);
+        } catch (RuntimeException $exception) {
+            throw new RuntimeException(
+                'Version could not be determined.',
                 0,
-                new ProcessFailedException($process)
+                $exception
             );
         }
-
-        return Version::fromString($process->getOutput());
     }
 
     public function supports(BrowserName $browserName) : bool
