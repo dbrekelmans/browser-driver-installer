@@ -76,7 +76,6 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser) : bool
     {
-        // TODO: Maybe also chromium? Have to test if API works the same.
-        return $browser->name()->equals(BrowserName::GOOGLE_CHROME());
+        return $browser->name()->equals(BrowserName::GOOGLE_CHROME()) || $browser->name()->equals(BrowserName::CHROMIUM());
     }
 }

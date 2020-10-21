@@ -20,6 +20,7 @@ class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
     private Browser $chrome;
+    private Browser $chromium;
     private Browser $firefox;
     /** @var MockObject&HttpClientInterface  */
     private $httpClientMock;
@@ -30,12 +31,18 @@ class VersionResolverTest extends TestCase
         $this->versionResolver = new VersionResolver($this->httpClientMock);
 
         $this->chrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
+        $this->chromium = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
         $this->firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 
     public function testSupportChrome() : void
     {
         self::assertTrue($this->versionResolver->supports($this->chrome));
+    }
+
+    public function testSupportChromium() : void
+    {
+        self::assertTrue($this->versionResolver->supports($this->chromium));
     }
 
     public function testDoesNotSupportFirefox() : void
