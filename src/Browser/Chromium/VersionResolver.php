@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
+namespace DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
@@ -13,11 +13,11 @@ final class VersionResolver extends VersionResolverChrome implements VersionReso
 {
     protected function getMacOSCommandLineForVersion(string $path) : string
     {
-        return sprintf('%s/Contents/MacOS/Google\ Chrome --version', $path);
+        return sprintf('%s/Contents/MacOS/Chromium --version', $path);
     }
 
     public function supports(BrowserName $browserName) : bool
     {
-        return $browserName->equals(BrowserName::GOOGLE_CHROME());
+        return $browserName->equals(BrowserName::CHROMIUM());
     }
 }
