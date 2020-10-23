@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
+use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Driver;
@@ -19,12 +20,15 @@ $application = new Application();
 $httpClient = new NativeHttpClient();
 $filesystem = new Filesystem();
 $zipArchive = new ZipArchive();
+$shellCommandLineEnv = new ShellCommandLineEnvironment();
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
+$browserPathResolverFactory->register(new Chromium\PathResolver());
 
 $browserVersionResolverFactory = new Browser\VersionResolverFactory();
-$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver(new ShellCommandLineEnvironment()));
+$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver($shellCommandLineEnv));
+$browserVersionResolverFactory->register(new Chromium\VersionResolver($shellCommandLineEnv));
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
@@ -37,6 +41,7 @@ $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $brows
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 
 $application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
+$application->add(new Chromium\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
 
 $application->run();
