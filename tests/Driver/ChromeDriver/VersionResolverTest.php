@@ -10,11 +10,11 @@ use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver\VersionResolver;
 use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
+use function in_array;
 
 class VersionResolverTest extends TestCase
 {
@@ -22,13 +22,30 @@ class VersionResolverTest extends TestCase
     private Browser $chrome;
     private Browser $chromium;
     private Browser $firefox;
-    /** @var MockObject&HttpClientInterface  */
-    private $httpClientMock;
 
     public function setUp() : void
     {
-        $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
-        $this->versionResolver = new VersionResolver($this->httpClientMock);
+        $httpClientMock = new MockHttpClient(static function (string $method, string $url) : MockResponse {
+            $urlsGiving86Version = [
+                'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
+                'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86',
+                'https://chromedriver.storage.googleapis.com/LATEST_RELEASE',
+            ];
+            if ($method === 'GET') {
+                if (in_array($url, $urlsGiving86Version, true)) {
+                    return new MockResponse('86.0.4240.22');
+                }
+                if ($url === 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_87') {
+                    return new MockResponse('87.0.4280.20');
+                }
+            }
+
+            return new MockResponse(
+                '<?xml version=\'1.0\' encoding=\'UTF-8\'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Details>No such object: chromedriver/LATEST_RELEASE_xxx</Details></Error>',
+                ['http_code' => 404]
+            );
+        });
+        $this->versionResolver = new VersionResolver($httpClientMock);
 
         $this->chrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
         $this->chromium = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
@@ -58,48 +75,26 @@ class VersionResolverTest extends TestCase
 
     public function testFromGetVersionForChrome() : void
     {
-        $this->mockHttpClientResponseContent(
-            'GET',
-            'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
-            '86.0.4240.22'
-        );
-
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->fromBrowser($this->chrome));
     }
 
     public function testFromExceptionIfCanNotParseVersionReceived() : void
     {
         self::expectException(UnexpectedValueException::class);
-        $this->mockHttpClientResponseContent(
-            'GET',
-            'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
-            '<?xml version=\'1.0\' encoding=\'UTF-8\'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Details>No such object: chromedriver/LATEST_RELEASE_xxx</Details></Error>'
-        );
+        $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
 
-        $this->versionResolver->fromBrowser($this->chrome);
+        $this->versionResolver->fromBrowser($wrongChrome);
+    }
+
+    public function testFromGetBetaVersionForDevChrome() : void
+    {
+        $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4302.0'), OperatingSystem::MACOS());
+
+        self::assertEquals(Version::fromString('87.0.4280.20'), $this->versionResolver->fromBrowser($devChrome));
     }
 
     public function testLatest() : void
     {
-        $this->mockHttpClientResponseContent(
-            'GET',
-            'https://chromedriver.storage.googleapis.com/LATEST_RELEASE',
-            '86.0.4240.22'
-        );
-
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
-    }
-
-    private function mockHttpClientResponseContent(string $method, string $url, string $content) : void
-    {
-        $responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $responseMock->expects(self::any())
-            ->method('getContent')
-            ->willReturn($content);
-
-        $this->httpClientMock->expects(self::any())
-            ->method('request')
-            ->with($method, $url)
-            ->willReturn($responseMock);
     }
 }

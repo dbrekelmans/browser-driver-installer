@@ -36,12 +36,7 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         try {
-            $response = $this->httpClient->request(
-                'GET',
-                sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString())
-            );
-
-            $content = $response->getContent();
+            $content = $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
         } catch (ClientExceptionInterface
                 | RedirectionExceptionInterface
                 | ServerExceptionInterface
@@ -77,5 +72,22 @@ final class VersionResolver implements VersionResolverInterface
     public function supports(Browser $browser) : bool
     {
         return $browser->name()->equals(BrowserName::GOOGLE_CHROME()) || $browser->name()->equals(BrowserName::CHROMIUM());
+    }
+
+    /**
+     * In case of handling with Chrome from Dev or Canary channel we will then take beta ChromeDriver
+     */
+    private function getBrowserVersionEndpoint(Browser $browser) : string
+    {
+        $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
+
+        $stableVersion = $this->latest();
+        $betaVersionMajor = (int) $stableVersion->major() + 1;
+
+        if ((int) $browser->version()->major() > $betaVersionMajor) {
+            $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, (string) $betaVersionMajor);
+        }
+
+        return $versionEndpoint;
     }
 }
