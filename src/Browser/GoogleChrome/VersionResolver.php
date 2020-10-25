@@ -6,19 +6,22 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-
-use function addslashes;
-use function Safe\preg_replace;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
+    private CommandLineEnvironment $commandLineEnvironment;
+
+    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    {
+        $this->commandLineEnvironment = $commandLineEnvironment;
+    }
+
     public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
@@ -32,19 +35,9 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            $process = Process::fromShellCommandline(sprintf('wmic datafile where name="%s" get Version /value', addslashes($path)));
-
-            try {
-                $process->mustRun();
-            } catch (ProcessFailedException $exception) {
-                throw new RuntimeException(
-                    sprintf('Version could not be determined.'),
-                    0,
-                    $exception
-                );
-            }
-
-            return Version::fromString(preg_replace("/[^\d\.]/", '', $process->getOutput()));
+            return $this->getVersionFromCommandLine(
+                sprintf('wmic datafile where name="%s" get Version /value', $path)
+            );
         }
 
         throw NotImplemented::feature(
@@ -57,18 +50,17 @@ final class VersionResolver implements VersionResolverInterface
 
     private function getVersionFromCommandLine(string $command) : Version
     {
-        $process = Process::fromShellCommandline($command);
-        $process->run();
+        try {
+            $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
 
-        if (!$process->isSuccessful()) {
+            return Version::fromString($commandOutput);
+        } catch (RuntimeException $exception) {
             throw new RuntimeException(
-                sprintf('Version could not be determined.'),
+                'Version could not be determined.',
                 0,
-                new ProcessFailedException($process)
+                $exception
             );
         }
-
-        return Version::fromString($process->getOutput());
     }
 
     public function supports(BrowserName $browserName) : bool

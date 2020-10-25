@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 use Symfony\Component\Console\Application;
@@ -23,7 +24,7 @@ $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
 
 $browserVersionResolverFactory = new Browser\VersionResolverFactory();
-$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver());
+$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver(new ShellCommandLineEnvironment()));
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
