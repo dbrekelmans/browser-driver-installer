@@ -15,9 +15,9 @@ interface VersionResolver
      * @throws RuntimeException If the version could not be resolved.
      * @throws NotImplemented If the browser is not yet supported.
      */
-    public function fromBrowser(Browser $browser) : Version;
+    public function fromBrowser(Browser $browser): Version;
 
-    public function latest() : Version;
+    public function latest(): Version;
 
-    public function supports(Browser $browser) : bool;
+    public function supports(Browser $browser): bool;
 }
