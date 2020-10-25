@@ -12,6 +12,7 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
 use function addslashes;
 use function Safe\sprintf;
+use function trim;
 
 final class PathResolver implements PathResolverInterface
 {

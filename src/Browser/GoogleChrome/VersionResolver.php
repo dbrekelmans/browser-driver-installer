@@ -41,7 +41,7 @@ final class VersionResolver implements VersionResolverInterface
                 sprintf('wmic datafile where name="%s" get Version /value', $path)
             );
 
-            $sanitizedOutput = preg_replace("/[^\d\.]/", '', $output);
+            $sanitizedOutput = preg_replace('/[^\d\.]/', '', $output);
 
             return Version::fromString($sanitizedOutput);
         }
@@ -54,7 +54,7 @@ final class VersionResolver implements VersionResolverInterface
         );
     }
 
-    public function supports(BrowserName $browserName) : bool
+    public function supports(BrowserName $browserName): bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
