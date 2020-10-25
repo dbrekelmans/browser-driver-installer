@@ -6,17 +6,22 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-use RuntimeException;
-use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
+use function addslashes;
 use function Safe\sprintf;
-use function str_replace;
 
 final class PathResolver implements PathResolverInterface
 {
+    private CommandLineEnvironment $commandLineEnvironment;
+
+    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    {
+        $this->commandLineEnvironment = $commandLineEnvironment;
+    }
+
     /**
      * @throws NotImplemented
      */
@@ -33,21 +38,9 @@ final class PathResolver implements PathResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            $process = Process::fromShellCommandline(
-                'for /f "tokens=2*" %a in (\'reg query "HKEY_CURRENT_USER\SOFTWARE\Google\Update" /v LastInstallerSuccessLaunchCmdLine\') do @echo %b'
-            );
+            $localAppDataPath = $this->commandLineEnvironment->getCommandLineSuccessfulOutput('echo %LocalAppData%');
 
-            try {
-                $process->mustRun();
-            } catch (ProcessFailedException $exception) {
-                throw new RuntimeException(
-                    sprintf('Path could not be determined.'),
-                    0,
-                    $exception
-                );
-            }
-
-            return str_replace('"', '', $process->getOutput());
+            return addslashes(trim($localAppDataPath) . '\Google\Chrome\Application\chrome.exe');
         }
 
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));

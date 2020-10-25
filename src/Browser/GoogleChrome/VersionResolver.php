@@ -11,6 +11,8 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
+
+use function Safe\preg_replace;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -35,9 +37,13 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return $this->getVersionFromCommandLine(
+            $output = $this->commandLineEnvironment->getCommandLineSuccessfulOutput(
                 sprintf('wmic datafile where name="%s" get Version /value', $path)
             );
+
+            $sanitizedOutput = preg_replace("/[^\d\.]/", '', $output);
+
+            return Version::fromString($sanitizedOutput);
         }
 
         throw NotImplemented::feature(
@@ -46,6 +52,11 @@ final class VersionResolver implements VersionResolverInterface
                 $operatingSystem->getValue()
             )
         );
+    }
+
+    public function supports(BrowserName $browserName) : bool
+    {
+        return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 
     private function getVersionFromCommandLine(string $command) : Version
@@ -61,10 +72,5 @@ final class VersionResolver implements VersionResolverInterface
                 $exception
             );
         }
-    }
-
-    public function supports(BrowserName $browserName) : bool
-    {
-        return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 }

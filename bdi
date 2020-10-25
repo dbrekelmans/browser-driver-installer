@@ -19,12 +19,13 @@ $application = new Application();
 $httpClient = new NativeHttpClient();
 $filesystem = new Filesystem();
 $zipArchive = new ZipArchive();
+$shellCommandLineEnvironment = new ShellCommandLineEnvironment();
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
-$browserPathResolverFactory->register(new GoogleChrome\PathResolver());
+$browserPathResolverFactory->register(new GoogleChrome\PathResolver($shellCommandLineEnvironment));
 
 $browserVersionResolverFactory = new Browser\VersionResolverFactory();
-$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver(new ShellCommandLineEnvironment()));
+$browserVersionResolverFactory->register(new GoogleChrome\VersionResolver($shellCommandLineEnvironment));
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
