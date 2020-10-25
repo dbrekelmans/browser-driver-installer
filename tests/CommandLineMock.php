@@ -6,21 +6,20 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests;
 
 use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use RuntimeException;
+
 use function Safe\sprintf;
 
 class CommandLineMock implements CommandLineEnvironment
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $commandToOutput = [];
 
-    public function givenCommandWillReturnOutput(string $command, string $output) : void
+    public function givenCommandWillReturnOutput(string $command, string $output): void
     {
         $this->commandToOutput[$command] = $output;
     }
 
-    public function getCommandLineSuccessfulOutput(string $command) : string
+    public function getCommandLineSuccessfulOutput(string $command): string
     {
         if (!isset($this->commandToOutput[$command])) {
             throw new RuntimeException(sprintf('Command %s is not mocked.', $command));

@@ -38,7 +38,8 @@ final class VersionResolver implements VersionResolverInterface
 
         try {
             $content = $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
-        } catch (ClientExceptionInterface
+        } catch (
+            ClientExceptionInterface
                 | RedirectionExceptionInterface
                 | ServerExceptionInterface
                 | TransportExceptionInterface
@@ -78,7 +79,7 @@ final class VersionResolver implements VersionResolverInterface
     /**
      * In case of handling with Chrome from Dev or Canary channel we will then take beta ChromeDriver
      */
-    private function getBrowserVersionEndpoint(Browser $browser) : string
+    private function getBrowserVersionEndpoint(Browser $browser): string
     {
         $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
 

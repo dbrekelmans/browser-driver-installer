@@ -9,6 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
+
 use function Safe\sprintf;
 
 abstract class VersionResolverChrome implements VersionResolver
@@ -20,7 +21,7 @@ abstract class VersionResolverChrome implements VersionResolver
         $this->commandLineEnvironment = $commandLineEnvironment;
     }
 
-    public function from(OperatingSystem $operatingSystem, string $path) : Version
+    public function from(OperatingSystem $operatingSystem, string $path): Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
@@ -44,9 +45,9 @@ abstract class VersionResolverChrome implements VersionResolver
         );
     }
 
-    abstract protected function getMacOSCommandLineForVersion(string $path) : string;
+    abstract protected function getMacOSCommandLineForVersion(string $path): string;
 
-    private function getVersionFromCommandLine(string $command) : Version
+    private function getVersionFromCommandLine(string $command): Version
     {
         try {
             $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);

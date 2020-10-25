@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
+
 use function in_array;
 
 class VersionResolverTest extends TestCase
@@ -25,7 +26,7 @@ class VersionResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $httpClientMock = new MockHttpClient(static function (string $method, string $url) : MockResponse {
+        $httpClientMock = new MockHttpClient(static function (string $method, string $url): MockResponse {
             $urlsGiving86Version = [
                 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
                 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86',
@@ -35,6 +36,7 @@ class VersionResolverTest extends TestCase
                 if (in_array($url, $urlsGiving86Version, true)) {
                     return new MockResponse('86.0.4240.22');
                 }
+
                 if ($url === 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_87') {
                     return new MockResponse('87.0.4280.20');
                 }
@@ -57,7 +59,7 @@ class VersionResolverTest extends TestCase
         self::assertTrue($this->versionResolver->supports($this->chrome));
     }
 
-    public function testSupportChromium() : void
+    public function testSupportChromium(): void
     {
         self::assertTrue($this->versionResolver->supports($this->chromium));
     }
@@ -86,14 +88,14 @@ class VersionResolverTest extends TestCase
         $this->versionResolver->fromBrowser($wrongChrome);
     }
 
-    public function testFromGetBetaVersionForDevChrome() : void
+    public function testFromGetBetaVersionForDevChrome(): void
     {
         $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4302.0'), OperatingSystem::MACOS());
 
         self::assertEquals(Version::fromString('87.0.4280.20'), $this->versionResolver->fromBrowser($devChrome));
     }
 
-    public function testLatest() : void
+    public function testLatest(): void
     {
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
     }

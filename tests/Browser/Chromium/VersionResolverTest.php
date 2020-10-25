@@ -16,23 +16,23 @@ class VersionResolverTest extends TestCase
     private VersionResolver $versionResolver;
     private CommandLineMock $commandLineMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->commandLineMock = new CommandLineMock();
         $this->versionResolver = new VersionResolver($this->commandLineMock);
     }
 
-    public function testSupportChromium() : void
+    public function testSupportChromium(): void
     {
         self::assertTrue($this->versionResolver->supports(BrowserName::CHROMIUM()));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
     }
 
-    public function testFromMac() : void
+    public function testFromMac(): void
     {
         $this->commandLineMock->givenCommandWillReturnOutput(
             '/Applications/Chromium.app/Contents/MacOS/Chromium --version',
