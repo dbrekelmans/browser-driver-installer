@@ -12,14 +12,13 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
 use DBrekelmans\BrowserDriverInstaller\Version;
-use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 final class VersionResolverFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    public function testNoVersionResolverImplemented() : void
+    public function testNoVersionResolverImplemented(): void
     {
         $factory = new VersionResolverFactory();
 
@@ -33,7 +32,7 @@ final class VersionResolverFactoryTest extends TestCase
         );
     }
 
-    public function testRegisteredVersionResolverIsReturned() : void
+    public function testRegisteredVersionResolverIsReturned(): void
     {
         $versionResolver = $this->createStub(VersionResolver::class);
         $versionResolver->method('supports')->willReturn(true);
@@ -53,21 +52,18 @@ final class VersionResolverFactoryTest extends TestCase
         );
     }
 
-    public function testSupportedVersionResolverIsReturned() : void
+    public function testSupportedVersionResolverIsReturned(): void
     {
-        /** @var VersionResolver&Stub $versionResolverA */
         $versionResolverA = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverA->method('supports')->willReturn(false);
 
-        /** @var VersionResolver&Stub $versionResolverB */
         $versionResolverB = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverB->method('supports')->willReturn(true);
 
-        /** @var VersionResolver&Stub $versionResolverC */
         $versionResolverC = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
@@ -90,15 +86,13 @@ final class VersionResolverFactoryTest extends TestCase
         );
     }
 
-    public function testFirstSupportedVersionResolverIsReturned() : void
+    public function testFirstSupportedVersionResolverIsReturned(): void
     {
-        /** @var VersionResolver&Stub $versionResolverA */
         $versionResolverA = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverA->method('supports')->willReturn(true);
 
-        /** @var VersionResolver&Stub $versionResolverB */
         $versionResolverB = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();

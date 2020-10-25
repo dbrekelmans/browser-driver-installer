@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
 use function Safe\sprintf;
 
 abstract class DriverCommand extends Command
@@ -31,9 +32,9 @@ abstract class DriverCommand extends Command
         parent::__construct(sprintf('driver:%s', static::driverName()->getValue()));
     }
 
-    abstract protected static function driverName() : DriverName;
+    abstract protected static function driverName(): DriverName;
 
-    final protected function configure() : void
+    final protected function configure(): void
     {
         $this->setDescription(sprintf('Helps you install the %s.', static::driverName()->getValue()));
 
@@ -48,7 +49,7 @@ abstract class DriverCommand extends Command
         );
     }
 
-    final protected function execute(InputInterface $input, OutputInterface $output) : int
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

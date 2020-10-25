@@ -25,7 +25,7 @@ final class PathResolver implements PathResolverInterface
     /**
      * @throws NotImplemented
      */
-    public function from(OperatingSystem $operatingSystem) : string
+    public function from(OperatingSystem $operatingSystem): string
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             // TODO: command -v google-chrome
@@ -46,7 +46,7 @@ final class PathResolver implements PathResolverInterface
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
     }
 
-    public function supports(BrowserName $browserName) : bool
+    public function supports(BrowserName $browserName): bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }

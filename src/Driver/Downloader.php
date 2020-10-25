@@ -11,7 +11,7 @@ interface Downloader
     /**
      * @throws RuntimeException
      */
-    public function download(Driver $driver, string $location) : string;
+    public function download(Driver $driver, string $location): string;
 
-    public function supports(Driver $driver) : bool;
+    public function supports(Driver $driver): bool;
 }

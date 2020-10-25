@@ -13,7 +13,7 @@ class OperatingSystemTest extends TestCase
     /**
      * @dataProvider fromFamilyDataProvider
      */
-    public function testFromFamily(OperatingSystem $expected, Family $family) : void
+    public function testFromFamily(OperatingSystem $expected, Family $family): void
     {
         self::assertTrue($expected->equals(OperatingSystem::fromFamily($family)));
     }
@@ -22,7 +22,7 @@ class OperatingSystemTest extends TestCase
      * @psalm-return array<string, array{OperatingSystem, Family}>
      * @return array<string, array<mixed>>
      */
-    public function fromFamilyDataProvider() : array
+    public function fromFamilyDataProvider(): array
     {
         return [
             'windows' => [OperatingSystem::WINDOWS(), Family::WINDOWS()],
