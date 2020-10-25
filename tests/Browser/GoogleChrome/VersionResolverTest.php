@@ -6,20 +6,22 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests\Browser\GoogleChrome;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome\VersionResolver;
+use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-use DBrekelmans\BrowserDriverInstaller\Tests\CommandLineMock;
 use DBrekelmans\BrowserDriverInstaller\Version;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
-    private CommandLineMock $commandLineMock;
+    /** @var MockObject&CommandLineEnvironment */
+    private $commandLineEnvMock;
 
     protected function setUp(): void
     {
-        $this->commandLineMock = new CommandLineMock();
-        $this->versionResolver = new VersionResolver($this->commandLineMock);
+        $this->commandLineEnvMock = $this->getMockBuilder(CommandLineEnvironment::class)->getMock();
+        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
     }
 
     public function testSupportChrome(): void
@@ -34,7 +36,7 @@ class VersionResolverTest extends TestCase
 
     public function testFromLinux(): void
     {
-        $this->commandLineMock->givenCommandWillReturnOutput('google-chrome --version', 'Google Chrome 86.0.4240.80');
+        $this->mockCommandLineCommandOutput('google-chrome --version', 'Google Chrome 86.0.4240.80');
 
         self::assertEquals(
             Version::fromString('86.0.4240.80'),
@@ -44,7 +46,7 @@ class VersionResolverTest extends TestCase
 
     public function testFromMac(): void
     {
-        $this->commandLineMock->givenCommandWillReturnOutput(
+        $this->mockCommandLineCommandOutput(
             '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version',
             'Google Chrome 86.0.4240.80'
         );
@@ -57,7 +59,7 @@ class VersionResolverTest extends TestCase
 
     public function testFromWindows(): void
     {
-        $this->commandLineMock->givenCommandWillReturnOutput(
+        $this->mockCommandLineCommandOutput(
             'wmic datafile where name="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" get Version /value',
             'Google Chrome 86.0.4240.80'
         );
@@ -69,5 +71,13 @@ class VersionResolverTest extends TestCase
                 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
             )
         );
+    }
+
+    private function mockCommandLineCommandOutput(string $command, string $output): void
+    {
+        $this->commandLineEnvMock
+            ->method('getCommandLineSuccessfulOutput')
+            ->with($command)
+            ->willReturn($output);
     }
 }
