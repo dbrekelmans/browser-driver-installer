@@ -17,12 +17,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 use ZipArchive;
-use const DIRECTORY_SEPARATOR;
+
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
 use function sys_get_temp_dir;
+
+use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
@@ -42,7 +44,7 @@ final class Downloader implements DownloaderInterface
         $this->zip = $zip;
     }
 
-    public function supports(Driver $driver) : bool
+    public function supports(Driver $driver): bool
     {
         return $driver->name()->equals(DriverName::CHROME());
     }
@@ -50,7 +52,7 @@ final class Downloader implements DownloaderInterface
     /**
      * @throws RuntimeException
      */
-    public function download(Driver $driver, string $location) : string
+    public function download(Driver $driver, string $location): string
     {
         try {
             $archive = $this->downloadArchive($driver);
@@ -100,7 +102,7 @@ final class Downloader implements DownloaderInterface
      * @throws FilesystemException
      * @throws IOException
      */
-    private function downloadArchive(Driver $driver) : string
+    private function downloadArchive(Driver $driver): string
     {
         $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'chromedriver', '.zip');
 
@@ -132,7 +134,7 @@ final class Downloader implements DownloaderInterface
     /**
      * @throws NotImplemented
      */
-    private function getBinaryName(Driver $driver) : string
+    private function getBinaryName(Driver $driver): string
     {
         $operatingSystem = $driver->operatingSystem();
 
@@ -157,7 +159,7 @@ final class Downloader implements DownloaderInterface
      * @throws RuntimeException
      * @throws IOException
      */
-    private function extractArchive(string $archive) : string
+    private function extractArchive(string $archive): string
     {
         $success = $this->zip->open($archive);
 
@@ -201,7 +203,7 @@ final class Downloader implements DownloaderInterface
         return $file;
     }
 
-    private function getFilePath(string $location, OperatingSystem $operatingSystem) : string
+    private function getFilePath(string $location, OperatingSystem $operatingSystem): string
     {
         $filePath = $location . DIRECTORY_SEPARATOR . 'chromedriver';
 

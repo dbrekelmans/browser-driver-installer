@@ -16,23 +16,23 @@ class VersionResolverTest extends TestCase
     private VersionResolver $versionResolver;
     private CommandLineMock $commandLineMock;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->commandLineMock = new CommandLineMock();
         $this->versionResolver = new VersionResolver($this->commandLineMock);
     }
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
     }
 
-    public function testFromLinux() : void
+    public function testFromLinux(): void
     {
         $this->commandLineMock->givenCommandWillReturnOutput('google-chrome --version', 'Google Chrome 86.0.4240.80');
 
@@ -42,7 +42,7 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    public function testFromMac() : void
+    public function testFromMac(): void
     {
         $this->commandLineMock->givenCommandWillReturnOutput(
             '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version',
@@ -55,7 +55,7 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    public function testFromWindows() : void
+    public function testFromWindows(): void
     {
         $this->commandLineMock->givenCommandWillReturnOutput(
             'wmic datafile where name="C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" get Version /value',

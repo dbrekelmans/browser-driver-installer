@@ -38,16 +38,16 @@
         "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
-        "dbrekelmans/coding-standard": "^1.2",
+        "dbrekelmans/coding-standard": "^1.3",
         "phpstan/phpstan": "^0.12.36",
         "phpstan/phpstan-phpunit": "^0.12.16",
         "phpstan/phpstan-strict-rules": "^0.12.5",
         "phpunit/phpunit": "^9.3",
-        "psalm/plugin-phpunit": "^0.12.1",
+        "psalm/plugin-phpunit": "^0.13",
         "roave/security-advisories": "dev-master",
         "thecodingmachine/phpstan-safe-rule": "^1.0",
         "thecodingmachine/phpstan-strict-rules": "^0.12.0",
-        "vimeo/psalm": "^3.13"
+        "vimeo/psalm": "^4.0"
     },
     "autoload": {
         "psr-4": {

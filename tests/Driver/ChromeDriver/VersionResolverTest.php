@@ -23,7 +23,7 @@ class VersionResolverTest extends TestCase
     private Browser $chromium;
     private Browser $firefox;
 
-    public function setUp() : void
+    protected function setUp(): void
     {
         $httpClientMock = new MockHttpClient(static function (string $method, string $url) : MockResponse {
             $urlsGiving86Version = [
@@ -52,7 +52,7 @@ class VersionResolverTest extends TestCase
         $this->firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->versionResolver->supports($this->chrome));
     }
@@ -62,23 +62,23 @@ class VersionResolverTest extends TestCase
         self::assertTrue($this->versionResolver->supports($this->chromium));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->versionResolver->supports($this->firefox));
     }
 
-    public function testFromThrowsExceptionForFirefox() : void
+    public function testFromThrowsExceptionForFirefox(): void
     {
-        self::expectException(Unsupported::class);
+        $this->expectException(Unsupported::class);
         $this->versionResolver->fromBrowser($this->firefox);
     }
 
-    public function testFromGetVersionForChrome() : void
+    public function testFromGetVersionForChrome(): void
     {
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->fromBrowser($this->chrome));
     }
 
-    public function testFromExceptionIfCanNotParseVersionReceived() : void
+    public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
         self::expectException(UnexpectedValueException::class);
         $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());

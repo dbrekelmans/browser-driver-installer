@@ -9,7 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 
 final class Command extends DriverCommand
 {
-    protected static function driverName() : DriverName
+    protected static function driverName(): DriverName
     {
         return DriverName::CHROME();
     }

@@ -16,7 +16,7 @@ final class VersionResolver extends VersionResolverChrome implements VersionReso
         return sprintf('%s/Contents/MacOS/Google\ Chrome --version', $path);
     }
 
-    public function supports(BrowserName $browserName) : bool
+    public function supports(BrowserName $browserName): bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
