@@ -44,4 +44,30 @@ class VersionResolverTest extends TestCase
             $this->versionResolver->from(OperatingSystem::MACOS(), '/Applications/Chromium.app')
         );
     }
+
+    public function testFromLinux(): void
+    {
+        $this->commandLineMock->givenCommandWillReturnOutput('chromium --version', 'Chromium 88.0.4299.0');
+
+        self::assertEquals(
+            Version::fromString('88.0.4299.0'),
+            $this->versionResolver->from(OperatingSystem::LINUX(), 'chromium')
+        );
+    }
+
+    public function testFromWindows(): void
+    {
+        $this->commandLineMock->givenCommandWillReturnOutput(
+            'wmic datafile where name="C:\Program Files (x86)\Chromium\Application\chrome.exe" get Version /value',
+            'Chromium 88.0.4299.0'
+        );
+
+        self::assertEquals(
+            Version::fromString('88.0.4299.0'),
+            $this->versionResolver->from(
+                OperatingSystem::WINDOWS(),
+                'C:\Program Files (x86)\Chromium\Application\chrome.exe'
+            )
+        );
+    }
 }
