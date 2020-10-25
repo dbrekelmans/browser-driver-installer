@@ -17,14 +17,14 @@ use PHPUnit\Framework\TestCase;
 
 final class BrowserFactoryTest extends TestCase
 {
-    private static function assertBrowser(Browser $expected, Browser $actual) : void
+    private static function assertBrowser(Browser $expected, Browser $actual): void
     {
         self::assertTrue($expected->name()->equals($actual->name()));
         self::assertTrue($expected->operatingSystem()->equals($actual->operatingSystem()));
         self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
     }
 
-    public function testCreateFromNameOperatingSystem() : void
+    public function testCreateFromNameOperatingSystem(): void
     {
         $pathResolverFactory = new PathResolverFactory();
         $versionResolverFactory = new VersionResolverFactory();
@@ -53,7 +53,7 @@ final class BrowserFactoryTest extends TestCase
         );
     }
 
-    public function testCreateFromNameOperatingSystemAndPath() : void
+    public function testCreateFromNameOperatingSystemAndPath(): void
     {
         $versionResolverFactory = new VersionResolverFactory();
 

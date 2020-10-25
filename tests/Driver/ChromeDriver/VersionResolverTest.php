@@ -24,7 +24,7 @@ class VersionResolverTest extends TestCase
     /** @var MockObject&HttpClientInterface  */
     private $httpClientMock;
 
-    public function setUp() : void
+    protected function setUp(): void
     {
         $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
         $this->versionResolver = new VersionResolver($this->httpClientMock);
@@ -33,23 +33,23 @@ class VersionResolverTest extends TestCase
         $this->firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->versionResolver->supports($this->chrome));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->versionResolver->supports($this->firefox));
     }
 
-    public function testFromThrowsExceptionForFirefox() : void
+    public function testFromThrowsExceptionForFirefox(): void
     {
-        self::expectException(Unsupported::class);
+        $this->expectException(Unsupported::class);
         $this->versionResolver->fromBrowser($this->firefox);
     }
 
-    public function testFromGetVersionForChrome() : void
+    public function testFromGetVersionForChrome(): void
     {
         $this->mockHttpClientResponseContent(
             'GET',
@@ -60,9 +60,9 @@ class VersionResolverTest extends TestCase
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->fromBrowser($this->chrome));
     }
 
-    public function testFromExceptionIfCanNotParseVersionReceived() : void
+    public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
-        self::expectException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->mockHttpClientResponseContent(
             'GET',
             'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
@@ -72,7 +72,7 @@ class VersionResolverTest extends TestCase
         $this->versionResolver->fromBrowser($this->chrome);
     }
 
-    public function testLatest() : void
+    public function testLatest(): void
     {
         $this->mockHttpClientResponseContent(
             'GET',
@@ -83,14 +83,14 @@ class VersionResolverTest extends TestCase
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
     }
 
-    private function mockHttpClientResponseContent(string $method, string $url, string $content) : void
+    private function mockHttpClientResponseContent(string $method, string $url, string $content): void
     {
         $responseMock = $this->getMockBuilder(ResponseInterface::class)->getMock();
-        $responseMock->expects(self::any())
+        $responseMock
             ->method('getContent')
             ->willReturn($content);
 
-        $this->httpClientMock->expects(self::any())
+        $this->httpClientMock
             ->method('request')
             ->with($method, $url)
             ->willReturn($responseMock);

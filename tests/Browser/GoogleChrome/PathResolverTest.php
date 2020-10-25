@@ -13,12 +13,12 @@ final class PathResolverTest extends TestCase
 {
     private PathResolver $pathResolver;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->pathResolver = new PathResolver();
     }
 
-    public function testFromKnownOs() : void
+    public function testFromKnownOs(): void
     {
         self::assertEquals('google-chrome', $this->pathResolver->from(OperatingSystem::LINUX()));
         self::assertEquals('/Applications/Google\ Chrome.app', $this->pathResolver->from(OperatingSystem::MACOS()));
@@ -28,12 +28,12 @@ final class PathResolverTest extends TestCase
         );
     }
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->pathResolver->supports(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->pathResolver->supports(BrowserName::FIREFOX()));
     }

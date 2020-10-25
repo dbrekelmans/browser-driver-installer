@@ -14,8 +14,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use ZipArchive;
-use const DIRECTORY_SEPARATOR;
+
 use function sys_get_temp_dir;
+
+use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
@@ -28,7 +30,7 @@ class DownloaderTest extends TestCase
     /** @var MockObject&HttpClientInterface */
     private $httpClientMock;
 
-    public function setUp() : void
+    protected function setUp(): void
     {
         $this->fsMock = $this->getMockBuilder(Filesystem::class)->disableOriginalConstructor()->getMock();
         $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
@@ -38,18 +40,18 @@ class DownloaderTest extends TestCase
         $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->downloader->supports($this->chromeDriverMac));
     }
 
-    public function testDoesNotSupportGecko() : void
+    public function testDoesNotSupportGecko(): void
     {
         $geckoDriver = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
         self::assertFalse($this->downloader->supports($geckoDriver));
     }
 
-    public function testDownloadMac() : void
+    public function testDownloadMac(): void
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
@@ -63,7 +65,7 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver', $filePath);
     }
 
-    public function testDownloadLinux() : void
+    public function testDownloadLinux(): void
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
@@ -78,7 +80,7 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver', $filePath);
     }
 
-    public function testDownloadWindows() : void
+    public function testDownloadWindows(): void
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
@@ -93,31 +95,25 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
-    private function mockFsAndZipForSuccessfulDownload() : void
+    private function mockFsAndZipForSuccessfulDownload(): void
     {
         $this->fsMock
-            ->expects(self::any())
             ->method('tempnam')
             ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver-XXX.zip');
         $this->fsMock
-            ->expects(self::any())
             ->method('readLink')
             ->willReturn('YYY');
 
         $this->zipMock
-            ->expects(self::any())
             ->method('open')
             ->willReturn(true);
         $this->zipMock
-            ->expects(self::any())
             ->method('count')
             ->willReturn(1);
         $this->zipMock
-            ->expects(self::any())
             ->method('extractTo')
             ->willReturn(true);
         $this->zipMock
-            ->expects(self::any())
             ->method('close')
             ->willReturn(true);
     }

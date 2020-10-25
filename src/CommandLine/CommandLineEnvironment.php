@@ -14,5 +14,5 @@ interface CommandLineEnvironment
      *
      * @throws RuntimeException
      */
-    public function getCommandLineSuccessfulOutput(string $command) : string;
+    public function getCommandLineSuccessfulOutput(string $command): string;
 }

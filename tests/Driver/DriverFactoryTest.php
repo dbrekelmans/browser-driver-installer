@@ -23,7 +23,7 @@ final class DriverFactoryTest extends TestCase
     /**
      * @dataProvider createFromBrowserDataProvider
      */
-    public function testCreateFromBrowser(Driver $expectedDriver, Browser $browser) : void
+    public function testCreateFromBrowser(Driver $expectedDriver, Browser $browser): void
     {
         $versionResolver = $this->createStub(VersionResolver::class);
         $versionResolver->method('fromBrowser')->willReturn(Version::fromString('1.0.0'));
@@ -38,7 +38,7 @@ final class DriverFactoryTest extends TestCase
         self::assertSameDriver($expectedDriver, $driver);
     }
 
-    private static function assertSameDriver(Driver $expected, Driver $actual) : void
+    private static function assertSameDriver(Driver $expected, Driver $actual): void
     {
         self::assertTrue($expected->name()->equals($actual->name()));
         self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
@@ -49,7 +49,7 @@ final class DriverFactoryTest extends TestCase
      * @psalm-return array<string, array{Driver, Browser}>
      * @return array<string, array<mixed>>
      */
-    public function createFromBrowserDataProvider() : array
+    public function createFromBrowserDataProvider(): array
     {
         return [
             'google_chrome' => [
