@@ -8,7 +8,8 @@ use function stripslashes;
 
 trait UniqueClassName
 {
-    private static int $uniqueClassNameCounter = 0;
+    /** @var int */
+    private static $uniqueClassNameCounter = 0;
 
     /**
      * @psalm-param class-string $className

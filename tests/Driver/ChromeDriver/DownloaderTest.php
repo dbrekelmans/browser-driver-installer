@@ -11,6 +11,7 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use PHPStan\Testing\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use ZipArchive;
@@ -21,24 +22,20 @@ use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
-    private Downloader $downloader;
-    private Driver $chromeDriverMac;
-    /** @var MockObject&Filesystem */
-    private $fsMock;
-    /** @var MockObject&ZipArchive */
-    private $zipMock;
+    /** @var Downloader */
+    private $downloader;
+
+    /** @var Driver */
+    private $chromeDriverMac;
+
+    /** @var Stub&Filesystem */
+    private $filesystem;
+
+    /** @var Stub&ZipArchive */
+    private $zip;
+
     /** @var MockObject&HttpClientInterface */
-    private $httpClientMock;
-
-    protected function setUp(): void
-    {
-        $this->fsMock = $this->getMockBuilder(Filesystem::class)->disableOriginalConstructor()->getMock();
-        $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
-        $this->zipMock = $this->getMockBuilder(ZipArchive::class)->getMock();
-        $this->downloader = new Downloader($this->fsMock, $this->httpClientMock, $this->zipMock);
-
-        $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
-    }
+    private $httpClient;
 
     public function testSupportChrome(): void
     {
@@ -55,7 +52,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
-        $this->httpClientMock
+        $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
@@ -69,7 +66,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
-        $this->httpClientMock
+        $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
@@ -84,7 +81,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndZipForSuccessfulDownload();
 
-        $this->httpClientMock
+        $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
@@ -95,25 +92,35 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
+    protected function setUp(): void
+    {
+        $this->filesystem = $this->createStub(Filesystem::class);
+        $this->httpClient = $this->createMock(HttpClientInterface::class);
+        $this->zip = $this->createStub(ZipArchive::class);
+        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->zip);
+
+        $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
+    }
+
     private function mockFsAndZipForSuccessfulDownload(): void
     {
-        $this->fsMock
+        $this->filesystem
             ->method('tempnam')
             ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver-XXX.zip');
-        $this->fsMock
+        $this->filesystem
             ->method('readLink')
             ->willReturn('YYY');
 
-        $this->zipMock
+        $this->zip
             ->method('open')
             ->willReturn(true);
-        $this->zipMock
+        $this->zip
             ->method('count')
             ->willReturn(1);
-        $this->zipMock
+        $this->zip
             ->method('extractTo')
             ->willReturn(true);
-        $this->zipMock
+        $this->zip
             ->method('close')
             ->willReturn(true);
     }

@@ -16,7 +16,8 @@ use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    private CommandLineEnvironment $commandLineEnvironment;
+    /** @var CommandLineEnvironment */
+    private $commandLineEnvironment;
 
     public function __construct(CommandLineEnvironment $commandLineEnvironment)
     {
@@ -49,6 +50,11 @@ final class VersionResolver implements VersionResolverInterface
         );
     }
 
+    public function supports(BrowserName $browserName): bool
+    {
+        return $browserName->equals(BrowserName::GOOGLE_CHROME());
+    }
+
     private function getVersionFromCommandLine(string $command): Version
     {
         try {
@@ -62,10 +68,5 @@ final class VersionResolver implements VersionResolverInterface
                 $exception
             );
         }
-    }
-
-    public function supports(BrowserName $browserName): bool
-    {
-        return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 }

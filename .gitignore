@@ -2,4 +2,3 @@
 /.dist/
 /.phive/tools/
 .phpunit.result.cache
-.phpunit.cache

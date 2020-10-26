@@ -33,9 +33,14 @@ final class Downloader implements DownloaderInterface
     private const BINARY_MAC = 'chromedriver_mac64';
     private const BINARY_WINDOWS = 'chromedriver_win32';
 
-    private Filesystem $filesystem;
-    private HttpClientInterface $httpClient;
-    private ZipArchive $zip;
+    /** @var Filesystem */
+    private $filesystem;
+
+    /** @var HttpClientInterface */
+    private $httpClient;
+
+    /** @var ZipArchive */
+    private $zip;
 
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, ZipArchive $zip)
     {

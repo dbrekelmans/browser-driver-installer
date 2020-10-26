@@ -14,15 +14,11 @@ use PHPUnit\Framework\TestCase;
 
 class VersionResolverTest extends TestCase
 {
-    private VersionResolver $versionResolver;
+    /** @var VersionResolver */
+    private $versionResolver;
+
     /** @var MockObject&CommandLineEnvironment */
     private $commandLineEnvMock;
-
-    protected function setUp(): void
-    {
-        $this->commandLineEnvMock = $this->getMockBuilder(CommandLineEnvironment::class)->getMock();
-        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
-    }
 
     public function testSupportChromium(): void
     {
@@ -71,6 +67,12 @@ class VersionResolverTest extends TestCase
                 'C:\Program Files (x86)\Chromium\Application\chrome.exe'
             )
         );
+    }
+
+    protected function setUp(): void
+    {
+        $this->commandLineEnvMock = $this->createMock(CommandLineEnvironment::class);
+        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
     }
 
     private function mockCommandLineCommandOutput(string $command, string $output): void
