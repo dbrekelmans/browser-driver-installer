@@ -59,7 +59,7 @@ class VersionResolverTest extends TestCase
 
     public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
-        self::expectException(UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
 
         $this->versionResolver->fromBrowser($wrongChrome);
