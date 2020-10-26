@@ -24,5 +24,16 @@
                 <referencedFunction name="Symfony\Component\Filesystem\Filesystem::tempnam"/>
             </errorLevel>
         </TooManyArguments>
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::method"/>
+            </errorLevel>
+            <errorLevel type="suppress">
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::with"/>
+            </errorLevel>
+            <errorLevel type="suppress">
+                <referencedMethod name="PHPUnit\Framework\MockObject\Builder\InvocationMocker::willReturn"/>
+            </errorLevel>
+        </InternalMethod>
     </issueHandlers>
 </psalm>
