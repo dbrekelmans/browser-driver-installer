@@ -27,7 +27,7 @@
         "bdi"
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.1",
         "ext-zip": "*",
         "myclabs/php-enum": "^1.7",
         "symfony/console": "^5.1",
