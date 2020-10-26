@@ -13,7 +13,7 @@ final class PathResolverFactory
 {
     /**
      * @psalm-var array<class-string<PathResolver>, PathResolver>
-     * @var PathResolver[] $pathResolvers
+     * @var PathResolver[]
      */
     private $pathResolvers = [];
 

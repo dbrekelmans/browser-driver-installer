@@ -16,9 +16,9 @@ final class PathResolverTest extends TestCase
 
     public function testFromKnownOs(): void
     {
-        self::assertEquals('google-chrome', $this->pathResolver->from(OperatingSystem::LINUX()));
-        self::assertEquals('/Applications/Google\ Chrome.app', $this->pathResolver->from(OperatingSystem::MACOS()));
-        self::assertEquals(
+        self::assertSame('google-chrome', $this->pathResolver->from(OperatingSystem::LINUX()));
+        self::assertSame('/Applications/Google\ Chrome.app', $this->pathResolver->from(OperatingSystem::MACOS()));
+        self::assertSame(
             'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
             $this->pathResolver->from(OperatingSystem::WINDOWS())
         );

@@ -40,3 +40,4 @@ For a full list of available commands, run `bdi list`.
 
 ### Supported browsers
 * google-chrome
+* chromium

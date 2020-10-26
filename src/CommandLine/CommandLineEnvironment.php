@@ -9,10 +9,7 @@ use RuntimeException;
 interface CommandLineEnvironment
 {
     /**
-     * Provides output of a command line if successful
-     * Will throw RuntimeException if not successful
-     *
-     * @throws RuntimeException
+     * @throws RuntimeException If command is not successful.
      */
     public function getCommandLineSuccessfulOutput(string $command): string;
 }
