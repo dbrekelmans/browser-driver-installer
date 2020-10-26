@@ -21,24 +21,30 @@ use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
-    private Downloader $downloader;
-    private Driver $chromeDriverMac;
-    /** @var MockObject&Filesystem */
+    /**
+     * @var Downloader
+     */
+    private $downloader;
+
+    /**
+     * @var Driver
+     */
+    private $chromeDriverMac;
+
+    /**
+     * @var MockObject&Filesystem
+     */
     private $fsMock;
-    /** @var MockObject&ZipArchive */
+
+    /**
+     * @var MockObject&ZipArchive
+     */
     private $zipMock;
-    /** @var MockObject&HttpClientInterface */
+
+    /**
+     * @var MockObject&HttpClientInterface
+     */
     private $httpClientMock;
-
-    protected function setUp(): void
-    {
-        $this->fsMock = $this->getMockBuilder(Filesystem::class)->disableOriginalConstructor()->getMock();
-        $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
-        $this->zipMock = $this->getMockBuilder(ZipArchive::class)->getMock();
-        $this->downloader = new Downloader($this->fsMock, $this->httpClientMock, $this->zipMock);
-
-        $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
-    }
 
     public function testSupportChrome(): void
     {
@@ -93,6 +99,16 @@ class DownloaderTest extends TestCase
         $filePath = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver.exe', $filePath);
+    }
+
+    protected function setUp(): void
+    {
+        $this->fsMock = $this->getMockBuilder(Filesystem::class)->disableOriginalConstructor()->getMock();
+        $this->httpClientMock = $this->getMockBuilder(HttpClientInterface::class)->getMock();
+        $this->zipMock = $this->getMockBuilder(ZipArchive::class)->getMock();
+        $this->downloader = new Downloader($this->fsMock, $this->httpClientMock, $this->zipMock);
+
+        $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
     private function mockFsAndZipForSuccessfulDownload(): void

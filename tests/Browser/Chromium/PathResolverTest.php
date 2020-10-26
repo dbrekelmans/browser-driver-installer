@@ -11,12 +11,10 @@ use PHPUnit\Framework\TestCase;
 
 final class PathResolverTest extends TestCase
 {
-    private PathResolver $pathResolver;
-
-    protected function setUp(): void
-    {
-        $this->pathResolver = new PathResolver();
-    }
+    /**
+     * @var PathResolver
+     */
+    private $pathResolver;
 
     public function testFromKnownOs(): void
     {
@@ -36,5 +34,10 @@ final class PathResolverTest extends TestCase
     public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->pathResolver->supports(BrowserName::FIREFOX()));
+    }
+
+    protected function setUp(): void
+    {
+        $this->pathResolver = new PathResolver();
     }
 }

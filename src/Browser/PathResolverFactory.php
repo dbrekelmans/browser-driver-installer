@@ -15,7 +15,7 @@ final class PathResolverFactory
      * @psalm-var array<class-string<PathResolver>, PathResolver>
      * @var PathResolver[] $pathResolvers
      */
-    private array $pathResolvers = [];
+    private $pathResolvers = [];
 
     /**
      * @throws NotImplemented If no path resolver is implemented for browser.

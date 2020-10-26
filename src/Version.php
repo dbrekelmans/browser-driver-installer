@@ -15,10 +15,25 @@ final class Version
 {
     private const DELIMITER = '.';
 
-    private string $major;
-    private string $minor;
-    private string $patch;
-    private ?string $build;
+    /**
+     * @var string
+     */
+    private $major;
+
+    /**
+     * @var string
+     */
+    private $minor;
+
+    /**
+     * @var string
+     */
+    private $patch;
+
+    /**
+     * @var string|null
+     */
+    private $build;
 
     private function __construct(string $major, string $minor, string $patch, ?string $build)
     {
