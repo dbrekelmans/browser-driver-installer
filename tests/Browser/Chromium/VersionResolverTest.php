@@ -18,7 +18,7 @@ class VersionResolverTest extends TestCase
     private $versionResolver;
 
     /** @var MockObject&CommandLineEnvironment */
-    private $commandLineEnvironment;
+    private $commandLineEnvMock;
 
     public function testSupportChromium(): void
     {
@@ -71,13 +71,13 @@ class VersionResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->commandLineEnvironment = $this->createMock(CommandLineEnvironment::class);
-        $this->versionResolver = new VersionResolver($this->commandLineEnvironment);
+        $this->commandLineEnvMock = $this->createMock(CommandLineEnvironment::class);
+        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
     }
 
     private function mockCommandLineCommandOutput(string $command, string $output): void
     {
-        $this->commandLineEnvironment
+        $this->commandLineEnvMock
             ->method('getCommandLineSuccessfulOutput')
             ->with($command)
             ->willReturn($output);

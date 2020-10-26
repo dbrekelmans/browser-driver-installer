@@ -50,46 +50,46 @@ class DownloaderTest extends TestCase
 
     public function testDownloadMac(): void
     {
-        $this->mockFilesystemAndZipForSuccessfulDownload($this->filesystem, $this->zip);
+        $this->mockFsAndZipForSuccessfulDownload();
 
         $this->httpClient
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
 
         $filePath = $this->downloader->download($this->chromeDriverMac, '.');
 
-        self::assertSame('./chromedriver', $filePath);
+        self::assertEquals('./chromedriver', $filePath);
     }
 
     public function testDownloadLinux(): void
     {
-        $this->mockFilesystemAndZipForSuccessfulDownload($this->filesystem, $this->zip);
+        $this->mockFsAndZipForSuccessfulDownload();
 
         $this->httpClient
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
         $filePath = $this->downloader->download($chromeDriverLinux, '.');
 
-        self::assertSame('./chromedriver', $filePath);
+        self::assertEquals('./chromedriver', $filePath);
     }
 
     public function testDownloadWindows(): void
     {
-        $this->mockFilesystemAndZipForSuccessfulDownload($this->filesystem, $this->zip);
+        $this->mockFsAndZipForSuccessfulDownload();
 
         $this->httpClient
-            ->expects(self::once())
+            ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS());
         $filePath = $this->downloader->download($chromeDriverLinux, '.');
 
-        self::assertSame('./chromedriver.exe', $filePath);
+        self::assertEquals('./chromedriver.exe', $filePath);
     }
 
     protected function setUp(): void
@@ -102,21 +102,26 @@ class DownloaderTest extends TestCase
         $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
-    /**
-     * @param Filesystem&Stub $filesystem
-     * @param ZipArchive&Stub $zip
-     */
-    private function mockFilesystemAndZipForSuccessfulDownload(Filesystem $filesystem, ZipArchive $zip): void
+    private function mockFsAndZipForSuccessfulDownload(): void
     {
-        $filesystem
+        $this->filesystem
             ->method('tempnam')
             ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver-XXX.zip');
+        $this->filesystem
+            ->method('readLink')
+            ->willReturn('YYY');
 
-        $filesystem->method('readLink')->willReturn('YYY');
-
-        $zip->method('open')->willReturn(true);
-        $zip->method('count')->willReturn(1);
-        $zip->method('extractTo')->willReturn(true);
-        $zip->method('close')->willReturn(true);
+        $this->zip
+            ->method('open')
+            ->willReturn(true);
+        $this->zip
+            ->method('count')
+            ->willReturn(1);
+        $this->zip
+            ->method('extractTo')
+            ->willReturn(true);
+        $this->zip
+            ->method('close')
+            ->willReturn(true);
     }
 }
