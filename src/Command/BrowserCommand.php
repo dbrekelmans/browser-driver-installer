@@ -19,24 +19,16 @@ use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
+    /** @var Filesystem */
     protected $filesystem;
 
-    /**
-     * @var BrowserFactory
-     */
+    /** @var BrowserFactory */
     protected $browserFactory;
 
-    /**
-     * @var DriverFactory
-     */
+    /** @var DriverFactory */
     protected $driverFactory;
 
-    /**
-     * @var DownloaderFactory
-     */
+    /** @var DownloaderFactory */
     protected $driverDownloaderFactory;
 
     public function __construct(

@@ -14,14 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class VersionResolverTest extends TestCase
 {
-    /**
-     * @var VersionResolver
-     */
+    /** @var VersionResolver */
     private $versionResolver;
 
-    /**
-     * @var MockObject&CommandLineEnvironment
-     */
+    /** @var MockObject&CommandLineEnvironment */
     private $commandLineEnvMock;
 
     public function testSupportChromium(): void

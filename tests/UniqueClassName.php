@@ -8,9 +8,7 @@ use function stripslashes;
 
 trait UniqueClassName
 {
-    /**
-     * @var int
-     */
+    /** @var int */
     private static $uniqueClassNameCounter = 0;
 
     /**

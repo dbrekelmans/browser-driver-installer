@@ -21,29 +21,19 @@ use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
-    /**
-     * @var Downloader
-     */
+    /** @var Downloader */
     private $downloader;
 
-    /**
-     * @var Driver
-     */
+    /** @var Driver */
     private $chromeDriverMac;
 
-    /**
-     * @var MockObject&Filesystem
-     */
+    /** @var MockObject&Filesystem */
     private $fsMock;
 
-    /**
-     * @var MockObject&ZipArchive
-     */
+    /** @var MockObject&ZipArchive */
     private $zipMock;
 
-    /**
-     * @var MockObject&HttpClientInterface
-     */
+    /** @var MockObject&HttpClientInterface */
     private $httpClientMock;
 
     public function testSupportChrome(): void

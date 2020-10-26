@@ -19,24 +19,16 @@ use function in_array;
 
 class VersionResolverTest extends TestCase
 {
-    /**
-     * @var VersionResolver
-     */
+    /** @var VersionResolver */
     private $versionResolver;
 
-    /**
-     * @var Browser
-     */
+    /** @var Browser */
     private $chrome;
 
-    /**
-     * @var Browser
-     */
+    /** @var Browser */
     private $chromium;
 
-    /**
-     * @var Browser
-     */
+    /** @var Browser */
     private $firefox;
 
     public function testSupportChrome(): void

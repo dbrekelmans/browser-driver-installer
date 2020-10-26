@@ -19,14 +19,10 @@ use function Safe\sprintf;
 
 abstract class DriverCommand extends Command
 {
-    /**
-     * @var VersionResolver
-     */
+    /** @var VersionResolver */
     private $versionResolver;
 
-    /**
-     * @var DownloaderFactory
-     */
+    /** @var DownloaderFactory */
     private $downloaderFactory;
 
     public function __construct(
