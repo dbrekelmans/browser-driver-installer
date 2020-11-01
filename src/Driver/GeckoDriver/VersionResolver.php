@@ -59,7 +59,7 @@ final class VersionResolver implements VersionResolverInterface
     public function latest(): Version
     {
         $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
-        /** @var array $data */
+        /** @var array<mixed> $data */
         $data = json_decode($response->getContent(), true);
         if (!isset($data['name'])) {
             throw new RuntimeException('Can not find latest release name');
