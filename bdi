@@ -9,6 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
+use DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\NativeHttpClient;
@@ -32,10 +33,13 @@ $browserVersionResolverFactory->register(new Chromium\VersionResolver($shellComm
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
+$geckoDriverVersionResolver = new GeckoDriver\VersionResolver($httpClient);
 $driverVersionResolverFactory->register($chromeDriverVersionResolver);
+$driverVersionResolverFactory->register($geckoDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
+$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
@@ -43,5 +47,6 @@ $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 $application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new Chromium\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
+$application->add(new GeckoDriver\Command($geckoDriverVersionResolver, $driverDownloaderFactory));
 
 $application->run();

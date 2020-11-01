@@ -28,7 +28,9 @@
     ],
     "require": {
         "php": "^7.2",
+        "ext-json": "*",
         "ext-zip": "*",
+        "ext-zlib": "*",
         "myclabs/php-enum": "^1.7",
         "symfony/console": "^5.1",
         "symfony/filesystem": "^5.1",
