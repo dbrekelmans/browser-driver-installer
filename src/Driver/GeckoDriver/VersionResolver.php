@@ -65,7 +65,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new RuntimeException('Can not find latest release name');
         }
 
-        return Version::fromString((string)$data['name']);
+        return Version::fromString((string) $data['name']);
     }
 
     public function supports(Browser $browser): bool

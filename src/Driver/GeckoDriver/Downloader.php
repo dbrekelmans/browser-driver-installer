@@ -18,6 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function assert;
 use function basename;
 use function count;
 use function dirname;
@@ -161,8 +162,8 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(sprintf('Archive %s does not contain any file', $archive));
         }
 
-        /** @var DirectoryIterator $file */
         foreach ($tarData as $file) {
+            assert($file instanceof DirectoryIterator);
             if (strpos($file->getFilename(), 'geckodriver') !== false) {
                 return $destDir . DIRECTORY_SEPARATOR . $file->getFilename();
             }
