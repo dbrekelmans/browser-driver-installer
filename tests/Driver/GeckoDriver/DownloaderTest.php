@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver\GeckoDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver\Downloader;
@@ -25,12 +26,15 @@ class DownloaderTest extends TestCase
     private $filesystem;
     /** @var MockObject&HttpClientInterface */
     private $httpClient;
+    /** @var Extractor&MockObject */
+    private $archiveExtractor;
 
     public function setUp(): void
     {
         $this->filesystem = $this->createStub(Filesystem::class);
         $this->httpClient = $this->createMock(HttpClientInterface::class);
-        $this->downloader = new Downloader($this->filesystem, $this->httpClient);
+        $this->archiveExtractor = $this->createMock(Extractor::class);
+        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
         $this->gecko = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
     }
 

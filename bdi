@@ -3,6 +3,7 @@
 
 declare(strict_types=1);
 
+use DBrekelmans\BrowserDriverInstaller\Archive\TarGzExtractor;
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
@@ -22,6 +23,7 @@ $httpClient = new NativeHttpClient();
 $filesystem = new Filesystem();
 $zipArchive = new ZipArchive();
 $shellCommandLineEnv = new ShellCommandLineEnvironment();
+$tarGzExtractor = new TarGzExtractor();
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
@@ -39,7 +41,7 @@ $driverVersionResolverFactory->register($geckoDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
-$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient));
+$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $tarGzExtractor));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);

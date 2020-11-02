@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-use DirectoryIterator;
-use PharData;
 use RuntimeException;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -18,9 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-use function assert;
 use function basename;
-use function count;
 use function dirname;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -43,11 +40,14 @@ final class Downloader implements DownloaderInterface
 
     /** @var HttpClientInterface  */
     private $httpClient;
+    /** @var Extractor */
+    private $archiveExtractor;
 
-    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient)
+    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
         $this->filesystem = $filesystem;
         $this->httpClient = $httpClient;
+        $this->archiveExtractor = $archiveExtractor;
     }
 
     public function download(Driver $driver, string $location): string
@@ -152,20 +152,11 @@ final class Downloader implements DownloaderInterface
 
     private function extractArchive(string $archive): string
     {
-        $destDir = dirname($archive);
-        //TODO inject this as a dependency
-        $tarGzData = new PharData($archive);
-        $tarData = $tarGzData->decompress();
-        $tarData->extractTo($destDir);
+        $extractedFiles = $this->archiveExtractor->extract($archive, dirname($archive));
 
-        if (count($tarData) === 0) {
-            throw new RuntimeException(sprintf('Archive %s does not contain any file', $archive));
-        }
-
-        foreach ($tarData as $file) {
-            assert($file instanceof DirectoryIterator);
-            if (strpos($file->getFilename(), 'geckodriver') !== false) {
-                return $destDir . DIRECTORY_SEPARATOR . $file->getFilename();
+        foreach ($extractedFiles as $filename) {
+            if (strpos($filename, 'geckodriver') !== false) {
+                return $filename;
             }
         }
 
