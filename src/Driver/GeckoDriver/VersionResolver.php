@@ -11,6 +11,8 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function assert;
+use function is_string;
 use function Safe\json_decode;
 use function Safe\krsort;
 use function Safe\sprintf;
@@ -50,6 +52,7 @@ final class VersionResolver implements VersionResolverInterface
         $minRequiredBrowserVersions = self::MIN_REQUIRED_BROWSER_VERSIONS;
         krsort($minRequiredBrowserVersions);
         foreach ($minRequiredBrowserVersions as $minReqVersion => $geckoVersion) {
+            assert(is_string($geckoVersion));
             if ($browserMajorVersion >= $minReqVersion) {
                 return Version::fromString($geckoVersion);
             }
