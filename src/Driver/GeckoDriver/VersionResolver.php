@@ -11,12 +11,22 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function Safe\krsort;
 use function Safe\json_decode;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
     private const LATEST_VERSION_ENDPOINT = 'https://api.github.com/repos/mozilla/geckodriver/releases/latest';
+
+    private const MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST = 60;
+
+    private const MIN_REQUIRED_BROWSER_VERSIONS = [
+        57 => '0.25.0',
+        55 => '0.20.1',
+        53 => '0.18.0',
+        52 => '0.17.0',
+    ];
 
     /** @var HttpClientInterface */
     private $httpClient;
@@ -32,25 +42,17 @@ final class VersionResolver implements VersionResolverInterface
     public function fromBrowser(Browser $browser): Version
     {
         $browserMajorVersion = (int) $browser->version()->major();
-        //TODO maybe put this part in a matrix??
-        if ($browserMajorVersion >= 60) {
+
+        if ($browserMajorVersion >= self::MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST) {
             return $this->latest();
         }
 
-        if ($browserMajorVersion >= 57) {
-            return Version::fromString('0.25.0');
-        }
-
-        if ($browserMajorVersion >= 55) {
-            return Version::fromString('0.20.1');
-        }
-
-        if ($browserMajorVersion >= 53) {
-            return Version::fromString('0.18.0');
-        }
-
-        if ($browserMajorVersion >= 52) {
-            return Version::fromString('0.17.0');
+        $minRequiredBrowserVersions = self::MIN_REQUIRED_BROWSER_VERSIONS;
+        krsort($minRequiredBrowserVersions);
+        foreach ($minRequiredBrowserVersions as $minReqVersion => $geckoVersion) {
+            if ($browserMajorVersion >= $minReqVersion) {
+                return Version::fromString($geckoVersion);
+            }
         }
 
         throw new RuntimeException(sprintf('Could not find a geckodriver version for Firefox %s', $browser->version()->toString()));
