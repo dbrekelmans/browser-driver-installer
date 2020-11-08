@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Archive;
 
-use DirectoryIterator;
 use PharData;
+use PharFileInfo;
 
 use function assert;
 
@@ -24,7 +24,7 @@ final class TarGzExtractor implements Extractor
 
         $extractedFilenames = [];
         foreach ($tarData as $file) {
-            assert($file instanceof DirectoryIterator);
+            assert($file instanceof PharFileInfo);
             $extractedFilenames[] = $destination . DIRECTORY_SEPARATOR . $file->getFilename();
         }
 

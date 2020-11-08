@@ -105,3 +105,4 @@ jobs:
             ${{ runner.os }}-composer-
       - run: composer install --no-interaction --no-dev --optimize-autoloader
       - run: php bdi browser:google-chrome . -vvv
+      - run: php bdi driver:geckodriver . -vvv

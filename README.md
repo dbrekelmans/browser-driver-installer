@@ -37,6 +37,7 @@ For a full list of available commands, run `bdi list`.
 
 ### Supported drivers
 * chromedriver
+* geckodriver
 
 ### Supported browsers
 * google-chrome
