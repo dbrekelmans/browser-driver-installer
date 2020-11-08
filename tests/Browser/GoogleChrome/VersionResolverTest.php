@@ -57,7 +57,8 @@ class VersionResolverTest extends TestCase
     {
         $this->mockCommandLineCommandOutput(
             'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
-            'Google Chrome 86.0.4240.80'
+            'HKEY_LOCAL_MACHINE\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96}
+    pv    REG_SZ    86.0.4240.80'
         );
 
         self::assertEquals(
