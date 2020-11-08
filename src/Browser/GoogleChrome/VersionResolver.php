@@ -10,7 +10,7 @@ use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
-use RuntimeException;
+use InvalidArgumentException;
 
 use function Safe\sprintf;
 
@@ -37,9 +37,24 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return $this->getVersionFromCommandLine(
-                sprintf('wmic datafile where name="%s" get Version /value', $path)
-            );
+            $possibleCommands = [
+                'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
+                'reg query HKLM\Software\Google\Update\Clients\{8237E44A-0054-442C-B6B6-EA0509993955} /v pv /reg:32 2> NUL',
+                'reg query HKLM\Software\Google\Update\Clients\{401C381F-E0DE-4B85-8BD8-3F3F14FBDA57} /v pv /reg:32 2> NUL',
+                'reg query HKCU\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
+                'reg query HKCU\Software\Google\Update\Clients\{8237E44A-0054-442C-B6B6-EA0509993955} /v pv /reg:32 2> NUL',
+                'reg query HKCU\Software\Google\Update\Clients\{401C381F-E0DE-4B85-8BD8-3F3F14FBDA57} /v pv /reg:32 2> NUL',
+                'reg query HKCU\Software\Google\Update\Clients\{4ea16ac7-fd5a-47c3-875b-dbf4a2008c20} /v pv /reg:32 2> NUL',
+            ];
+            foreach ($possibleCommands as $possibleCommand) {
+                try {
+                    return $this->getVersionFromCommandLine($possibleCommand);
+                } catch (InvalidArgumentException $exception) {
+                    // @ignoreException
+                }
+            }
+
+            throw new InvalidArgumentException('Version could not be determined.');
         }
 
         throw NotImplemented::feature(
@@ -61,8 +76,8 @@ final class VersionResolver implements VersionResolverInterface
             $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
 
             return Version::fromString($commandOutput);
-        } catch (RuntimeException $exception) {
-            throw new RuntimeException(
+        } catch (InvalidArgumentException $exception) {
+            throw new InvalidArgumentException(
                 'Version could not be determined.',
                 0,
                 $exception
