@@ -45,15 +45,16 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+            $previousException = null;
             foreach (self::getWindowsCommandsForVersion() as $possibleCommand) {
                 try {
                     return $this->getVersionFromCommandLine($possibleCommand);
                 } catch (InvalidArgumentException $exception) {
-                    // @ignoreException
+                    $previousException = $exception;
                 }
             }
 
-            throw new InvalidArgumentException('Version could not be determined.');
+            throw new InvalidArgumentException('Version could not be determined.', 0, $previousException);
         }
 
         throw NotImplemented::feature(
