@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Archive;
 
+use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use PharData;
 use PharFileInfo;
-
-use function assert;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -24,7 +23,10 @@ final class TarGzExtractor implements Extractor
 
         $extractedFilenames = [];
         foreach ($tarData as $file) {
-            assert($file instanceof PharFileInfo);
+            if (!$file instanceof PharFileInfo) {
+                throw UnexpectedType::expected(PharFileInfo::class, $file);
+            }
+
             $extractedFilenames[] = $destination . DIRECTORY_SEPARATOR . $file->getFilename();
         }
 

@@ -30,10 +30,10 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    public const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win64';
-    public const DOWNLOAD_PATH_OS_PART_MACOS = 'macos';
-    public const DOWNLOAD_PATH_OS_PART_LINUX = 'linux64';
-    public const DOWNLOAD_PATH = 'https://github.com/mozilla/geckodriver/releases/download/v%s/geckodriver-v%s-%s.tar.gz';
+    private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win64';
+    private const DOWNLOAD_PATH_OS_PART_MACOS = 'macos';
+    private const DOWNLOAD_PATH_OS_PART_LINUX = 'linux64';
+    private const DOWNLOAD_BASE_PATH = 'https://github.com/mozilla/geckodriver/releases/download/';
 
     /** @var Filesystem  */
     private $filesystem;
@@ -118,8 +118,8 @@ final class Downloader implements DownloaderInterface
      */
     private function getDownloadPath(Driver $driver): string
     {
-        return sprintf(
-            self::DOWNLOAD_PATH,
+        return self::DOWNLOAD_BASE_PATH . sprintf(
+            'v%s/geckodriver-v%s-%s.tar.gz',
             $driver->version()->toString(),
             $driver->version()->toString(),
             $this->getOsForDownloadPath($driver)
