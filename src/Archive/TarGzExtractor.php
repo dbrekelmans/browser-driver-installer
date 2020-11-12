@@ -19,7 +19,7 @@ final class TarGzExtractor implements Extractor
     {
         $tarGzData = new PharData($archive);
         $tarData = $tarGzData->decompress();
-        $tarData->extractTo($destination);
+        $tarData->extractTo($destination, null, true);
 
         $extractedFilenames = [];
         foreach ($tarData as $file) {
