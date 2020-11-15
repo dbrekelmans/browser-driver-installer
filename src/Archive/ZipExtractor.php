@@ -51,4 +51,9 @@ final class ZipExtractor implements Extractor
 
         return $extractedFilenames;
     }
+
+    public function getSupportedMimeTypes(): array
+    {
+        return ['application/zip'];
+    }
 }

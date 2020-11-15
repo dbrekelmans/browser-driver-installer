@@ -28,9 +28,8 @@ $shellCommandLineEnv = new ShellCommandLineEnvironment();
 $tarGzExtractor = new TarGzExtractor();
 $zipExtractor = new ZipExtractor($zipArchive);
 $multiExtractor = new MultiExtractor();
-//TODO put mimeType supported in a support method
-$multiExtractor->register($zipExtractor, 'application/zip');
-$multiExtractor->register($tarGzExtractor, 'application/gzip');
+$multiExtractor->register($zipExtractor);
+$multiExtractor->register($tarGzExtractor);
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());

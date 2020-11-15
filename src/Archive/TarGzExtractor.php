@@ -33,4 +33,15 @@ final class TarGzExtractor implements Extractor
 
         return $extractedFilenames;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSupportedMimeTypes(): array
+    {
+        return [
+            'application/gzip',
+            'application/x-gzip',
+        ];
+    }
 }
