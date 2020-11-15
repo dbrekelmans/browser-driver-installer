@@ -86,7 +86,7 @@ class DownloaderTest extends TestCase
     {
         $this->filesystem
             ->method('tempnam')
-            ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'geckodriver-XXX.tar.gz');
+            ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'geckodriver-XXX.zip');
 
         $this->archiveExtractor
             ->method('extract')
@@ -95,7 +95,7 @@ class DownloaderTest extends TestCase
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-win64.tar.gz');
+            ->with('GET', 'https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-win64.zip');
 
         $geckoWindows = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::WINDOWS());
         $filePath = $this->downloader->download($geckoWindows, '.');

@@ -3,7 +3,9 @@
 
 declare(strict_types=1);
 
+use DBrekelmans\BrowserDriverInstaller\Archive\MultiExtractor;
 use DBrekelmans\BrowserDriverInstaller\Archive\TarGzExtractor;
+use DBrekelmans\BrowserDriverInstaller\Archive\ZipExtractor;
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
@@ -24,6 +26,11 @@ $filesystem = new Filesystem();
 $zipArchive = new ZipArchive();
 $shellCommandLineEnv = new ShellCommandLineEnvironment();
 $tarGzExtractor = new TarGzExtractor();
+$zipExtractor = new ZipExtractor($zipArchive);
+$multiExtractor = new MultiExtractor();
+//TODO put mimeType supported in a support method
+$multiExtractor->register($zipExtractor, 'application/zip');
+$multiExtractor->register($tarGzExtractor, 'application/gzip');
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
@@ -40,8 +47,9 @@ $driverVersionResolverFactory->register($chromeDriverVersionResolver);
 $driverVersionResolverFactory->register($geckoDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
+//TODO use instead zipExtractor
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
-$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $tarGzExtractor));
+$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $multiExtractor));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);

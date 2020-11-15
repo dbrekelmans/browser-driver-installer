@@ -94,7 +94,7 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver): string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver', '.tar.gz');
+        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver', $this->getArchiveExtension($driver));
 
         $response = $this->httpClient->request('GET', $this->getDownloadPath($driver));
 
@@ -119,10 +119,11 @@ final class Downloader implements DownloaderInterface
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
-            'v%s/geckodriver-v%s-%s.tar.gz',
+            'v%s/geckodriver-v%s-%s%s',
             $driver->version()->toString(),
             $driver->version()->toString(),
-            $this->getOsForDownloadPath($driver)
+            $this->getOsForDownloadPath($driver),
+            $this->getArchiveExtension($driver)
         );
     }
 
@@ -161,5 +162,14 @@ final class Downloader implements DownloaderInterface
         }
 
         throw new RuntimeException(sprintf('Archive %s does not contain any geckodriver file', $archive));
+    }
+
+    private function getArchiveExtension(Driver $driver): string
+    {
+        if ($driver->operatingSystem()->equals(OperatingSystem::WINDOWS())) {
+            return '.zip';
+        }
+
+        return '.tar.gz';
     }
 }
