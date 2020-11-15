@@ -40,6 +40,7 @@ final class Downloader implements DownloaderInterface
 
     /** @var HttpClientInterface  */
     private $httpClient;
+
     /** @var Extractor */
     private $archiveExtractor;
 

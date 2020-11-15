@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
@@ -16,8 +17,8 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-use ZipArchive;
 
+use function count;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
@@ -39,14 +40,14 @@ final class Downloader implements DownloaderInterface
     /** @var HttpClientInterface */
     private $httpClient;
 
-    /** @var ZipArchive */
-    private $zip;
+    /** @var Extractor */
+    private $archiveExtractor;
 
-    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, ZipArchive $zip)
+    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
         $this->filesystem = $filesystem;
         $this->httpClient = $httpClient;
-        $this->zip = $zip;
+        $this->archiveExtractor = $archiveExtractor;
     }
 
     public function supports(Driver $driver): bool
@@ -166,41 +167,17 @@ final class Downloader implements DownloaderInterface
      */
     private function extractArchive(string $archive): string
     {
-        $success = $this->zip->open($archive);
+        $unzipLocation = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
+        $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
 
-        if ($success !== true) {
-            throw new RuntimeException(sprintf('Could not open archive %s.', $archive));
-        }
-
-        $count = $this->zip->count();
+        $count = count($extractedFiles);
         if ($count !== 1) {
             throw new UnexpectedValueException(sprintf('Expected exactly one file in the archive. Found %d', $count));
         }
 
-        $unzipLocation = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
-        $success = $this->zip->extractTo($unzipLocation);
-
-        if ($success !== true) {
-            throw new RuntimeException(
-                sprintf(
-                    'Could not extract archive %s to %s.',
-                    $archive,
-                    $unzipLocation
-                )
-            );
-        }
-
-        $filename = $this->zip->getNameIndex(0);
-        $link = $unzipLocation . DIRECTORY_SEPARATOR . $filename;
-
-        $file = $this->filesystem->readlink($link, true);
+        $file = $this->filesystem->readlink($extractedFiles[0], true);
         if ($file === null) {
-            throw new RuntimeException(sprintf('Could not read link %s', $link));
-        }
-
-        $success = $this->zip->close();
-        if ($success !== true) {
-            throw new RuntimeException(sprintf('Could not close zip archive %s.', $archive));
+            throw new RuntimeException(sprintf('Could not read link %s', $extractedFiles[0]));
         }
 
         $this->filesystem->remove($archive);
