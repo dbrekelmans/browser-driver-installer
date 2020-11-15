@@ -56,8 +56,9 @@ class VersionResolverTest extends TestCase
     public function testFromWindows(): void
     {
         $this->mockCommandLineCommandOutput(
-            'wmic datafile where name="C:\Program Files (x86)\Chromium\Application\chrome.exe" get Version /value',
-            'Chromium 88.0.4299.0'
+            'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
+            'HKEY_LOCAL_MACHINE\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96}
+    pv    REG_SZ    88.0.4299.0'
         );
 
         self::assertEquals(
