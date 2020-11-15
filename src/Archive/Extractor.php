@@ -18,5 +18,5 @@ interface Extractor
     /**
      * @return string[]
      */
-    public function getSupportedMimeTypes(): array;
+    public function getSupportedExtensions(): array;
 }

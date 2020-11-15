@@ -37,11 +37,8 @@ final class TarGzExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function getSupportedMimeTypes(): array
+    public function getSupportedExtensions(): array
     {
-        return [
-            'application/gzip',
-            'application/x-gzip',
-        ];
+        return ['gz'];
     }
 }

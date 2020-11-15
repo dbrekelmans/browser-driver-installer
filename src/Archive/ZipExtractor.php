@@ -55,8 +55,8 @@ final class ZipExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function getSupportedMimeTypes(): array
+    public function getSupportedExtensions(): array
     {
-        return ['application/zip'];
+        return ['zip'];
     }
 }
