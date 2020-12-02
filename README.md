@@ -30,8 +30,10 @@ You can download the PHAR directly from the github [releases page](https://githu
 Run with `bdi.phar <command>`.
 
 ## Usage
-If you want to install a specific browser driver, you can use `bdi driver:<driver-name>`.
-If you're not sure which driver you need, you can specify your browser, and the correct driver will automatically be installed `bdi browser:<browser-name>`.
+Run `bdi` or `bdi detect` to automatically detect your installed browsers and install the corresponding drivers.
+
+If you want to install any working driver for a specific browser, run `bdi browser:<browser-name>`.
+If you want to install a specific driver, run `bdi driver:<driver-name>` (defaults to the latest version. Use `--driver-version=<version>` to install a different version).
 
 For a full list of available commands, run `bdi list`.
 

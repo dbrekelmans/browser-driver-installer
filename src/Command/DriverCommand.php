@@ -19,6 +19,8 @@ use function Safe\sprintf;
 
 abstract class DriverCommand extends Command
 {
+    public const PREFIX = 'driver';
+
     /** @var VersionResolver */
     private $versionResolver;
 
@@ -32,7 +34,7 @@ abstract class DriverCommand extends Command
         $this->versionResolver = $versionResolver;
         $this->downloaderFactory = $downloaderFactory;
 
-        parent::__construct(sprintf('driver:%s', static::driverName()->getValue()));
+        parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->getValue()));
     }
 
     abstract protected static function driverName(): DriverName;
