@@ -32,7 +32,7 @@ final class InstallPathArgument extends InputArgument implements Argument
 
     public function mode(): ArgumentMode
     {
-        return ArgumentMode::REQUIRED();
+        return ArgumentMode::OPTIONAL();
     }
 
     public function description(): string
@@ -42,7 +42,7 @@ final class InstallPathArgument extends InputArgument implements Argument
 
     public function default(): ?string
     {
-        return null;
+        return '.';
     }
 
     /**
