@@ -25,7 +25,7 @@ final class DetectCommand extends Command
         parent::__construct(self::NAME);
     }
 
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Detects installed browsers and installs corresponding drivers.');
 
@@ -39,7 +39,7 @@ final class DetectCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
