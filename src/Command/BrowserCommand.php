@@ -19,6 +19,8 @@ use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
+    public const PREFIX = 'browser';
+
     /** @var Filesystem */
     protected $filesystem;
 
@@ -42,7 +44,7 @@ abstract class BrowserCommand extends Command
         $this->driverFactory = $driverFactory;
         $this->driverDownloaderFactory = $driverDownloaderFactory;
 
-        parent::__construct(sprintf('browser:%s', static::browserName()->getValue()));
+        parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->getValue()));
     }
 
     abstract protected static function browserName(): BrowserName;

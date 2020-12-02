@@ -38,7 +38,7 @@ final class BrowserPathOption extends InputOption implements Option
 
     public function mode(): OptionMode
     {
-        return OptionMode::OPTIONAL();
+        return OptionMode::REQUIRED();
     }
 
     public function description(): string

@@ -9,6 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Archive\ZipExtractor;
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
+use DBrekelmans\BrowserDriverInstaller\Command\DetectCommand;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
@@ -52,9 +53,12 @@ $driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $http
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 
+$application->add(new DetectCommand());
 $application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new Chromium\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
 $application->add(new GeckoDriver\Command($geckoDriverVersionResolver, $driverDownloaderFactory));
+
+$application->setDefaultCommand(DetectCommand::NAME);
 
 $application->run();
