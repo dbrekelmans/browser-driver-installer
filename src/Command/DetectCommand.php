@@ -56,8 +56,6 @@ final class DetectCommand extends Command
             '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->getValue(),
         ];
 
-        $returnCode = self::SUCCESS;
-
         foreach (BrowserName::values() as $browserName) {
             $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());
 
@@ -76,11 +74,7 @@ final class DetectCommand extends Command
             }
 
             try {
-                $innerReturnCode = $command->run(new ArrayInput($arguments), $output);
-
-                if ($innerReturnCode > $returnCode) {
-                    $returnCode = $innerReturnCode;
-                }
+                $command->run(new ArrayInput($arguments), $output);
             } catch (ExceptionInterface $exception) {
                 if ($io->isVerbose()) {
                     $io->warning(sprintf('Could not execute command "%s", skipping...', $commandName));
@@ -92,6 +86,6 @@ final class DetectCommand extends Command
             }
         }
 
-        return $returnCode;
+        return self::SUCCESS;
     }
 }
