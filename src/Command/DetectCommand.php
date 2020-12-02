@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Command;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -13,6 +12,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 
 use function Safe\sprintf;
 
@@ -25,7 +25,7 @@ final class DetectCommand extends Command
         parent::__construct(self::NAME);
     }
 
-    protected function configure(): void
+    protected function configure() : void
     {
         $this->setDescription('Detects installed browsers and installs corresponding drivers.');
 
@@ -39,7 +39,7 @@ final class DetectCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -81,7 +81,7 @@ final class DetectCommand extends Command
                 if ($innerReturnCode > $returnCode) {
                     $returnCode = $innerReturnCode;
                 }
-            } catch (Exception $exception) { // @phpstan-ignore-line
+            } catch (Throwable $exception) { // @phpstan-ignore-line
                 if ($io->isVerbose()) {
                     $io->warning(sprintf('Could not execute command "%s".', $commandName));
                 }
