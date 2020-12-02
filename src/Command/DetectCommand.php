@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Command;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
+use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
-use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,6 +56,8 @@ final class DetectCommand extends Command
             '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->getValue(),
         ];
 
+        $returnCode = self::SUCCESS;
+
         foreach (BrowserName::values() as $browserName) {
             $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());
 
@@ -74,10 +76,14 @@ final class DetectCommand extends Command
             }
 
             try {
-                $command->run(new ArrayInput($arguments), $output);
-            } catch (ExceptionInterface $exception) {
+                $innerReturnCode = $command->run(new ArrayInput($arguments), $output);
+
+                if ($innerReturnCode > $returnCode) {
+                    $returnCode = $innerReturnCode;
+                }
+            } catch (Exception $exception) { // @phpstan-ignore-line
                 if ($io->isVerbose()) {
-                    $io->warning(sprintf('Could not execute command "%s", skipping...', $commandName));
+                    $io->warning(sprintf('Could not execute command "%s".', $commandName));
                 }
 
                 if ($io->isDebug()) {
@@ -86,6 +92,6 @@ final class DetectCommand extends Command
             }
         }
 
-        return self::SUCCESS;
+        return $returnCode;
     }
 }
