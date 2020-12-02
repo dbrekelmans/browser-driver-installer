@@ -107,6 +107,5 @@ jobs:
       - run: php bdi
       - run: php bdi detect
       - run: php bdi browser:google-chrome -vvv
-      - run: php bdi browser:chromium -vvv
       - run: php bdi driver:chromedriver -vvv
       - run: php bdi driver:geckodriver -vvv

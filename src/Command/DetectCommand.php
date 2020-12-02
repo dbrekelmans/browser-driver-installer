@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Command;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
-use Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,8 +58,8 @@ final class DetectCommand extends Command
 
         $returnCode = self::SUCCESS;
 
-        foreach (BrowserName::toArray() as $browserName) {
-            $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName);
+        foreach (BrowserName::values() as $browserName) {
+            $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());
 
             try {
                 $command = $application->find($commandName);
@@ -81,7 +81,7 @@ final class DetectCommand extends Command
                 if ($innerReturnCode > $returnCode) {
                     $returnCode = $innerReturnCode;
                 }
-            } catch (Exception $exception) {
+            } catch (ExceptionInterface $exception) {
                 if ($io->isVerbose()) {
                     $io->warning(sprintf('Could not execute command "%s", skipping...', $commandName));
                 }
