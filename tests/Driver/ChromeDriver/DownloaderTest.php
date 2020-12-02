@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver\ChromeDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver\Downloader;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
@@ -14,7 +15,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use ZipArchive;
 
 use function sys_get_temp_dir;
 
@@ -31,8 +31,8 @@ class DownloaderTest extends TestCase
     /** @var Stub&Filesystem */
     private $filesystem;
 
-    /** @var Stub&ZipArchive */
-    private $zip;
+    /** @var Stub&Extractor */
+    private $archiveExtractor;
 
     /** @var MockObject&HttpClientInterface */
     private $httpClient;
@@ -50,7 +50,7 @@ class DownloaderTest extends TestCase
 
     public function testDownloadMac(): void
     {
-        $this->mockFsAndZipForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
         $this->httpClient
             ->expects(self::atLeastOnce())
@@ -64,7 +64,7 @@ class DownloaderTest extends TestCase
 
     public function testDownloadLinux(): void
     {
-        $this->mockFsAndZipForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
         $this->httpClient
             ->expects(self::atLeastOnce())
@@ -79,7 +79,7 @@ class DownloaderTest extends TestCase
 
     public function testDownloadWindows(): void
     {
-        $this->mockFsAndZipForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
         $this->httpClient
             ->expects(self::atLeastOnce())
@@ -96,13 +96,13 @@ class DownloaderTest extends TestCase
     {
         $this->filesystem = $this->createStub(Filesystem::class);
         $this->httpClient = $this->createMock(HttpClientInterface::class);
-        $this->zip = $this->createStub(ZipArchive::class);
-        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->zip);
+        $this->archiveExtractor = $this->createStub(Extractor::class);
+        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
 
         $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
-    private function mockFsAndZipForSuccessfulDownload(): void
+    private function mockFsAndArchiveExtractorForSuccessfulDownload(): void
     {
         $this->filesystem
             ->method('tempnam')
@@ -111,17 +111,8 @@ class DownloaderTest extends TestCase
             ->method('readLink')
             ->willReturn('YYY');
 
-        $this->zip
-            ->method('open')
-            ->willReturn(true);
-        $this->zip
-            ->method('count')
-            ->willReturn(1);
-        $this->zip
-            ->method('extractTo')
-            ->willReturn(true);
-        $this->zip
-            ->method('close')
-            ->willReturn(true);
+        $this->archiveExtractor
+            ->method('extract')
+            ->willReturn(['./chromedriver']);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
+namespace DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
@@ -16,28 +16,29 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use UnexpectedValueException;
 
-use function count;
+use function basename;
+use function dirname;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
+use function strpos;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const DOWNLOAD_ENDPOINT = 'https://chromedriver.storage.googleapis.com';
-    private const BINARY_LINUX = 'chromedriver_linux64';
-    private const BINARY_MAC = 'chromedriver_mac64';
-    private const BINARY_WINDOWS = 'chromedriver_win32';
+    private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win64';
+    private const DOWNLOAD_PATH_OS_PART_MACOS = 'macos';
+    private const DOWNLOAD_PATH_OS_PART_LINUX = 'linux64';
+    private const DOWNLOAD_BASE_PATH = 'https://github.com/mozilla/geckodriver/releases/download/';
 
-    /** @var Filesystem */
+    /** @var Filesystem  */
     private $filesystem;
 
-    /** @var HttpClientInterface */
+    /** @var HttpClientInterface  */
     private $httpClient;
 
     /** @var Extractor */
@@ -50,50 +51,31 @@ final class Downloader implements DownloaderInterface
         $this->archiveExtractor = $archiveExtractor;
     }
 
-    public function supports(Driver $driver): bool
-    {
-        return $driver->name()->equals(DriverName::CHROME());
-    }
-
-    /**
-     * @throws RuntimeException
-     */
     public function download(Driver $driver, string $location): string
     {
         try {
             $archive = $this->downloadArchive($driver);
         } catch (NotImplemented | FilesystemException | IOException | TransportExceptionInterface $exception) {
-            throw new RuntimeException('Something went wrong downloading the chromedriver archive.', 0, $exception);
+            throw new RuntimeException('Something went wrong downloading the geckodriver archive.', 0, $exception);
         }
 
         try {
             $binary = $this->extractArchive($archive);
         } catch (IOException | RuntimeException $exception) {
-            throw new RuntimeException('Something went wrong extracting the chromedriver archive.', 0, $exception);
+            throw new RuntimeException('Something went wrong extracting the geckodriver archive.', 0, $exception);
         }
-
-        $filePath = $this->getFilePath($location, $driver->operatingSystem());
 
         if (!$this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
         }
 
+        $filePath = $location . DIRECTORY_SEPARATOR . basename($binary);
+
         try {
             $this->filesystem->rename($binary, $filePath, true);
         } catch (IOException $exception) {
             throw new RuntimeException(
-                sprintf('Something went wrong moving the chromedriver to %s.', $location),
-                0,
-                $exception
-            );
-        }
-
-        $mode = 0755;
-        try {
-            $this->filesystem->chmod($filePath, $mode);
-        } catch (IOException $exception) {
-            throw new RuntimeException(
-                sprintf('Something went wrong setting the permissions of the chromedriver to %d.', $mode),
+                sprintf('Something went wrong moving the geckodriver to %s.', $location),
                 0,
                 $exception
             );
@@ -102,25 +84,20 @@ final class Downloader implements DownloaderInterface
         return $filePath;
     }
 
+    public function supports(Driver $driver): bool
+    {
+        return $driver->name()->equals(DriverName::GECKO());
+    }
+
     /**
-     * @throws NotImplemented
-     * @throws TransportExceptionInterface
      * @throws FilesystemException
-     * @throws IOException
+     * @throws TransportExceptionInterface
      */
     private function downloadArchive(Driver $driver): string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'chromedriver', '.zip');
+        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver', $this->getArchiveExtension($driver));
 
-        $response = $this->httpClient->request(
-            'GET',
-            sprintf(
-                '%s/%s/%s.zip',
-                self::DOWNLOAD_ENDPOINT,
-                $driver->version()->toBuildString(),
-                $this->getBinaryName($driver)
-            )
-        );
+        $response = $this->httpClient->request('GET', $this->getDownloadPath($driver));
 
         $fileHandler = fopen($temporaryFile, 'wb');
 
@@ -140,20 +117,34 @@ final class Downloader implements DownloaderInterface
     /**
      * @throws NotImplemented
      */
-    private function getBinaryName(Driver $driver): string
+    private function getDownloadPath(Driver $driver): string
+    {
+        return self::DOWNLOAD_BASE_PATH . sprintf(
+            'v%s/geckodriver-v%s-%s%s',
+            $driver->version()->toString(),
+            $driver->version()->toString(),
+            $this->getOsForDownloadPath($driver),
+            $this->getArchiveExtension($driver)
+        );
+    }
+
+    /**
+     * @throws NotImplemented
+     */
+    private function getOsForDownloadPath(Driver $driver): string
     {
         $operatingSystem = $driver->operatingSystem();
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return self::BINARY_WINDOWS;
+            return self::DOWNLOAD_PATH_OS_PART_WINDOWS;
         }
 
         if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-            return self::BINARY_MAC;
+            return self::DOWNLOAD_PATH_OS_PART_MACOS;
         }
 
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-            return self::BINARY_LINUX;
+            return self::DOWNLOAD_PATH_OS_PART_LINUX;
         }
 
         throw NotImplemented::feature(
@@ -161,38 +152,25 @@ final class Downloader implements DownloaderInterface
         );
     }
 
-    /**
-     * @throws RuntimeException
-     * @throws IOException
-     */
     private function extractArchive(string $archive): string
     {
-        $unzipLocation = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
-        $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
+        $extractedFiles = $this->archiveExtractor->extract($archive, dirname($archive));
 
-        $count = count($extractedFiles);
-        if ($count !== 1) {
-            throw new UnexpectedValueException(sprintf('Expected exactly one file in the archive. Found %d', $count));
+        foreach ($extractedFiles as $filename) {
+            if (strpos($filename, 'geckodriver') !== false) {
+                return $filename;
+            }
         }
 
-        $file = $this->filesystem->readlink($extractedFiles[0], true);
-        if ($file === null) {
-            throw new RuntimeException(sprintf('Could not read link %s', $extractedFiles[0]));
-        }
-
-        $this->filesystem->remove($archive);
-
-        return $file;
+        throw new RuntimeException(sprintf('Archive %s does not contain any geckodriver file', $archive));
     }
 
-    private function getFilePath(string $location, OperatingSystem $operatingSystem): string
+    private function getArchiveExtension(Driver $driver): string
     {
-        $filePath = $location . DIRECTORY_SEPARATOR . 'chromedriver';
-
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            $filePath .= '.exe';
+        if ($driver->operatingSystem()->equals(OperatingSystem::WINDOWS())) {
+            return '.zip';
         }
 
-        return $filePath;
+        return '.tar.gz';
     }
 }

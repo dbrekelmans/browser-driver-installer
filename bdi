@@ -3,12 +3,16 @@
 
 declare(strict_types=1);
 
+use DBrekelmans\BrowserDriverInstaller\Archive\MultiExtractor;
+use DBrekelmans\BrowserDriverInstaller\Archive\TarGzExtractor;
+use DBrekelmans\BrowserDriverInstaller\Archive\ZipExtractor;
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
+use DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\NativeHttpClient;
@@ -21,6 +25,11 @@ $httpClient = new NativeHttpClient();
 $filesystem = new Filesystem();
 $zipArchive = new ZipArchive();
 $shellCommandLineEnv = new ShellCommandLineEnvironment();
+$tarGzExtractor = new TarGzExtractor();
+$zipExtractor = new ZipExtractor($zipArchive);
+$multiExtractor = new MultiExtractor();
+$multiExtractor->register($zipExtractor);
+$multiExtractor->register($tarGzExtractor);
 
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
@@ -32,10 +41,13 @@ $browserVersionResolverFactory->register(new Chromium\VersionResolver($shellComm
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
+$geckoDriverVersionResolver = new GeckoDriver\VersionResolver($httpClient);
 $driverVersionResolverFactory->register($chromeDriverVersionResolver);
+$driverVersionResolverFactory->register($geckoDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
-$driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $zipArchive));
+$driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $multiExtractor));
+$driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $multiExtractor));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
@@ -43,5 +55,6 @@ $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 $application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new Chromium\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
+$application->add(new GeckoDriver\Command($geckoDriverVersionResolver, $driverDownloaderFactory));
 
 $application->run();
