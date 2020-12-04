@@ -8,6 +8,7 @@ use DBrekelmans\BrowserDriverInstaller\Archive\TarGzExtractor;
 use DBrekelmans\BrowserDriverInstaller\Archive\ZipExtractor;
 use DBrekelmans\BrowserDriverInstaller\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
+use DBrekelmans\BrowserDriverInstaller\Browser\Firefox;
 use DBrekelmans\BrowserDriverInstaller\Browser\GoogleChrome;
 use DBrekelmans\BrowserDriverInstaller\Command\DetectCommand;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\ShellCommandLineEnvironment;
@@ -35,10 +36,12 @@ $multiExtractor->register($tarGzExtractor);
 $browserPathResolverFactory = new Browser\PathResolverFactory();
 $browserPathResolverFactory->register(new GoogleChrome\PathResolver());
 $browserPathResolverFactory->register(new Chromium\PathResolver());
+$browserPathResolverFactory->register(new Firefox\PathResolver());
 
 $browserVersionResolverFactory = new Browser\VersionResolverFactory();
 $browserVersionResolverFactory->register(new GoogleChrome\VersionResolver($shellCommandLineEnv));
 $browserVersionResolverFactory->register(new Chromium\VersionResolver($shellCommandLineEnv));
+$browserVersionResolverFactory->register(new Firefox\VersionResolver($shellCommandLineEnv));
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
@@ -56,6 +59,7 @@ $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
 $application->add(new DetectCommand());
 $application->add(new GoogleChrome\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new Chromium\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
+$application->add(new Firefox\Command($filesystem, $browserFactory, $driverFactory, $driverDownloaderFactory));
 $application->add(new ChromeDriver\Command($chromeDriverVersionResolver, $driverDownloaderFactory));
 $application->add(new GeckoDriver\Command($geckoDriverVersionResolver, $driverDownloaderFactory));
 
