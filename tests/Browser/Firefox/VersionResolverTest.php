@@ -56,13 +56,13 @@ final class VersionResolverTest extends TestCase
     public function testFromWindows(): void
     {
         $this->mockCommandLineCommandOutput(
-            'C:\\Program Files (x86)\\Firefox\\Application\\firefox --version',
+            'C:\\Program Files (x86)\\Mozilla Firefox\\firefox --version',
             'Mozilla Firefox 83.0'
         );
 
         self::assertEquals(
             Version::fromString('83.0'),
-            $this->versionResolver->from(OperatingSystem::WINDOWS(), 'C:\\Program Files (x86)\\Firefox\\Application\\firefox')
+            $this->versionResolver->from(OperatingSystem::WINDOWS(), 'C:\\Program Files (x86)\\Mozilla Firefox\\firefox')
         );
     }
 
