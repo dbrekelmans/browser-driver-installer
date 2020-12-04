@@ -24,7 +24,7 @@ final class PathResolver implements PathResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return 'C:\\Program Files (x86)\\Firefox\\Application\\firefox.exe';
+            return 'C:\\Program Files (x86)\\Firefox\\Application\\firefox';
         }
 
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));

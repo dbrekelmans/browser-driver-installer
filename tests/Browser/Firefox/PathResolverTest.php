@@ -19,7 +19,7 @@ final class PathResolverTest extends TestCase
         self::assertSame('firefox', $this->pathResolver->from(OperatingSystem::LINUX()));
         self::assertSame('/Applications/Firefox.app', $this->pathResolver->from(OperatingSystem::MACOS()));
         self::assertSame(
-            'C:\Program Files (x86)\Firefox\Application\firefox.exe',
+            'C:\Program Files (x86)\Firefox\Application\firefox',
             $this->pathResolver->from(OperatingSystem::WINDOWS())
         );
     }
