@@ -4,7 +4,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
 >
-    <rule ref="dbrekelmans"/>
+    <rule ref="Doctrine"/>
 
     <config name="ignore_warnings_on_exit" value="1"/>
 
