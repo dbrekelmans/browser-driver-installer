@@ -20,8 +20,8 @@ final class Browser
 
     public function __construct(BrowserName $name, Version $version, OperatingSystem $operatingSystem)
     {
-        $this->name = $name;
-        $this->version = $version;
+        $this->name            = $name;
+        $this->version         = $version;
         $this->operatingSystem = $operatingSystem;
     }
 

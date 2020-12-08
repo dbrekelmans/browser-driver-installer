@@ -69,7 +69,7 @@ final class VersionResolverTest extends TestCase
     protected function setUp(): void
     {
         $this->commandLineEnvMock = $this->createMock(CommandLineEnvironment::class);
-        $this->versionResolver = new VersionResolver($this->commandLineEnvMock);
+        $this->versionResolver    = new VersionResolver($this->commandLineEnvMock);
     }
 
     private function mockCommandLineCommandOutput(string $command, string $output): void

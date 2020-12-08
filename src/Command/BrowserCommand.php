@@ -39,9 +39,9 @@ abstract class BrowserCommand extends Command
         DriverFactory $driverFactory,
         DownloaderFactory $driverDownloaderFactory
     ) {
-        $this->filesystem = $filesystem;
-        $this->browserFactory = $browserFactory;
-        $this->driverFactory = $driverFactory;
+        $this->filesystem              = $filesystem;
+        $this->browserFactory          = $browserFactory;
+        $this->driverFactory           = $driverFactory;
         $this->driverDownloaderFactory = $driverDownloaderFactory;
 
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->getValue()));
@@ -70,9 +70,9 @@ abstract class BrowserCommand extends Command
 
         $browserName = static::browserName();
 
-        $installPath = Input\InstallPathArgument::value($input);
+        $installPath     = Input\InstallPathArgument::value($input);
         $operatingSystem = Input\OperatingSystemOption::value($input);
-        $browserPath = Input\BrowserPathOption::value($input);
+        $browserPath     = Input\BrowserPathOption::value($input);
 
         if ($browserPath === null) {
             $browser = $this->browserFactory->createFromNameAndOperatingSystem($browserName, $operatingSystem);
@@ -97,7 +97,7 @@ abstract class BrowserCommand extends Command
         }
 
         $driverDownloader = $this->driverDownloaderFactory->createFromDriver($driver);
-        $filePath = $driverDownloader->download($driver, $installPath);
+        $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
             sprintf('%s %s installed to %s', $driver->name()->getValue(), $driver->version()->toBuildString(), $filePath)

@@ -27,7 +27,7 @@ final class MultiExtractor implements Extractor
     {
         $pathParts = pathinfo($archive);
 
-        if (!isset($pathParts['extension'])) {
+        if (! isset($pathParts['extension'])) {
             throw new Unsupported(sprintf('Can not find extension for archive %s', $archive));
         }
 
@@ -51,6 +51,6 @@ final class MultiExtractor implements Extractor
     public function register(Extractor $extractor): void
     {
         $this->registeredExtractors[] = $extractor;
-        $this->supportedExtensions = array_unique(array_merge($this->supportedExtensions, $extractor->getSupportedExtensions()));
+        $this->supportedExtensions    = array_unique(array_merge($this->supportedExtensions, $extractor->getSupportedExtensions()));
     }
 }

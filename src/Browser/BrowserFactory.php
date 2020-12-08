@@ -18,14 +18,14 @@ final class BrowserFactory
         PathResolverFactory $pathResolverFactory,
         VersionResolverFactory $versionResolverFactory
     ) {
-        $this->pathResolverFactory = $pathResolverFactory;
+        $this->pathResolverFactory    = $pathResolverFactory;
         $this->versionResolverFactory = $versionResolverFactory;
     }
 
     public function createFromNameAndOperatingSystem(BrowserName $name, OperatingSystem $operatingSystem): Browser
     {
         $pathResolver = $this->pathResolverFactory->createFromName($name);
-        $path = $pathResolver->from($operatingSystem);
+        $path         = $pathResolver->from($operatingSystem);
 
         return $this->createFromNameOperatingSystemAndPath($name, $operatingSystem, $path);
     }
@@ -36,7 +36,7 @@ final class BrowserFactory
         string $path
     ): Browser {
         $versionResolver = $this->versionResolverFactory->createFromName($name);
-        $version = $versionResolver->from($operatingSystem, $path);
+        $version         = $versionResolver->from($operatingSystem, $path);
 
         return new Browser($name, $version, $operatingSystem);
     }

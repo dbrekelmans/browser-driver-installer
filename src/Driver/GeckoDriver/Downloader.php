@@ -31,9 +31,9 @@ use const DIRECTORY_SEPARATOR;
 final class Downloader implements DownloaderInterface
 {
     private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win64';
-    private const DOWNLOAD_PATH_OS_PART_MACOS = 'macos';
-    private const DOWNLOAD_PATH_OS_PART_LINUX = 'linux64';
-    private const DOWNLOAD_BASE_PATH = 'https://github.com/mozilla/geckodriver/releases/download/';
+    private const DOWNLOAD_PATH_OS_PART_MACOS   = 'macos';
+    private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
+    private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
     /** @var Filesystem  */
     private $filesystem;
@@ -46,8 +46,8 @@ final class Downloader implements DownloaderInterface
 
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
-        $this->filesystem = $filesystem;
-        $this->httpClient = $httpClient;
+        $this->filesystem       = $filesystem;
+        $this->httpClient       = $httpClient;
         $this->archiveExtractor = $archiveExtractor;
     }
 
@@ -65,7 +65,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException('Something went wrong extracting the geckodriver archive.', 0, $exception);
         }
 
-        if (!$this->filesystem->exists($location)) {
+        if (! $this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
         }
 

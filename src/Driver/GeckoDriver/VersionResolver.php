@@ -52,7 +52,7 @@ final class VersionResolver implements VersionResolverInterface
         $minRequiredBrowserVersions = self::MIN_REQUIRED_BROWSER_VERSIONS;
         krsort($minRequiredBrowserVersions);
         foreach ($minRequiredBrowserVersions as $minReqVersion => $geckoVersion) {
-            if (!is_string($geckoVersion)) {
+            if (! is_string($geckoVersion)) {
                 throw UnexpectedType::expected('string', $geckoVersion);
             }
 
@@ -69,7 +69,7 @@ final class VersionResolver implements VersionResolverInterface
         $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
         /** @var array<mixed> $data */
         $data = json_decode($response->getContent(), true);
-        if (!isset($data['name'])) {
+        if (! isset($data['name'])) {
             throw new RuntimeException('Can not find latest release name');
         }
 

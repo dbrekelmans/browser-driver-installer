@@ -53,7 +53,7 @@ final class Version
                 );
             }
 
-            if (!isset($matches['major'], $matches['minor'])) {
+            if (! isset($matches['major'], $matches['minor'])) {
                 throw new InvalidArgumentException(
                     sprintf('Could not parse version string "%s".', $versionString)
                 );

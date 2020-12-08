@@ -18,13 +18,13 @@ final class TarGzExtractor implements Extractor
     public function extract(string $archive, string $destination): array
     {
         $tarGzData = new PharData($archive);
-        $tarData = $tarGzData->decompress();
+        $tarData   = $tarGzData->decompress();
         /** @phpstan-ignore-next-line */
         $tarData->extractTo($destination, null, true);
 
         $extractedFilenames = [];
         foreach ($tarData as $file) {
-            if (!$file instanceof PharFileInfo) {
+            if (! $file instanceof PharFileInfo) {
                 throw UnexpectedType::expected(PharFileInfo::class, $file);
             }
 

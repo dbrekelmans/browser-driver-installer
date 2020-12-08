@@ -35,11 +35,11 @@ class DownloaderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->filesystem = $this->createStub(Filesystem::class);
-        $this->httpClient = $this->createMock(HttpClientInterface::class);
+        $this->filesystem       = $this->createStub(Filesystem::class);
+        $this->httpClient       = $this->createMock(HttpClientInterface::class);
         $this->archiveExtractor = $this->createMock(Extractor::class);
-        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
-        $this->geckoMac = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
+        $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
+        $this->geckoMac         = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
     }
 
     public function testSupportGecko(): void
@@ -77,7 +77,7 @@ class DownloaderTest extends TestCase
             ->with('GET', 'https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-linux64.tar.gz');
 
         $geckoLinux = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::LINUX());
-        $filePath = $this->downloader->download($geckoLinux, '.');
+        $filePath   = $this->downloader->download($geckoLinux, '.');
 
         self::assertEquals('./geckodriver', $filePath);
     }
@@ -98,7 +98,7 @@ class DownloaderTest extends TestCase
             ->with('GET', 'https://github.com/mozilla/geckodriver/releases/download/v0.27.0/geckodriver-v0.27.0-win64.zip');
 
         $geckoWindows = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::WINDOWS());
-        $filePath = $this->downloader->download($geckoWindows, '.');
+        $filePath     = $this->downloader->download($geckoWindows, '.');
 
         self::assertEquals('./geckodriver.exe', $filePath);
     }

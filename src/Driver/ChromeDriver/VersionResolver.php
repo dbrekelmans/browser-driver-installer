@@ -33,7 +33,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function fromBrowser(Browser $browser): Version
     {
-        if (!$this->supports($browser)) {
+        if (! $this->supports($browser)) {
             throw new Unsupported(sprintf('%s is not supported.', $browser->name()->getValue()));
         }
 
@@ -66,7 +66,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
+        $response      = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
         $versionString = $response->getContent();
 
         return Version::fromString($versionString);
@@ -84,7 +84,7 @@ final class VersionResolver implements VersionResolverInterface
     {
         $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
 
-        $stableVersion = $this->latest();
+        $stableVersion    = $this->latest();
         $betaVersionMajor = (int) $stableVersion->major() + 1;
 
         if ((int) $browser->version()->major() > $betaVersionMajor) {

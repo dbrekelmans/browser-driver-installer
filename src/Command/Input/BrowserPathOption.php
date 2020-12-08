@@ -62,7 +62,7 @@ final class BrowserPathOption extends InputOption implements Option
             return null;
         }
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 

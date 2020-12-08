@@ -23,7 +23,7 @@ final class DriverFactory
     public function createFromBrowser(Browser $browser): Driver
     {
         $versionResolver = $this->versionResolverFactory->createFromBrowser($browser);
-        $version = $versionResolver->fromBrowser($browser);
+        $version         = $versionResolver->fromBrowser($browser);
 
         $name = $this->getDriverNameForBrowser($browser);
 

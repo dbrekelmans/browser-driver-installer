@@ -31,7 +31,7 @@ abstract class DriverCommand extends Command
         VersionResolver $versionResolver,
         DownloaderFactory $downloaderFactory
     ) {
-        $this->versionResolver = $versionResolver;
+        $this->versionResolver   = $versionResolver;
         $this->downloaderFactory = $downloaderFactory;
 
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->getValue()));
@@ -60,8 +60,8 @@ abstract class DriverCommand extends Command
 
         $driverName = static::driverName();
 
-        $installPath = Input\InstallPathArgument::value($input);
-        $versionString = Input\VersionOption::value($input);
+        $installPath     = Input\InstallPathArgument::value($input);
+        $versionString   = Input\VersionOption::value($input);
         $operatingSystem = Input\OperatingSystemOption::value($input);
 
         // TODO: move this into VersionOption class
@@ -86,7 +86,7 @@ abstract class DriverCommand extends Command
         }
 
         $driverDownloader = $this->downloaderFactory->createFromDriver($driver);
-        $filePath = $driverDownloader->download($driver, $installPath);
+        $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
             sprintf(

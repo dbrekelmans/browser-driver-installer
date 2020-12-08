@@ -15,10 +15,11 @@ interface Argument
     public static function name(): string;
 
     /**
-     * @psalm-return T
      * @return mixed
      *
      * @throws UnexpectedValueException
+     *
+     * @psalm-return T
      */
     public static function value(InputInterface $input);
 

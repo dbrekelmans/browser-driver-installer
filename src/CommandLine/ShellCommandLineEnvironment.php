@@ -17,7 +17,7 @@ class ShellCommandLineEnvironment implements CommandLineEnvironment
         $process = Process::fromShellCommandline($command);
         $process->run();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new RuntimeException(
                 sprintf('Command %s failed', $command),
                 0,
