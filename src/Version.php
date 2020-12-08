@@ -21,13 +21,13 @@ final class Version
     /** @var string */
     private $minor;
 
-    /** @var string */
+    /** @var string|null */
     private $patch;
 
     /** @var string|null */
     private $build;
 
-    private function __construct(string $major, string $minor, string $patch, ?string $build)
+    private function __construct(string $major, string $minor, ?string $patch, ?string $build)
     {
         $this->major = $major;
         $this->minor = $minor;
@@ -43,7 +43,7 @@ final class Version
         try {
             if (
                 preg_match(
-                    "/(?'major'\d+)\.(?'minor'\d+)\.(?'patch'\d+)(\.(?'build'\d+))?/",
+                    "/(?'major'\d+)\.(?'minor'\d+)(\.(?'patch'\d+))?(\.(?'build'\d+))?/",
                     $versionString,
                     $matches
                 ) === 0
@@ -53,7 +53,7 @@ final class Version
                 );
             }
 
-            if (!isset($matches['major'], $matches['minor'], $matches['patch'])) {
+            if (!isset($matches['major'], $matches['minor'])) {
                 throw new InvalidArgumentException(
                     sprintf('Could not parse version string "%s".', $versionString)
                 );
@@ -62,7 +62,7 @@ final class Version
             return new self(
                 (string) $matches['major'],
                 (string) $matches['minor'],
-                (string) $matches['patch'],
+                isset($matches['patch']) ? (string) $matches['patch'] : null,
                 isset($matches['build']) ? (string) $matches['build'] : null
             );
         } catch (PcreException $exception) {
@@ -84,7 +84,7 @@ final class Version
         return $this->minor;
     }
 
-    public function patch(): string
+    public function patch(): ?string
     {
         return $this->patch;
     }
@@ -107,6 +107,12 @@ final class Version
 
     public function toString(): string
     {
-        return implode(self::DELIMITER, [$this->major, $this->minor, $this->patch]);
+        $versionString = implode(self::DELIMITER, [$this->major, $this->minor]);
+
+        if ($this->patch !== null) {
+            $versionString .= self::DELIMITER . $this->patch;
+        }
+
+        return $versionString;
     }
 }
