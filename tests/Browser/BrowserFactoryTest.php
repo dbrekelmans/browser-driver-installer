@@ -26,13 +26,13 @@ final class BrowserFactoryTest extends TestCase
 
     public function testCreateFromNameOperatingSystem(): void
     {
-        $pathResolverFactory = new PathResolverFactory();
+        $pathResolverFactory    = new PathResolverFactory();
         $versionResolverFactory = new VersionResolverFactory();
 
         $factory = new BrowserFactory($pathResolverFactory, $versionResolverFactory);
 
-        $name = BrowserName::GOOGLE_CHROME();
-        $version = Version::fromString('1.0.0');
+        $name            = BrowserName::GOOGLE_CHROME();
+        $version         = Version::fromString('1.0.0');
         $operatingSystem = OperatingSystem::LINUX();
 
         $versionResolver = $this->createStub(VersionResolver::class);
@@ -59,8 +59,8 @@ final class BrowserFactoryTest extends TestCase
 
         $factory = new BrowserFactory(new PathResolverFactory(), $versionResolverFactory);
 
-        $name = BrowserName::GOOGLE_CHROME();
-        $version = Version::fromString('1.0.0');
+        $name            = BrowserName::GOOGLE_CHROME();
+        $version         = Version::fromString('1.0.0');
         $operatingSystem = OperatingSystem::LINUX();
 
         $versionResolver = $this->createStub(VersionResolver::class);

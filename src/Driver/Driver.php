@@ -20,8 +20,8 @@ final class Driver
 
     public function __construct(DriverName $name, Version $version, OperatingSystem $operatingSystem)
     {
-        $this->name = $name;
-        $this->version = $version;
+        $this->name            = $name;
+        $this->version         = $version;
         $this->operatingSystem = $operatingSystem;
     }
 

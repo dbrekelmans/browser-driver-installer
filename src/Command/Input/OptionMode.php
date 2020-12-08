@@ -11,14 +11,12 @@ use MyCLabs\Enum\Enum;
  * @method static self REQUIRED()
  * @method static self OPTIONAL()
  * @method static self IS_ARRAY()
- *
  * @extends Enum<int>
- *
  * @psalm-immutable
  */
 final class OptionMode extends Enum
 {
-    public const NONE = 1;
+    public const NONE     = 1;
     public const REQUIRED = 2;
     public const OPTIONAL = 4;
     public const IS_ARRAY = 8;

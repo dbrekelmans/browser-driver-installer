@@ -79,7 +79,7 @@ class VersionResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $httpClientMock = new MockHttpClient(
+        $httpClientMock        = new MockHttpClient(
             static function (string $method, string $url): MockResponse {
                 $urlsGiving86Version = [
                     'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
@@ -104,8 +104,8 @@ class VersionResolverTest extends TestCase
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 
-        $this->chrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
+        $this->chrome   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
         $this->chromium = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
-        $this->firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->firefox  = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 }

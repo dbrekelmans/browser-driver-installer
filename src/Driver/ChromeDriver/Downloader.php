@@ -30,9 +30,9 @@ use const DIRECTORY_SEPARATOR;
 final class Downloader implements DownloaderInterface
 {
     private const DOWNLOAD_ENDPOINT = 'https://chromedriver.storage.googleapis.com';
-    private const BINARY_LINUX = 'chromedriver_linux64';
-    private const BINARY_MAC = 'chromedriver_mac64';
-    private const BINARY_WINDOWS = 'chromedriver_win32';
+    private const BINARY_LINUX      = 'chromedriver_linux64';
+    private const BINARY_MAC        = 'chromedriver_mac64';
+    private const BINARY_WINDOWS    = 'chromedriver_win32';
 
     /** @var Filesystem */
     private $filesystem;
@@ -45,8 +45,8 @@ final class Downloader implements DownloaderInterface
 
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
-        $this->filesystem = $filesystem;
-        $this->httpClient = $httpClient;
+        $this->filesystem       = $filesystem;
+        $this->httpClient       = $httpClient;
         $this->archiveExtractor = $archiveExtractor;
     }
 
@@ -74,7 +74,7 @@ final class Downloader implements DownloaderInterface
 
         $filePath = $this->getFilePath($location, $driver->operatingSystem());
 
-        if (!$this->filesystem->exists($location)) {
+        if (! $this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
         }
 
@@ -167,7 +167,7 @@ final class Downloader implements DownloaderInterface
      */
     private function extractArchive(string $archive): string
     {
-        $unzipLocation = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
+        $unzipLocation  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
 
         $count = count($extractedFiles);

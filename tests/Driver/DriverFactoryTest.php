@@ -33,7 +33,7 @@ final class DriverFactoryTest extends TestCase
         $versionResolverFactory->register($versionResolver);
 
         $factory = new DriverFactory($versionResolverFactory);
-        $driver = $factory->createFromBrowser($browser);
+        $driver  = $factory->createFromBrowser($browser);
 
         self::assertSameDriver($expectedDriver, $driver);
     }
@@ -46,8 +46,9 @@ final class DriverFactoryTest extends TestCase
     }
 
     /**
-     * @psalm-return array<string, array{Driver, Browser}>
      * @return array<string, array<mixed>>
+     *
+     * @psalm-return array<string, array{Driver, Browser}>
      */
     public function createFromBrowserDataProvider(): array
     {

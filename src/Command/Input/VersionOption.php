@@ -40,7 +40,7 @@ final class VersionOption extends InputOption implements Option
     {
         $value = $input->getOption(self::name());
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 

@@ -13,17 +13,15 @@ use MyCLabs\Enum\Enum;
  * @method static self SOLARIS()
  * @method static self LINUX()
  * @method static self UNKNOWN()
- *
  * @extends Enum<string>
- *
  * @psalm-immutable
  */
 final class Family extends Enum
 {
     public const WINDOWS = 'Windows';
-    public const BSD = 'BSD';
-    public const DARWIN = 'Darwin';
+    public const BSD     = 'BSD';
+    public const DARWIN  = 'Darwin';
     public const SOLARIS = 'Solaris';
-    public const LINUX = 'Linux';
+    public const LINUX   = 'Linux';
     public const UNKNOWN = 'Unknown';
 }

@@ -72,7 +72,7 @@ class DownloaderTest extends TestCase
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
-        $filePath = $this->downloader->download($chromeDriverLinux, '.');
+        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
@@ -87,17 +87,17 @@ class DownloaderTest extends TestCase
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS());
-        $filePath = $this->downloader->download($chromeDriverLinux, '.');
+        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
     protected function setUp(): void
     {
-        $this->filesystem = $this->createStub(Filesystem::class);
-        $this->httpClient = $this->createMock(HttpClientInterface::class);
+        $this->filesystem       = $this->createStub(Filesystem::class);
+        $this->httpClient       = $this->createMock(HttpClientInterface::class);
         $this->archiveExtractor = $this->createStub(Extractor::class);
-        $this->downloader = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
+        $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
 
         $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }

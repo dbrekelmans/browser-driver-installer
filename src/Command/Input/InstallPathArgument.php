@@ -52,7 +52,7 @@ final class InstallPathArgument extends InputArgument implements Argument
     {
         $value = $input->getArgument(self::name());
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 

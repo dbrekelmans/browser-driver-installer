@@ -29,7 +29,7 @@ class VersionResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->httpClient = new MockHttpClient(
+        $this->httpClient      = new MockHttpClient(
             static function (string $method, string $url): MockResponse {
                 if ($method === 'GET' && $url === 'https://api.github.com/repos/mozilla/geckodriver/releases/latest') {
                     return new MockResponse(file_get_contents(__DIR__ . '/../../fixtures/githubResponseGeckoLatest.json'));
@@ -39,8 +39,8 @@ class VersionResolverTest extends TestCase
             }
         );
         $this->versionResolver = new VersionResolver($this->httpClient);
-        $this->chrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
+        $this->firefox         = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 
     public function testDoesNotSupportChrome(): void

@@ -68,11 +68,11 @@ final class OperatingSystemOption extends InputOption implements Option
     {
         $value = $input->getOption(self::name());
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 
-        if (!OperatingSystem::isValid($value)) {
+        if (! OperatingSystem::isValid($value)) {
             throw new UnexpectedValueException(
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
