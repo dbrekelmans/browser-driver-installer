@@ -37,7 +37,7 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return $this->getVersionFromCommandLine(sprintf('%s --version | more', $path));
+            return $this->getVersionFromCommandLine(sprintf('"%s" --version | more', $path));
         }
 
         throw NotImplemented::feature(

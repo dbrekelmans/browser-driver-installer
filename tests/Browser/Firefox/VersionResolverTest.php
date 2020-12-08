@@ -56,7 +56,7 @@ final class VersionResolverTest extends TestCase
     public function testFromWindows(): void
     {
         $this->mockCommandLineCommandOutput(
-            'C:\\Program Files\\Mozilla Firefox\\firefox --version | more',
+            '"C:\\Program Files\\Mozilla Firefox\\firefox" --version | more',
             'Mozilla Firefox 83.0'
         );
 
