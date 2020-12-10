@@ -105,7 +105,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-composer-
       - run: composer install --no-interaction --no-dev --optimize-autoloader
-      - run: php bdi
       - run: php bdi detect
       - run: php bdi browser:google-chrome -vvv
       - run: php bdi browser:firefox -vvv
