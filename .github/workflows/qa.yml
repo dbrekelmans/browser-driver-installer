@@ -44,7 +44,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install --no-interaction
-      - run: vendor/bin/phpstan analyse --error-format=github
+      - run: vendor/bin/phpstan analyse
   psalm:
     runs-on: ubuntu-latest
     steps:
