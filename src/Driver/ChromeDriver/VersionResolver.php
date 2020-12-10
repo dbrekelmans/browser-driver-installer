@@ -16,7 +16,6 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -31,7 +30,7 @@ final class VersionResolver implements VersionResolverInterface
         $this->httpClient = $httpClient;
     }
 
-    public function fromBrowser(Browser $browser): Version
+    public function fromBrowser(Browser $browser) : Version
     {
         if (! $this->supports($browser)) {
             throw new Unsupported(sprintf('%s is not supported.', $browser->name()->getValue()));
@@ -39,8 +38,7 @@ final class VersionResolver implements VersionResolverInterface
 
         try {
             $content = $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
-        } catch (
-            ClientExceptionInterface
+        } catch (ClientExceptionInterface
                 | RedirectionExceptionInterface
                 | ServerExceptionInterface
                 | TransportExceptionInterface
@@ -64,7 +62,7 @@ final class VersionResolver implements VersionResolverInterface
         }
     }
 
-    public function latest(): Version
+    public function latest() : Version
     {
         $response      = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
         $versionString = $response->getContent();
@@ -72,7 +70,7 @@ final class VersionResolver implements VersionResolverInterface
         return Version::fromString($versionString);
     }
 
-    public function supports(Browser $browser): bool
+    public function supports(Browser $browser) : bool
     {
         return $browser->name()->equals(BrowserName::GOOGLE_CHROME()) || $browser->name()->equals(BrowserName::CHROMIUM());
     }
@@ -80,7 +78,7 @@ final class VersionResolver implements VersionResolverInterface
     /**
      * In case of handling with Chrome from Dev or Canary channel we will then take beta ChromeDriver
      */
-    private function getBrowserVersionEndpoint(Browser $browser): string
+    private function getBrowserVersionEndpoint(Browser $browser) : string
     {
         $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
 

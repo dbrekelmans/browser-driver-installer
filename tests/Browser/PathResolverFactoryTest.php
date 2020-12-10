@@ -9,13 +9,14 @@ use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolverFactory;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class PathResolverFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    public function testNoPathResolverImplemented(): void
+    public function testNoPathResolverImplemented() : void
     {
         $factory = new PathResolverFactory();
 
@@ -23,9 +24,9 @@ final class PathResolverFactoryTest extends TestCase
         $factory->createFromName(BrowserName::GOOGLE_CHROME());
     }
 
-    public function testRegisteredPathResolverIsReturned(): void
+    public function testRegisteredPathResolverIsReturned() : void
     {
-        $pathResolver = $this->createStub(PathResolver::class);
+        $pathResolver = $this->createMock(PathResolver::class);
         $pathResolver->method('supports')->willReturn(true);
 
         $factory = new PathResolverFactory();
@@ -34,18 +35,21 @@ final class PathResolverFactoryTest extends TestCase
         self::assertSame($pathResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testSupportedPathResolverIsReturned(): void
+    public function testSupportedPathResolverIsReturned() : void
     {
+        /** @var PathResolver&MockObject $pathResolverA */
         $pathResolverA = $this->getMockBuilder(PathResolver::class)
             ->setMockClassName(self::uniqueClassName(PathResolver::class))
             ->getMock();
         $pathResolverA->method('supports')->willReturn(false);
 
+        /** @var PathResolver&MockObject $pathResolverB */
         $pathResolverB = $this->getMockBuilder(PathResolver::class)
             ->setMockClassName(self::uniqueClassName(PathResolver::class))
             ->getMock();
         $pathResolverB->method('supports')->willReturn(true);
 
+        /** @var PathResolver&MockObject $pathResolverC */
         $pathResolverC = $this->getMockBuilder(PathResolver::class)
             ->setMockClassName(self::uniqueClassName(PathResolver::class))
             ->getMock();
@@ -59,13 +63,15 @@ final class PathResolverFactoryTest extends TestCase
         self::assertSame($pathResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testFirstSupportedPathResolverIsReturned(): void
+    public function testFirstSupportedPathResolverIsReturned() : void
     {
+        /** @var PathResolver&MockObject $pathResolverA */
         $pathResolverA = $this->getMockBuilder(PathResolver::class)
             ->setMockClassName(self::uniqueClassName(PathResolver::class))
             ->getMock();
         $pathResolverA->method('supports')->willReturn(true);
 
+        /** @var PathResolver&MockObject $pathResolverB */
         $pathResolverB = $this->getMockBuilder(PathResolver::class)
             ->setMockClassName(self::uniqueClassName(PathResolver::class))
             ->getMock();

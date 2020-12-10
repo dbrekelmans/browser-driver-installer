@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
-
 use function Safe\sprintf;
 
 final class DetectCommand extends Command
@@ -25,7 +24,7 @@ final class DetectCommand extends Command
         parent::__construct(self::NAME);
     }
 
-    protected function configure(): void
+    protected function configure() : void
     {
         $this->setDescription('Detects installed browsers and installs corresponding drivers.');
 
@@ -39,7 +38,7 @@ final class DetectCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
 
@@ -48,7 +47,7 @@ final class DetectCommand extends Command
         if ($application === null) {
             $io->error('Could not find application from command.');
 
-            return self::FAILURE;
+            return 1;
         }
 
         $arguments = [
@@ -56,7 +55,7 @@ final class DetectCommand extends Command
             '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->getValue(),
         ];
 
-        $returnCode = self::SUCCESS;
+        $returnCode = 0;
 
         foreach (BrowserName::values() as $browserName) {
             $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());

@@ -12,7 +12,7 @@ use UnexpectedValueException;
  */
 interface Option
 {
-    public static function name(): string;
+    public static function name() : string;
 
     /**
      * @return mixed
@@ -23,11 +23,11 @@ interface Option
      */
     public static function value(InputInterface $input);
 
-    public function shortcut(): ?string;
+    public function shortcut() : ?string;
 
-    public function description(): string;
+    public function description() : string;
 
-    public function mode(): OptionMode;
+    public function mode() : OptionMode;
 
-    public function default(): ?string;
+    public function default() : ?string;
 }

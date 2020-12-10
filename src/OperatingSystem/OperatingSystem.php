@@ -19,7 +19,7 @@ final class OperatingSystem extends Enum
     public const MACOS   = 'macos';
     public const LINUX   = 'linux';
 
-    public static function fromFamily(Family $family): self
+    public static function fromFamily(Family $family) : self
     {
         if ($family->equals(Family::WINDOWS())) {
             return self::WINDOWS();

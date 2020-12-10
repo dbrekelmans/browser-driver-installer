@@ -20,17 +20,17 @@ class VersionResolverTest extends TestCase
     /** @var MockObject&CommandLineEnvironment */
     private $commandLineEnvMock;
 
-    public function testSupportChrome(): void
+    public function testSupportChrome() : void
     {
         self::assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testDoesNotSupportFirefox(): void
+    public function testDoesNotSupportFirefox() : void
     {
         self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
     }
 
-    public function testFromLinux(): void
+    public function testFromLinux() : void
     {
         $this->mockCommandLineCommandOutput('google-chrome --version', 'Google Chrome 86.0.4240.80');
 
@@ -40,7 +40,7 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    public function testFromMac(): void
+    public function testFromMac() : void
     {
         $this->mockCommandLineCommandOutput(
             '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version',
@@ -53,7 +53,7 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    public function testFromWindows(): void
+    public function testFromWindows() : void
     {
         $this->mockCommandLineCommandOutput(
             'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
@@ -70,13 +70,13 @@ class VersionResolverTest extends TestCase
         );
     }
 
-    protected function setUp(): void
+    protected function setUp() : void
     {
         $this->commandLineEnvMock = $this->createMock(CommandLineEnvironment::class);
         $this->versionResolver    = new VersionResolver($this->commandLineEnvMock);
     }
 
-    private function mockCommandLineCommandOutput(string $command, string $output): void
+    private function mockCommandLineCommandOutput(string $command, string $output) : void
     {
         $this->commandLineEnvMock
             ->method('getCommandLineSuccessfulOutput')

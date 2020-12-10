@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Archive;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
-
 use function array_merge;
 use function array_unique;
 use function in_array;
@@ -23,7 +22,7 @@ final class MultiExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function extract(string $archive, string $destination): array
+    public function extract(string $archive, string $destination) : array
     {
         $pathParts = pathinfo($archive);
 
@@ -43,12 +42,12 @@ final class MultiExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function getSupportedExtensions(): array
+    public function getSupportedExtensions() : array
     {
         return $this->supportedExtensions;
     }
 
-    public function register(Extractor $extractor): void
+    public function register(Extractor $extractor) : void
     {
         $this->registeredExtractors[] = $extractor;
         $this->supportedExtensions    = array_unique(array_merge($this->supportedExtensions, $extractor->getSupportedExtensions()));

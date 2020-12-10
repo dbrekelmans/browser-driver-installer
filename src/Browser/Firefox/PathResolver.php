@@ -8,12 +8,11 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-
 use function Safe\sprintf;
 
 final class PathResolver implements PathResolverInterface
 {
-    public function from(OperatingSystem $operatingSystem): string
+    public function from(OperatingSystem $operatingSystem) : string
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             return 'firefox';
@@ -30,7 +29,7 @@ final class PathResolver implements PathResolverInterface
         throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
     }
 
-    public function supports(BrowserName $browserName): bool
+    public function supports(BrowserName $browserName) : bool
     {
         return $browserName->equals(BrowserName::FIREFOX());
     }

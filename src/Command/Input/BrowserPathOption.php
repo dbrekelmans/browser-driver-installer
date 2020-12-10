@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-
 use function is_string;
 
 /**
@@ -26,32 +25,34 @@ final class BrowserPathOption extends InputOption implements Option
         );
     }
 
-    public static function name(): string
+    public static function name() : string
     {
         return 'browser-path';
     }
 
-    public function shortcut(): ?string
+    public function shortcut() : ?string
     {
         return null;
     }
 
-    public function mode(): OptionMode
+    public function mode() : OptionMode
     {
         return OptionMode::REQUIRED();
     }
 
-    public function description(): string
+    public function description() : string
     {
         return 'Path to the browser if it\'s not installed in the default location';
     }
 
-    public function default(): ?string
+    public function default() : ?string
     {
         return null;
     }
 
     /**
+     * @return string|null
+     *
      * @inheritDoc
      */
     public static function value(InputInterface $input)

@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-
 use function is_string;
 
 /**
@@ -28,12 +27,14 @@ final class VersionOption extends InputOption implements Option
         );
     }
 
-    public static function name(): string
+    public static function name() : string
     {
         return 'driver-version';
     }
 
     /**
+     * @return string
+     *
      * @inheritDoc
      */
     public static function value(InputInterface $input)
@@ -47,22 +48,22 @@ final class VersionOption extends InputOption implements Option
         return $value;
     }
 
-    public function shortcut(): ?string
+    public function shortcut() : ?string
     {
         return null;
     }
 
-    public function mode(): OptionMode
+    public function mode() : OptionMode
     {
         return OptionMode::REQUIRED();
     }
 
-    public function description(): string
+    public function description() : string
     {
         return 'Driver version to install';
     }
 
-    public function default(): ?string
+    public function default() : ?string
     {
         return self::LATEST;
     }

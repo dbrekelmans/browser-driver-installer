@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller;
 
 use InvalidArgumentException;
 use Safe\Exceptions\PcreException;
-
 use function implode;
 use function Safe\preg_match;
 use function Safe\sprintf;
@@ -38,15 +37,14 @@ final class Version
     /**
      * @throws InvalidArgumentException
      */
-    public static function fromString(string $versionString): self
+    public static function fromString(string $versionString) : self
     {
         try {
-            if (
-                preg_match(
-                    "/(?'major'\d+)\.(?'minor'\d+)(\.(?'patch'\d+))?(\.(?'build'\d+))?/",
-                    $versionString,
-                    $matches
-                ) === 0
+            if (preg_match(
+                "/(?'major'\d+)\.(?'minor'\d+)(\.(?'patch'\d+))?(\.(?'build'\d+))?/",
+                $versionString,
+                $matches
+            ) === 0
             ) {
                 throw new InvalidArgumentException(
                     sprintf('Could not parse version string "%s".', $versionString)
@@ -74,27 +72,27 @@ final class Version
         }
     }
 
-    public function major(): string
+    public function major() : string
     {
         return $this->major;
     }
 
-    public function minor(): string
+    public function minor() : string
     {
         return $this->minor;
     }
 
-    public function patch(): ?string
+    public function patch() : ?string
     {
         return $this->patch;
     }
 
-    public function build(): ?string
+    public function build() : ?string
     {
         return $this->build;
     }
 
-    public function toBuildString(): string
+    public function toBuildString() : string
     {
         $versionString = $this->toString();
 
@@ -105,7 +103,7 @@ final class Version
         return $versionString;
     }
 
-    public function toString(): string
+    public function toString() : string
     {
         $versionString = implode(self::DELIMITER, [$this->major, $this->minor]);
 

@@ -9,7 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Command\BrowserCommand;
 
 final class Command extends BrowserCommand
 {
-    protected static function browserName(): BrowserName
+    protected static function browserName() : BrowserName
     {
         return BrowserName::FIREFOX();
     }
