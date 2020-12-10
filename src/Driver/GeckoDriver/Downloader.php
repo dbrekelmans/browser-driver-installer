@@ -93,7 +93,7 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver) : string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver');
+        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver') . $this->getArchiveExtension($driver);
 
         $response = $this->httpClient->request('GET', $this->getDownloadPath($driver));
 

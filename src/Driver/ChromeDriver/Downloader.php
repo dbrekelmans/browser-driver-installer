@@ -108,7 +108,7 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver) : string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'chromedriver');
+        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'chromedriver') . '.zip';
 
         $response = $this->httpClient->request(
             'GET',
