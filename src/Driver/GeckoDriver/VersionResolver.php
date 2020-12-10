@@ -32,6 +32,9 @@ final class VersionResolver implements VersionResolverInterface
     /** @var HttpClientInterface */
     private $httpClient;
 
+    /** @var Version|null */
+    private $cachedLatestVersion;
+
     public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
@@ -65,14 +68,18 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest() : Version
     {
-        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
-        /** @var array<mixed> $data */
-        $data = json_decode($response->getContent(), true);
-        if (! isset($data['name'])) {
-            throw new RuntimeException('Can not find latest release name');
+        if (! $this->cachedLatestVersion instanceof Version) {
+            $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
+            /** @var array<mixed> $data */
+            $data = json_decode($response->getContent(), true);
+            if (! isset($data['name'])) {
+                throw new RuntimeException('Can not find latest release name');
+            }
+
+            $this->cachedLatestVersion = Version::fromString((string) $data['name']);
         }
 
-        return Version::fromString((string) $data['name']);
+        return $this->cachedLatestVersion;
     }
 
     public function supports(Browser $browser) : bool
