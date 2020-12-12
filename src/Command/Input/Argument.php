@@ -12,7 +12,7 @@ use UnexpectedValueException;
  */
 interface Argument
 {
-    public static function name(): string;
+    public static function name() : string;
 
     /**
      * @return mixed
@@ -23,9 +23,9 @@ interface Argument
      */
     public static function value(InputInterface $input);
 
-    public function description(): string;
+    public function description() : string;
 
-    public function mode(): ArgumentMode;
+    public function mode() : ArgumentMode;
 
-    public function default(): ?string;
+    public function default() : ?string;
 }

@@ -12,13 +12,10 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use PHPStan\Testing\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\MockObject\Stub;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
-use function sys_get_temp_dir;
-
 use const DIRECTORY_SEPARATOR;
+use function sys_get_temp_dir;
 
 class DownloaderTest extends TestCase
 {
@@ -28,27 +25,27 @@ class DownloaderTest extends TestCase
     /** @var Driver */
     private $chromeDriverMac;
 
-    /** @var Stub&Filesystem */
+    /** @var MockObject&Filesystem */
     private $filesystem;
 
-    /** @var Stub&Extractor */
+    /** @var MockObject&Extractor */
     private $archiveExtractor;
 
     /** @var MockObject&HttpClientInterface */
     private $httpClient;
 
-    public function testSupportChrome(): void
+    public function testSupportChrome() : void
     {
         self::assertTrue($this->downloader->supports($this->chromeDriverMac));
     }
 
-    public function testDoesNotSupportGecko(): void
+    public function testDoesNotSupportGecko() : void
     {
         $geckoDriver = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
         self::assertFalse($this->downloader->supports($geckoDriver));
     }
 
-    public function testDownloadMac(): void
+    public function testDownloadMac() : void
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
@@ -62,7 +59,7 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver', $filePath);
     }
 
-    public function testDownloadLinux(): void
+    public function testDownloadLinux() : void
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
@@ -77,7 +74,7 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver', $filePath);
     }
 
-    public function testDownloadWindows(): void
+    public function testDownloadWindows() : void
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload();
 
@@ -92,17 +89,17 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
-    protected function setUp(): void
+    protected function setUp() : void
     {
-        $this->filesystem       = $this->createStub(Filesystem::class);
+        $this->filesystem       = $this->createMock(Filesystem::class);
         $this->httpClient       = $this->createMock(HttpClientInterface::class);
-        $this->archiveExtractor = $this->createStub(Extractor::class);
+        $this->archiveExtractor = $this->createMock(Extractor::class);
         $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
 
         $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
-    private function mockFsAndArchiveExtractorForSuccessfulDownload(): void
+    private function mockFsAndArchiveExtractorForSuccessfulDownload() : void
     {
         $this->filesystem
             ->method('tempnam')

@@ -4,6 +4,9 @@ parameters:
 		- src
 		- tests
 		- bdi
+	ignoreErrors:
+		- '#In method \"DBrekelmans\\BrowserDriverInstaller\\Command\\DetectCommand::execute\", caught \"Throwable\" must be rethrown#'
+		- '#Parameter \#2 $files of method Phar::extractTo() expects array|string, null given.#'
 
 includes:
     - vendor/phpstan/phpstan-strict-rules/rules.neon

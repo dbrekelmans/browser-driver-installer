@@ -12,7 +12,6 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 use Safe\Exceptions\StringsException;
-
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -32,7 +31,7 @@ final class VersionResolver implements VersionResolverInterface
         $this->commandLineEnvironment = $commandLineEnvironment;
     }
 
-    public function from(OperatingSystem $operatingSystem, string $path): Version
+    public function from(OperatingSystem $operatingSystem, string $path) : Version
     {
         if ($operatingSystem->equals(OperatingSystem::LINUX())) {
             return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
@@ -65,12 +64,12 @@ final class VersionResolver implements VersionResolverInterface
         );
     }
 
-    public function supports(BrowserName $browserName): bool
+    public function supports(BrowserName $browserName) : bool
     {
         return $browserName->equals(BrowserName::GOOGLE_CHROME());
     }
 
-    private function getVersionFromCommandLine(string $command): Version
+    private function getVersionFromCommandLine(string $command) : Version
     {
         try {
             $commandOutput = $this->commandLineEnvironment->getCommandLineSuccessfulOutput($command);
@@ -95,7 +94,7 @@ final class VersionResolver implements VersionResolverInterface
      *
      * @throws StringsException
      */
-    private static function getWindowsCommandsForVersion(): array
+    private static function getWindowsCommandsForVersion() : array
     {
         $commands = [];
         foreach ([self::REG_KEY_STABLE, self::REG_KEY_BETA, self::REG_KEY_DEV] as $regKey) {

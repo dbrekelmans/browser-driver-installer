@@ -15,10 +15,10 @@ interface VersionResolver
      * @throws RuntimeException If the version could not be resolved.
      * @throws NotImplemented If the operating system is not yet supported.
      */
-    public function from(OperatingSystem $operatingSystem, string $path): Version;
+    public function from(OperatingSystem $operatingSystem, string $path) : Version;
 
     /**
      * TODO: Refactor to supports(OperatingSystem $operatingSystem).
      */
-    public function supports(BrowserName $browserName): bool;
+    public function supports(BrowserName $browserName) : bool;
 }

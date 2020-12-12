@@ -13,19 +13,20 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
-
 use function Safe\sprintf;
 
 final class DetectCommand extends Command
 {
-    public const NAME = 'detect';
+    public const NAME    = 'detect';
+    public const FAILURE = 1;
+    public const SUCCESS = 0;
 
     public function __construct()
     {
         parent::__construct(self::NAME);
     }
 
-    protected function configure(): void
+    protected function configure() : void
     {
         $this->setDescription('Detects installed browsers and installs corresponding drivers.');
 
@@ -39,7 +40,7 @@ final class DetectCommand extends Command
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $io = new SymfonyStyle($input, $output);
 
