@@ -18,8 +18,8 @@ use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
-    public const PREFIX   = 'browser';
-    private const SUCCESS = 0;
+    public const PREFIX  = 'browser';
+    public const SUCCESS = 0;
 
     /** @var Filesystem */
     protected $filesystem;

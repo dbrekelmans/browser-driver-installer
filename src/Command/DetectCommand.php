@@ -17,9 +17,9 @@ use function Safe\sprintf;
 
 final class DetectCommand extends Command
 {
-    public const NAME     = 'detect';
-    private const FAILURE = 1;
-    private const SUCCESS = 0;
+    public const NAME    = 'detect';
+    public const FAILURE = 1;
+    public const SUCCESS = 0;
 
     public function __construct()
     {
