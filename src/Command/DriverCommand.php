@@ -18,7 +18,8 @@ use function Safe\sprintf;
 
 abstract class DriverCommand extends Command
 {
-    public const PREFIX = 'driver';
+    public const PREFIX   = 'driver';
+    private const SUCCESS = 0;
 
     /** @var VersionResolver */
     private $versionResolver;
@@ -96,6 +97,6 @@ abstract class DriverCommand extends Command
             )
         );
 
-        return 0;
+        return self::SUCCESS;
     }
 }

@@ -17,7 +17,9 @@ use function Safe\sprintf;
 
 final class DetectCommand extends Command
 {
-    public const NAME = 'detect';
+    public const NAME     = 'detect';
+    private const FAILURE = 1;
+    private const SUCCESS = 0;
 
     public function __construct()
     {
@@ -47,7 +49,7 @@ final class DetectCommand extends Command
         if ($application === null) {
             $io->error('Could not find application from command.');
 
-            return 1;
+            return self::FAILURE;
         }
 
         $arguments = [
@@ -55,7 +57,7 @@ final class DetectCommand extends Command
             '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->getValue(),
         ];
 
-        $returnCode = 0;
+        $returnCode = self::SUCCESS;
 
         foreach (BrowserName::values() as $browserName) {
             $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());

@@ -18,7 +18,8 @@ use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
-    public const PREFIX = 'browser';
+    public const PREFIX   = 'browser';
+    private const SUCCESS = 0;
 
     /** @var Filesystem */
     protected $filesystem;
@@ -102,6 +103,6 @@ abstract class BrowserCommand extends Command
             sprintf('%s %s installed to %s', $driver->name()->getValue(), $driver->version()->toBuildString(), $filePath)
         );
 
-        return 0;
+        return self::SUCCESS;
     }
 }
