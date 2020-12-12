@@ -5,7 +5,7 @@ parameters:
 		- tests
 		- bdi
 	ignoreErrors:
-		- '#caught \"Throwable\" must be rethrown#'
+		- '#In method \"DBrekelmans\\BrowserDriverInstaller\\Command\\DetectCommand::execute\", caught \"Throwable\" must be rethrown#'
 		- '#Parameter \#2 $files of method Phar::extractTo() expects array|string, null given.#'
 
 includes:
