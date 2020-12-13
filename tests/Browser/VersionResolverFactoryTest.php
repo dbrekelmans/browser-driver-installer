@@ -9,14 +9,13 @@ use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolverFactory;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class VersionResolverFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    public function testNoVersionResolverImplemented() : void
+    public function testNoVersionResolverImplemented(): void
     {
         $factory = new VersionResolverFactory();
 
@@ -24,9 +23,9 @@ final class VersionResolverFactoryTest extends TestCase
         $factory->createFromName(BrowserName::GOOGLE_CHROME());
     }
 
-    public function testRegisteredVersionResolverIsReturned() : void
+    public function testRegisteredVersionResolverIsReturned(): void
     {
-        $versionResolver = $this->createMock(VersionResolver::class);
+        $versionResolver = $this->createStub(VersionResolver::class);
         $versionResolver->method('supports')->willReturn(true);
 
         $factory = new VersionResolverFactory();
@@ -35,21 +34,18 @@ final class VersionResolverFactoryTest extends TestCase
         self::assertSame($versionResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testSupportedVersionResolverIsReturned() : void
+    public function testSupportedVersionResolverIsReturned(): void
     {
-        /** @var VersionResolver&MockObject $versionResolverA */
         $versionResolverA = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverA->method('supports')->willReturn(false);
 
-        /** @var VersionResolver&MockObject $versionResolverB */
         $versionResolverB = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverB->method('supports')->willReturn(true);
 
-        /** @var VersionResolver&MockObject $versionResolverC */
         $versionResolverC = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
@@ -63,15 +59,13 @@ final class VersionResolverFactoryTest extends TestCase
         self::assertSame($versionResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
     }
 
-    public function testFirstSupportedVersionResolverIsReturned() : void
+    public function testFirstSupportedVersionResolverIsReturned(): void
     {
-        /** @var VersionResolver&MockObject $versionResolverA */
         $versionResolverA = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();
         $versionResolverA->method('supports')->willReturn(true);
 
-        /** @var VersionResolver&MockObject $versionResolverB */
         $versionResolverB = $this->getMockBuilder(VersionResolver::class)
             ->setMockClassName(self::uniqueClassName(VersionResolver::class))
             ->getMock();

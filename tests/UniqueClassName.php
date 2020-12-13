@@ -14,7 +14,7 @@ trait UniqueClassName
     /**
      * @psalm-param class-string $className
      */
-    private static function uniqueClassName(string $className) : string
+    private static function uniqueClassName(string $className): string
     {
         $uniqueClassName = stripslashes(static::class) . stripslashes($className) . self::$uniqueClassNameCounter;
 

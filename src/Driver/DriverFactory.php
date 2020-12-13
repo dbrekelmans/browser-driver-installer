@@ -7,6 +7,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+
 use function Safe\sprintf;
 
 final class DriverFactory
@@ -19,7 +20,7 @@ final class DriverFactory
         $this->versionResolverFactory = $versionResolverFactory;
     }
 
-    public function createFromBrowser(Browser $browser) : Driver
+    public function createFromBrowser(Browser $browser): Driver
     {
         $versionResolver = $this->versionResolverFactory->createFromBrowser($browser);
         $version         = $versionResolver->fromBrowser($browser);
@@ -32,7 +33,7 @@ final class DriverFactory
     /**
      * @throws NotImplemented
      */
-    private function getDriverNameForBrowser(Browser $browser) : DriverName
+    private function getDriverNameForBrowser(Browser $browser): DriverName
     {
         $browserName = $browser->name();
 

@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+
 use function Safe\file_get_contents;
 
 class VersionResolverTest extends TestCase
@@ -26,10 +27,10 @@ class VersionResolverTest extends TestCase
     /** @var Browser */
     private $firefox;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->httpClient      = new MockHttpClient(
-            static function (string $method, string $url) : MockResponse {
+            static function (string $method, string $url): MockResponse {
                 if ($method === 'GET' && $url === 'https://api.github.com/repos/mozilla/geckodriver/releases/latest') {
                     return new MockResponse(file_get_contents(__DIR__ . '/../../fixtures/githubResponseGeckoLatest.json'));
                 }
@@ -42,24 +43,24 @@ class VersionResolverTest extends TestCase
         $this->firefox         = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 
-    public function testDoesNotSupportChrome() : void
+    public function testDoesNotSupportChrome(): void
     {
         self::assertFalse($this->versionResolver->supports($this->chrome));
     }
 
-    public function testSupportsFirefox() : void
+    public function testSupportsFirefox(): void
     {
         self::assertTrue($this->versionResolver->supports($this->firefox));
     }
 
-    public function testLatestVersionForRecentBrowser() : void
+    public function testLatestVersionForRecentBrowser(): void
     {
         $geckoVersion = $this->versionResolver->fromBrowser($this->firefox);
 
         self::assertEquals(Version::fromString('0.28.0'), $geckoVersion);
     }
 
-    public function testVersionForOldBrowser() : void
+    public function testVersionForOldBrowser(): void
     {
         $firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('57.0.0'), OperatingSystem::MACOS());
 
@@ -68,7 +69,7 @@ class VersionResolverTest extends TestCase
         self::assertEquals(Version::fromString('0.25.0'), $geckoVersion);
     }
 
-    public function testNoVersionForVeryOldBrowser() : void
+    public function testNoVersionForVeryOldBrowser(): void
     {
         self::expectException(RuntimeException::class);
 

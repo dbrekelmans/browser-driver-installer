@@ -14,12 +14,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
+
 use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
-    public const PREFIX  = 'browser';
-    public const SUCCESS = 0;
+    public const PREFIX = 'browser';
 
     /** @var Filesystem */
     protected $filesystem;
@@ -47,9 +47,9 @@ abstract class BrowserCommand extends Command
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->getValue()));
     }
 
-    abstract protected static function browserName() : BrowserName;
+    abstract protected static function browserName(): BrowserName;
 
-    final protected function configure() : void
+    final protected function configure(): void
     {
         $this->setDescription(sprintf('Helps you install the driver for %s.', static::browserName()->getValue()));
 
@@ -64,7 +64,7 @@ abstract class BrowserCommand extends Command
         );
     }
 
-    final protected function execute(InputInterface $input, OutputInterface $output) : int
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 

@@ -27,29 +27,28 @@
         "bdi"
     ],
     "require": {
-        "php": "^7.1|^8.0",
+        "php": "^7.2|^8.0",
         "ext-json": "*",
         "ext-zip": "*",
         "ext-zlib": "*",
         "myclabs/php-enum": "^1.7",
-        "symfony/console": "^4.4|^5.0",
-        "symfony/filesystem": "^4.4|^5.0",
-        "symfony/http-client": "^4.4|^5.0",
-        "symfony/polyfill-php72": "^1.20",
+        "symfony/console": "^5.1",
+        "symfony/filesystem": "^5.1",
+        "symfony/http-client": "^5.1",
         "symfony/polyfill-php80": "^1.18",
-        "symfony/process": "^4.4|^5.0",
-        "thecodingmachine/safe": "^0.1|^1.1"
+        "symfony/process": "^5.1",
+        "thecodingmachine/safe": "^1.1"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^6.0|^8.0",
-        "phpstan/phpstan": "^0.10|^0.12",
-        "phpstan/phpstan-phpunit": "^0.10|^0.12",
-        "phpstan/phpstan-strict-rules": "^0.10|^0.12",
-        "phpunit/phpunit": "^7.5|^8.5",
+        "doctrine/coding-standard": "^8.0",
+        "phpstan/phpstan": "^0.12.36",
+        "phpstan/phpstan-phpunit": "^0.12.16",
+        "phpstan/phpstan-strict-rules": "^0.12.5",
+        "phpunit/phpunit": "^8.5",
         "psalm/plugin-phpunit": "^0.12|^0.13",
         "roave/security-advisories": "dev-master",
-        "thecodingmachine/phpstan-safe-rule": "^0.1|^1.0",
-        "thecodingmachine/phpstan-strict-rules": "^0.10|^0.12",
+        "thecodingmachine/phpstan-safe-rule": "^1.0",
+        "thecodingmachine/phpstan-strict-rules": "^0.12.0",
         "vimeo/psalm": "^3.18|^4.0"
     },
     "autoload": {
