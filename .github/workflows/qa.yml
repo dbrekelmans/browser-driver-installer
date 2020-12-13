@@ -13,15 +13,7 @@ jobs:
           php-version: 7.2
           extensions: zip
           coverage: none
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - run: composer install --no-interaction
+      - uses: ramsey/composer-install@v1
       - run: vendor/bin/phpunit
   phpstan:
     runs-on: ubuntu-latest
@@ -32,15 +24,7 @@ jobs:
           php-version: 7.2
           extensions: zip
           coverage: none
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - run: composer install --no-interaction
+      - uses: ramsey/composer-install@v1
       - run: vendor/bin/phpstan analyse --error-format=github
   psalm:
     runs-on: ubuntu-latest
@@ -51,15 +35,7 @@ jobs:
           php-version: 7.2
           extensions: zip
           coverage: none
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - run: composer install --no-interaction
+      - uses: ramsey/composer-install@v1
       - run: vendor/bin/psalm --output-format=github
   phpcs:
     runs-on: ubuntu-latest
@@ -70,15 +46,7 @@ jobs:
           php-version: 7.2
           extensions: zip
           coverage: none
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-      - run: composer install --no-interaction
+      - uses: ramsey/composer-install@v1
       - run: vendor/bin/phpcs
   e2e:
     runs-on: ${{ matrix.os }}
@@ -86,6 +54,20 @@ jobs:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         php: [7.2, 7.3, 7.4, 8.0]
+        dependencies: [locked]
+        include:
+          - os: ubuntu-latest
+            php: 7.2
+            dependencies: lowest
+          - os: ubuntu-latest
+            php: 7.3
+            dependencies: lowest
+          - os: ubuntu-latest
+            php: 7.4
+            dependencies: lowest
+          - os: ubuntu-latest
+            php: 8.0
+            dependencies: lowest
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
@@ -93,15 +75,10 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: zip
           coverage: none
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v2
+      - uses: ramsey/composer-install@v1
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-${{ matrix.php }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.php }}-composer-
-      - run: composer install --no-interaction --no-dev --optimize-autoloader
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: "--no-dev --optimize-autoloader --prefer-dist"
       - run: php bdi
       - run: php bdi detect
       - run: php bdi browser:google-chrome -vvv
