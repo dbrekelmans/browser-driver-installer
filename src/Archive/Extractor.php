@@ -13,10 +13,10 @@ interface Extractor
      *
      * @throws Unsupported
      */
-    public function extract(string $archive, string $destination) : array;
+    public function extract(string $archive, string $destination): array;
 
     /**
      * @return string[]
      */
-    public function getSupportedExtensions() : array;
+    public function getSupportedExtensions(): array;
 }

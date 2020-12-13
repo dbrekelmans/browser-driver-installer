@@ -12,14 +12,13 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
 use DBrekelmans\BrowserDriverInstaller\Version;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class DownloaderFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    public function testNoDownloaderImplemented() : void
+    public function testNoDownloaderImplemented(): void
     {
         $factory = new DownloaderFactory();
 
@@ -29,9 +28,9 @@ final class DownloaderFactoryTest extends TestCase
         );
     }
 
-    public function testRegisteredDownloaderIsReturned() : void
+    public function testRegisteredDownloaderIsReturned(): void
     {
-        $downloader = $this->createMock(Downloader::class);
+        $downloader = $this->createStub(Downloader::class);
         $downloader->method('supports')->willReturn(true);
 
         $factory = new DownloaderFactory();
@@ -45,21 +44,18 @@ final class DownloaderFactoryTest extends TestCase
         );
     }
 
-    public function testSupportedDownloaderIsReturned() : void
+    public function testSupportedDownloaderIsReturned(): void
     {
-        /** @var Downloader&MockObject $downloaderA */
         $downloaderA = $this->getMockBuilder(Downloader::class)
             ->setMockClassName(self::uniqueClassName(Downloader::class))
             ->getMock();
         $downloaderA->method('supports')->willReturn(false);
 
-        /** @var Downloader&MockObject $downloaderB */
         $downloaderB = $this->getMockBuilder(Downloader::class)
             ->setMockClassName(self::uniqueClassName(Downloader::class))
             ->getMock();
         $downloaderB->method('supports')->willReturn(true);
 
-        /** @var Downloader&MockObject $downloaderC */
         $downloaderC = $this->getMockBuilder(Downloader::class)
             ->setMockClassName(self::uniqueClassName(Downloader::class))
             ->getMock();
@@ -78,15 +74,13 @@ final class DownloaderFactoryTest extends TestCase
         );
     }
 
-    public function testFirstSupportedDownloaderIsReturned() : void
+    public function testFirstSupportedDownloaderIsReturned(): void
     {
-        /** @var Downloader&MockObject $downloaderA */
         $downloaderA = $this->getMockBuilder(Downloader::class)
             ->setMockClassName(self::uniqueClassName(Downloader::class))
             ->getMock();
         $downloaderA->method('supports')->willReturn(true);
 
-        /** @var Downloader&MockObject $downloaderB */
         $downloaderB = $this->getMockBuilder(Downloader::class)
             ->setMockClassName(self::uniqueClassName(Downloader::class))
             ->getMock();

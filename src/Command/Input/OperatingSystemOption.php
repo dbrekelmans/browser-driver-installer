@@ -10,10 +10,12 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
-use const PHP_OS_FAMILY;
+
 use function implode;
 use function is_string;
 use function Safe\sprintf;
+
+use const PHP_OS_FAMILY;
 
 /**
  * @implements Option<OperatingSystem>
@@ -31,22 +33,22 @@ final class OperatingSystemOption extends InputOption implements Option
         );
     }
 
-    public static function name() : string
+    public static function name(): string
     {
         return 'os';
     }
 
-    public function shortcut() : ?string
+    public function shortcut(): ?string
     {
         return null;
     }
 
-    public function mode() : OptionMode
+    public function mode(): OptionMode
     {
         return OptionMode::REQUIRED();
     }
 
-    public function description() : string
+    public function description(): string
     {
         return sprintf(
             'Operating system for which to install the driver (%s)',
@@ -54,17 +56,12 @@ final class OperatingSystemOption extends InputOption implements Option
         );
     }
 
-    public function default() : ?string
+    public function default(): ?string
     {
-        /**
-         * @psalm-suppress MixedArgument
-         */
         return OperatingSystem::fromFamily(new Family(PHP_OS_FAMILY))->getValue();
     }
 
     /**
-     * @return OperatingSystem
-     *
      * @inheritDoc
      */
     public static function value(InputInterface $input)

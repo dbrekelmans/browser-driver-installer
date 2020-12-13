@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
+
 use function in_array;
 
 class VersionResolverTest extends TestCase
@@ -30,33 +31,33 @@ class VersionResolverTest extends TestCase
     /** @var Browser */
     private $firefox;
 
-    public function testSupportChrome() : void
+    public function testSupportChrome(): void
     {
         self::assertTrue($this->versionResolver->supports($this->chrome));
     }
 
-    public function testSupportChromium() : void
+    public function testSupportChromium(): void
     {
         self::assertTrue($this->versionResolver->supports($this->chromium));
     }
 
-    public function testDoesNotSupportFirefox() : void
+    public function testDoesNotSupportFirefox(): void
     {
         self::assertFalse($this->versionResolver->supports($this->firefox));
     }
 
-    public function testFromThrowsExceptionForFirefox() : void
+    public function testFromThrowsExceptionForFirefox(): void
     {
         $this->expectException(Unsupported::class);
         $this->versionResolver->fromBrowser($this->firefox);
     }
 
-    public function testFromGetVersionForChrome() : void
+    public function testFromGetVersionForChrome(): void
     {
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->fromBrowser($this->chrome));
     }
 
-    public function testFromExceptionIfCanNotParseVersionReceived() : void
+    public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
         $this->expectException(UnexpectedValueException::class);
         $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
@@ -64,22 +65,22 @@ class VersionResolverTest extends TestCase
         $this->versionResolver->fromBrowser($wrongChrome);
     }
 
-    public function testFromGetBetaVersionForDevChrome() : void
+    public function testFromGetBetaVersionForDevChrome(): void
     {
         $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4302.0'), OperatingSystem::MACOS());
 
         self::assertEquals(Version::fromString('87.0.4280.20'), $this->versionResolver->fromBrowser($devChrome));
     }
 
-    public function testLatest() : void
+    public function testLatest(): void
     {
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
     }
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $httpClientMock        = new MockHttpClient(
-            static function (string $method, string $url) : MockResponse {
+            static function (string $method, string $url): MockResponse {
                 $urlsGiving86Version = [
                     'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86.0.4240',
                     'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_86',

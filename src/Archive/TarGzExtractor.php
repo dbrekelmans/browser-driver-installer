@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Archive;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
-use Phar;
 use PharData;
 use PharFileInfo;
+
 use const DIRECTORY_SEPARATOR;
 
 final class TarGzExtractor implements Extractor
@@ -15,11 +15,10 @@ final class TarGzExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function extract(string $archive, string $destination) : array
+    public function extract(string $archive, string $destination): array
     {
         $tarGzData = new PharData($archive);
-        /** @var Phar $tarData */
-        $tarData = $tarGzData->decompress();
+        $tarData   = $tarGzData->decompress();
         /** @phpstan-ignore-next-line */
         $tarData->extractTo($destination, null, true);
 
@@ -38,7 +37,7 @@ final class TarGzExtractor implements Extractor
     /**
      * @inheritDoc
      */
-    public function getSupportedExtensions() : array
+    public function getSupportedExtensions(): array
     {
         return ['gz'];
     }
