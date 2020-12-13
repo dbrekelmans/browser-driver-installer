@@ -78,7 +78,7 @@ jobs:
       - uses: ramsey/composer-install@v1
         with:
           dependency-versions: ${{ matrix.dependencies }}
-          composer-options: "--no-dev --optimize-autoloader --prefer-dist --prefer-stable"
+          composer-options: "--no-dev --optimize-autoloader --prefer-dist"
       - run: php bdi
       - run: php bdi detect
       - run: php bdi browser:google-chrome -vvv
