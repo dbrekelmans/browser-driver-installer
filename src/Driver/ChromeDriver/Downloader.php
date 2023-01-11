@@ -29,10 +29,11 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const DOWNLOAD_ENDPOINT = 'https://chromedriver.storage.googleapis.com';
-    private const BINARY_LINUX      = 'chromedriver_linux64';
-    private const BINARY_MAC        = 'chromedriver_mac64';
-    private const BINARY_WINDOWS    = 'chromedriver_win32';
+    private const DOWNLOAD_ENDPOINT         = 'https://chromedriver.storage.googleapis.com';
+    private const BINARY_LINUX              = 'chromedriver_linux64';
+    private const BINARY_MAC                = 'chromedriver_mac64';
+    private const BINARY_WINDOWS            = 'chromedriver_win32';
+    private const EXPECTED_DRIVER_FILE_NAME = 'chromedriver';
 
     /** @var Filesystem */
     private $filesystem;
@@ -170,14 +171,21 @@ final class Downloader implements DownloaderInterface
         $unzipLocation  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
 
-        $count = count($extractedFiles);
-        if ($count !== 1) {
-            throw new UnexpectedValueException(sprintf('Expected exactly one file in the archive. Found %d', $count));
+        $driverFile = null;
+        foreach ($extractedFiles as $filename) {
+            if (preg_match('/'.self::EXPECTED_DRIVER_FILE_NAME.'(.exe)?$/', basename($filename))) {
+                $driverFile = $filename;
+                break;
+            }
         }
 
-        $file = $this->filesystem->readlink($extractedFiles[0], true);
+        if ($driverFile === null) {
+            throw new UnexpectedValueException(sprintf('No driver file named "%s" found in archive', self::EXPECTED_DRIVER_FILE_NAME));
+        }
+
+        $file = $this->filesystem->readlink($driverFile, true);
         if ($file === null) {
-            throw new RuntimeException(sprintf('Could not read link %s', $extractedFiles[0]));
+            throw new RuntimeException(sprintf('Could not read link %s', $driverFile));
         }
 
         $this->filesystem->remove($archive);
