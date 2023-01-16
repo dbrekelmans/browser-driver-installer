@@ -19,7 +19,6 @@ final class TarGzExtractor implements Extractor
     {
         $tarGzData = new PharData($archive);
         $tarData   = $tarGzData->decompress();
-        /** @phpstan-ignore-next-line */
         $tarData->extractTo($destination, null, true);
 
         $extractedFilenames = [];
