@@ -18,11 +18,13 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
-use function count;
+use function array_map;
+use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
@@ -43,11 +45,15 @@ final class Downloader implements DownloaderInterface
     /** @var Extractor */
     private $archiveExtractor;
 
+    /** @var string */
+    private $tempDir;
+
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
         $this->filesystem       = $filesystem;
         $this->httpClient       = $httpClient;
         $this->archiveExtractor = $archiveExtractor;
+        $this->tempDir          = sys_get_temp_dir();
     }
 
     public function supports(Driver $driver): bool
@@ -67,7 +73,7 @@ final class Downloader implements DownloaderInterface
         }
 
         try {
-            $binary = $this->extractArchive($archive);
+            $binary = $this->extractArchive($archive, $driver->operatingSystem());
         } catch (IOException | RuntimeException $exception) {
             throw new RuntimeException('Something went wrong extracting the chromedriver archive.', 0, $exception);
         }
@@ -110,7 +116,7 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver): string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'chromedriver', '.zip');
+        $temporaryFile = $this->filesystem->tempnam($this->tempDir, 'chromedriver', '.zip');
 
         $response = $this->httpClient->request(
             'GET',
@@ -165,19 +171,27 @@ final class Downloader implements DownloaderInterface
      * @throws RuntimeException
      * @throws IOException
      */
-    private function extractArchive(string $archive): string
+    private function extractArchive(string $archive, OperatingSystem $operatingSystem): string
     {
-        $unzipLocation  = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver';
+        $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
 
-        $count = count($extractedFiles);
-        if ($count !== 1) {
-            throw new UnexpectedValueException(sprintf('Expected exactly one file in the archive. Found %d', $count));
+        $filePath = $this->getFilePath($unzipLocation, $operatingSystem);
+        if (
+            in_array(
+                $this->getFileName($operatingSystem),
+                array_map(function ($file): string {
+                    return str_replace($this->tempDir . DIRECTORY_SEPARATOR, '', $file);
+                }, $extractedFiles),
+                true
+            )
+        ) {
+            throw new UnexpectedValueException(sprintf('Could not find "%s" in the extracted files.', $filePath));
         }
 
-        $file = $this->filesystem->readlink($extractedFiles[0], true);
+        $file = $this->filesystem->readlink($filePath, true);
         if ($file === null) {
-            throw new RuntimeException(sprintf('Could not read link %s', $extractedFiles[0]));
+            throw new RuntimeException(sprintf('Could not read link %s', $filePath));
         }
 
         $this->filesystem->remove($archive);
@@ -187,12 +201,17 @@ final class Downloader implements DownloaderInterface
 
     private function getFilePath(string $location, OperatingSystem $operatingSystem): string
     {
-        $filePath = $location . DIRECTORY_SEPARATOR . 'chromedriver';
+        return $location . DIRECTORY_SEPARATOR . $this->getFileName($operatingSystem);
+    }
+
+    private function getFileName(OperatingSystem $operatingSystem): string
+    {
+        $fileName = 'chromedriver';
 
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            $filePath .= '.exe';
+            $fileName .= '.exe';
         }
 
-        return $filePath;
+        return $fileName;
     }
 }

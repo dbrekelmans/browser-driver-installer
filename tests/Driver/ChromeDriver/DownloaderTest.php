@@ -10,9 +10,9 @@ use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
-use PHPStan\Testing\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -113,6 +113,6 @@ class DownloaderTest extends TestCase
 
         $this->archiveExtractor
             ->method('extract')
-            ->willReturn(['./chromedriver']);
+            ->willReturn(['./chromedriver', './LICENSE.chromedriver']);
     }
 }
