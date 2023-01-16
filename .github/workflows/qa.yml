@@ -53,7 +53,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        php: [7.2, 7.3, 7.4, 8.0]
+        php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2]
         dependencies: [locked]
         include:
           - os: ubuntu-latest
@@ -67,6 +67,12 @@ jobs:
             dependencies: lowest
           - os: ubuntu-latest
             php: 8.0
+            dependencies: lowest
+          - os: ubuntu-latest
+            php: 8.1
+            dependencies: lowest
+          - os: ubuntu-latest
+            php: 8.2
             dependencies: lowest
     steps:
       - uses: actions/checkout@v2
