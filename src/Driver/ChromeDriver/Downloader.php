@@ -18,13 +18,11 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
-use function array_map;
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
-use function str_replace;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
@@ -175,14 +173,12 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
+        $filePath       = $this->getFilePath($unzipLocation, $operatingSystem);
 
-        $filePath = $this->getFilePath($unzipLocation, $operatingSystem);
         if (
-            in_array(
-                $this->getFileName($operatingSystem),
-                array_map(function ($file): string {
-                    return str_replace($this->tempDir . DIRECTORY_SEPARATOR, '', $file);
-                }, $extractedFiles),
+            ! in_array(
+                $filePath,
+                $extractedFiles,
                 true
             )
         ) {

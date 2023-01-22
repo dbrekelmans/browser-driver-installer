@@ -25,9 +25,6 @@ class DownloaderTest extends TestCase
     /** @var Downloader */
     private $downloader;
 
-    /** @var Driver */
-    private $chromeDriverMac;
-
     /** @var Stub&Filesystem */
     private $filesystem;
 
@@ -39,32 +36,34 @@ class DownloaderTest extends TestCase
 
     public function testSupportChrome(): void
     {
-        self::assertTrue($this->downloader->supports($this->chromeDriverMac));
+        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
+        self::assertTrue($this->downloader->supports($chromeDriverLinux));
     }
 
     public function testDoesNotSupportGecko(): void
     {
-        $geckoDriver = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::MACOS());
+        $geckoDriver = new Driver(DriverName::GECKO(), Version::fromString('0.27.0'), OperatingSystem::LINUX());
         self::assertFalse($this->downloader->supports($geckoDriver));
     }
 
     public function testDownloadMac(): void
     {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS());
 
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
 
-        $filePath = $this->downloader->download($this->chromeDriverMac, '.');
+        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
+        $filePath        = $this->downloader->download($chromeDriverMac, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
 
     public function testDownloadLinux(): void
     {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX());
 
         $this->httpClient
             ->expects(self::atLeastOnce())
@@ -79,7 +78,7 @@ class DownloaderTest extends TestCase
 
     public function testDownloadWindows(): void
     {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload();
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS());
 
         $this->httpClient
             ->expects(self::atLeastOnce())
@@ -98,11 +97,9 @@ class DownloaderTest extends TestCase
         $this->httpClient       = $this->createMock(HttpClientInterface::class);
         $this->archiveExtractor = $this->createStub(Extractor::class);
         $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
-
-        $this->chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
     }
 
-    private function mockFsAndArchiveExtractorForSuccessfulDownload(): void
+    private function mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem $operatingSystem): void
     {
         $this->filesystem
             ->method('tempnam')
@@ -111,8 +108,14 @@ class DownloaderTest extends TestCase
             ->method('readLink')
             ->willReturn('YYY');
 
+        $binaryFilename = 'chromedriver' . ($operatingSystem->equals(OperatingSystem::WINDOWS()) ? '.exe' : '');
+
+        $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver' . DIRECTORY_SEPARATOR;
         $this->archiveExtractor
             ->method('extract')
-            ->willReturn(['./chromedriver', './LICENSE.chromedriver']);
+            ->willReturn([
+                $extractPath . $binaryFilename,
+                $extractPath . 'LICENSE.chromedriver',
+            ]);
     }
 }
