@@ -50,9 +50,14 @@ final class OperatingSystemOption extends InputOption implements Option
 
     public function description(): string
     {
+        /**
+         * @psalm-var array<string, string> $operatingSystems
+         */
+        $operatingSystems = OperatingSystem::toArray();
+
         return sprintf(
             'Operating system for which to install the driver (%s)',
-            implode('|', OperatingSystem::toArray())
+            implode('|', $operatingSystems)
         );
     }
 
@@ -73,15 +78,23 @@ final class OperatingSystemOption extends InputOption implements Option
         }
 
         if (! OperatingSystem::isValid($value)) {
+            /**
+             * @psalm-var array<string, string> $operatingSystems
+             */
+            $operatingSystems = OperatingSystem::toArray();
+
             throw new UnexpectedValueException(
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
                     $value,
-                    implode(', ', OperatingSystem::toArray())
+                    implode(', ', $operatingSystems)
                 )
             );
         }
 
+        /**
+         * @psalm-var string $value
+         */
         return new OperatingSystem($value);
     }
 }
