@@ -204,10 +204,7 @@ final class JsonDownloader implements DownloaderInterface
     private function getTmpFilePath(string $location, OperatingSystem $operatingSystem): string
     {
         if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return implode(
-                DIRECTORY_SEPARATOR,
-                [$location, self::BINARY_WINDOWS, $this->getFileName($operatingSystem)]
-            );
+            return $location . DIRECTORY_SEPARATOR . self::BINARY_WINDOWS . '/' . $this->getFileName($operatingSystem);
         }
 
         if ($operatingSystem->equals(OperatingSystem::MACOS())) {
