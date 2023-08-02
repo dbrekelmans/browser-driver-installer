@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
-use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolver;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use RuntimeException;
@@ -19,6 +18,7 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
+use function implode;
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -30,10 +30,15 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const DOWNLOAD_ENDPOINT = 'https://chromedriver.storage.googleapis.com';
-    private const BINARY_LINUX      = 'chromedriver_linux64';
-    private const BINARY_MAC        = 'chromedriver_mac64';
-    private const BINARY_WINDOWS    = 'chromedriver_win32';
+    private const DOWNLOAD_ENDPOINT      = 'https://chromedriver.storage.googleapis.com';
+    private const BINARY_LINUX           = 'chromedriver_linux64';
+    private const BINARY_MAC             = 'chromedriver_mac64';
+    private const BINARY_WINDOWS         = 'chromedriver_win32';
+    private const DOWNLOAD_ENDPOINT_JSON = 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing';
+    private const BINARY_LINUX_JSON      = 'chromedriver-linux64';
+    private const BINARY_MAC_JSON        = 'chromedriver-mac-x64';
+    private const BINARY_WINDOWS_JSON    = 'chromedriver-win32';
+
 
     /** @var Filesystem */
     private $filesystem;
@@ -57,7 +62,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()->equals(DriverName::CHROME()) && $driver->version()->major() < VersionResolver::CHROME_MAJOR_VERSION_ENDPOINT_BREAKPOINT;
+        return $driver->name()->equals(DriverName::CHROME());
     }
 
     /**
@@ -72,7 +77,7 @@ final class Downloader implements DownloaderInterface
         }
 
         try {
-            $binary = $this->extractArchive($archive, $driver->operatingSystem());
+            $binary = $this->extractArchive($archive, $driver);
         } catch (IOException | RuntimeException $exception) {
             throw new RuntimeException('Something went wrong extracting the chromedriver archive.', 0, $exception);
         }
@@ -121,7 +126,7 @@ final class Downloader implements DownloaderInterface
             'GET',
             sprintf(
                 '%s/%s/%s.zip',
-                self::DOWNLOAD_ENDPOINT,
+                $this->getDownloadEndpoint($driver),
                 $driver->version()->toBuildString(),
                 $this->getBinaryName($driver)
             )
@@ -148,17 +153,35 @@ final class Downloader implements DownloaderInterface
     private function getBinaryName(Driver $driver): string
     {
         $operatingSystem = $driver->operatingSystem();
+        switch ($this->isJsonVersion($driver)) {
+            case true:
+                if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+                    return 'win32/' . self::BINARY_LINUX_JSON;
+                }
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return self::BINARY_WINDOWS;
-        }
+                if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+                    return 'mac-x64/' . self::BINARY_LINUX_JSON;
+                }
 
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-            return self::BINARY_MAC;
-        }
+                if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+                    return 'linux64/' . self::BINARY_LINUX_JSON;
+                }
 
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-            return self::BINARY_LINUX;
+                break;
+            default:
+                if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+                    return self::BINARY_WINDOWS;
+                }
+
+                if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+                    return self::BINARY_MAC;
+                }
+
+                if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+                    return self::BINARY_LINUX;
+                }
+
+                break;
         }
 
         throw NotImplemented::feature(
@@ -170,11 +193,14 @@ final class Downloader implements DownloaderInterface
      * @throws RuntimeException
      * @throws IOException
      */
-    private function extractArchive(string $archive, OperatingSystem $operatingSystem): string
+    private function extractArchive(string $archive, Driver $driver): string
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        $filePath       = $this->getFilePath($unzipLocation, $operatingSystem);
+        $filePath       = $this->getFilePath($unzipLocation, $driver->operatingSystem());
+        if ($this->isJsonVersion($driver)) {
+            $filePath = $this->getTmpFilePath($unzipLocation, $driver->operatingSystem());
+        }
 
         if (
             ! in_array(
@@ -201,6 +227,29 @@ final class Downloader implements DownloaderInterface
         return $location . DIRECTORY_SEPARATOR . $this->getFileName($operatingSystem);
     }
 
+    private function getTmpFilePath(string $location, OperatingSystem $operatingSystem): string
+    {
+        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+            return $location . DIRECTORY_SEPARATOR . self::BINARY_WINDOWS_JSON . '/' . $this->getFileName($operatingSystem);
+        }
+
+        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+            return implode(
+                DIRECTORY_SEPARATOR,
+                [$location, self::BINARY_WINDOWS_JSON, $this->getFileName($operatingSystem)]
+            );
+        }
+
+        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+            return implode(
+                DIRECTORY_SEPARATOR,
+                [$location, self::BINARY_LINUX_JSON, $this->getFileName($operatingSystem)]
+            );
+        }
+
+        return $location . DIRECTORY_SEPARATOR . $this->getFileName($operatingSystem);
+    }
+
     private function getFileName(OperatingSystem $operatingSystem): string
     {
         $fileName = 'chromedriver';
@@ -210,5 +259,15 @@ final class Downloader implements DownloaderInterface
         }
 
         return $fileName;
+    }
+
+    public function isJsonVersion(Driver $driver): bool
+    {
+        return $driver->version()->major() >= VersionResolver::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
+    }
+
+    public function getDownloadEndpoint(Driver $driver): string
+    {
+        return $this->isJsonVersion($driver) ? self::DOWNLOAD_ENDPOINT_JSON : self::DOWNLOAD_ENDPOINT;
     }
 }
