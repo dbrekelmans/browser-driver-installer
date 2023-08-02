@@ -82,21 +82,4 @@ class JsonVersionResolver implements VersionResolverInterface
         return ($browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM()))
             && $browser->version()->major() >= VersionResolverInterface::CHROME_MAJOR_VERSION_ENDPOINT_BREAKPOINT;
     }
-
-    /**
-     * In case of handling with Chrome from Dev or Canary channel we will then take beta ChromeDriver
-     */
-    private function getBrowserVersionEndpoint(Browser $browser): string
-    {
-        $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
-
-        $stableVersion    = $this->latest();
-        $betaVersionMajor = (int) $stableVersion->major() + 1;
-
-        if ((int) $browser->version()->major() > $betaVersionMajor) {
-            $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, (string) $betaVersionMajor);
-        }
-
-        return $versionEndpoint;
-    }
 }
