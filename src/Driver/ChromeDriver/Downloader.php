@@ -156,11 +156,11 @@ final class Downloader implements DownloaderInterface
         switch ($this->isJsonVersion($driver)) {
             case true:
                 if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                    return 'win32/' . self::BINARY_LINUX_JSON;
+                    return 'win32/' . self::BINARY_WINDOWS_JSON;
                 }
 
                 if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                    return 'mac-x64/' . self::BINARY_LINUX_JSON;
+                    return 'mac-x64/' . self::BINARY_MAC_JSON;
                 }
 
                 if ($operatingSystem->equals(OperatingSystem::LINUX())) {
