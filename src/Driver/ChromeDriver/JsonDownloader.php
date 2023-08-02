@@ -32,9 +32,9 @@ use const DIRECTORY_SEPARATOR;
 final class JsonDownloader implements DownloaderInterface
 {
     private const DOWNLOAD_ENDPOINT = 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing';
-    private const BINARY_LINUX = 'chromedriver-linux64';
-    private const BINARY_MAC = 'chromedriver-mac-x64';
-    private const BINARY_WINDOWS = 'chromedriver-win32';
+    private const BINARY_LINUX      = 'chromedriver-linux64';
+    private const BINARY_MAC        = 'chromedriver-mac-x64';
+    private const BINARY_WINDOWS    = 'chromedriver-win32';
 
     /** @var Filesystem */
     private $filesystem;

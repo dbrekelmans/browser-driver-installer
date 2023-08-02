@@ -18,12 +18,14 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
+
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
