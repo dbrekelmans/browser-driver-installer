@@ -11,6 +11,7 @@ use RuntimeException;
 
 interface VersionResolver
 {
+    public const CHROME_MAJOR_VERSION_ENDPOINT_BREAKPOINT = 115;
     /**
      * @throws RuntimeException If the version could not be resolved.
      * @throws NotImplemented If the browser is not yet supported.

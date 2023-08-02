@@ -45,12 +45,15 @@ $browserVersionResolverFactory->register(new Firefox\VersionResolver($shellComma
 
 $driverVersionResolverFactory = new Driver\VersionResolverFactory();
 $chromeDriverVersionResolver = new ChromeDriver\VersionResolver($httpClient);
+$chromeDriverJsonVersionResolver = new ChromeDriver\JsonVersionResolver($httpClient);
 $geckoDriverVersionResolver = new GeckoDriver\VersionResolver($httpClient);
 $driverVersionResolverFactory->register($chromeDriverVersionResolver);
+$driverVersionResolverFactory->register($chromeDriverJsonVersionResolver);
 $driverVersionResolverFactory->register($geckoDriverVersionResolver);
 
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $multiExtractor));
+$driverDownloaderFactory->register(new ChromeDriver\JsonDownloader($filesystem, $httpClient, $multiExtractor));
 $driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $multiExtractor));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);

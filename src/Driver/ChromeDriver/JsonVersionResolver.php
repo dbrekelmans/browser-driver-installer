@@ -17,11 +17,12 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
+use function array_key_exists;
 use function Safe\sprintf;
 
-final class VersionResolver implements VersionResolverInterface
+class JsonVersionResolver implements VersionResolverInterface
 {
-    private const VERSION_ENDPOINT = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const VERSION_ENDPOINT = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
     /** @var HttpClientInterface */
     private $httpClient;
@@ -38,14 +39,16 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         try {
-            $content = $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
-        } catch (
-            ClientExceptionInterface
-                | RedirectionExceptionInterface
-                | ServerExceptionInterface
-                | TransportExceptionInterface
-                $exception
-        ) {
+            $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
+            $versions = $response->toArray();
+            if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
+                throw new Unsupported(
+                    sprintf('There is no build for version : %s', $browser->version()->toString())
+                );
+            }
+
+            $content = $versions['builds'][$browser->version()->toString()]['version'];
+        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface $exception) {
             throw new UnexpectedValueException(
                 'Something went wrong getting the driver version from the chromedriver API.',
                 0,
@@ -77,7 +80,7 @@ final class VersionResolver implements VersionResolverInterface
         $browserName = $browser->name();
 
         return ($browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM()))
-            && $browser->version()->major() < VersionResolverInterface::CHROME_MAJOR_VERSION_ENDPOINT_BREAKPOINT;
+            && $browser->version()->major() >= VersionResolverInterface::CHROME_MAJOR_VERSION_ENDPOINT_BREAKPOINT;
     }
 
     /**
