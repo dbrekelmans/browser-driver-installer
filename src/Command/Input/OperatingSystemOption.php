@@ -81,7 +81,7 @@ final class OperatingSystemOption extends InputOption implements Option
                 )
             );
         }
-
+        /** @psalm-var string $value */
         return new OperatingSystem($value);
     }
 }
