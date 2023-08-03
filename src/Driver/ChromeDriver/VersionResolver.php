@@ -97,7 +97,7 @@ final class VersionResolver implements VersionResolverInterface
         $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
         $versions = $response->toArray();
         if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
-            throw new Unsupported(
+            throw new UnexpectedValueException(
                 sprintf('There is no build for version : %s', $browser->version()->toString())
             );
         }
