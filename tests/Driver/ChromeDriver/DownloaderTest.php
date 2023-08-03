@@ -61,6 +61,21 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver', $filePath);
     }
 
+    public function testDownloadMacJson(): void
+    {
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS(), true);
+
+        $this->httpClient
+            ->expects(self::atLeastOnce())
+            ->method('request')
+            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/mac-x64/chromedriver-mac-x64.zip');
+
+        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::MACOS());
+        $filePath        = $this->downloader->download($chromeDriverMac, '.');
+
+        self::assertEquals('./chromedriver', $filePath);
+    }
+
     public function testDownloadLinux(): void
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX());
@@ -71,6 +86,21 @@ class DownloaderTest extends TestCase
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
+        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
+
+        self::assertEquals('./chromedriver', $filePath);
+    }
+
+    public function testDownloadLinuxJson(): void
+    {
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX(), true);
+
+        $this->httpClient
+            ->expects(self::atLeastOnce())
+            ->method('request')
+            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/linux64/chromedriver-linux64.zip');
+
+        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::LINUX());
         $filePath          = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver', $filePath);
@@ -91,6 +121,21 @@ class DownloaderTest extends TestCase
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
+    public function testDownloadWindowsJson(): void
+    {
+        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS(), true);
+
+        $this->httpClient
+            ->expects(self::atLeastOnce())
+            ->method('request')
+            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/win32/chromedriver-win32.zip');
+
+        $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS());
+        $filePath            = $this->downloader->download($chromeDriverWindows, '.');
+
+        self::assertEquals('./chromedriver.exe', $filePath);
+    }
+
     protected function setUp(): void
     {
         $this->filesystem       = $this->createStub(Filesystem::class);
@@ -99,8 +144,10 @@ class DownloaderTest extends TestCase
         $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
     }
 
-    private function mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem $operatingSystem): void
-    {
+    private function mockFsAndArchiveExtractorForSuccessfulDownload(
+        OperatingSystem $operatingSystem,
+        bool $isJsonVersion = false
+    ): void {
         $this->filesystem
             ->method('tempnam')
             ->willReturn(sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver-XXX.zip');
@@ -111,6 +158,20 @@ class DownloaderTest extends TestCase
         $binaryFilename = 'chromedriver' . ($operatingSystem->equals(OperatingSystem::WINDOWS()) ? '.exe' : '');
 
         $extractPath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'chromedriver' . DIRECTORY_SEPARATOR;
+        if ($isJsonVersion) {
+            if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+                $extractPath .= 'chromedriver-win32/';
+            }
+
+            if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+                $extractPath .= 'chromedriver-mac-x64/';
+            }
+
+            if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+                $extractPath .= 'chromedriver-linux64/';
+            }
+        }
+
         $this->archiveExtractor
             ->method('extract')
             ->willReturn([

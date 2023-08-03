@@ -236,7 +236,7 @@ final class Downloader implements DownloaderInterface
         if ($operatingSystem->equals(OperatingSystem::MACOS())) {
             return implode(
                 DIRECTORY_SEPARATOR,
-                [$location, self::BINARY_WINDOWS_JSON, $this->getFileName($operatingSystem)]
+                [$location, self::BINARY_MAC_JSON, $this->getFileName($operatingSystem)]
             );
         }
 
