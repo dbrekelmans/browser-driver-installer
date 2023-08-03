@@ -16,7 +16,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
 
 use function in_array;
-use function json_encode;
+use function Safe\json_encode;
 
 class VersionResolverTest extends TestCase
 {
@@ -106,13 +106,7 @@ class VersionResolverTest extends TestCase
 
                     if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json') {
                         return new MockResponse(
-                            json_encode([
-                                'builds' => [
-                                    '115.0.5751' => [
-                                        'version' => '115.0.5751.20',
-                                    ],
-                                ],
-                            ])
+                            json_encode(['builds' => ['115.0.5751' => ['version' => '115.0.5751.20']]])
                         );
                     }
                 }
@@ -125,9 +119,9 @@ class VersionResolverTest extends TestCase
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 
-        $this->chrome   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->chromeJson   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.5751.2'), OperatingSystem::MACOS());
-        $this->chromium = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
-        $this->firefox  = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
+        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.5751.2'), OperatingSystem::MACOS());
+        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
+        $this->firefox    = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 }
