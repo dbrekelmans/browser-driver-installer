@@ -153,35 +153,30 @@ final class Downloader implements DownloaderInterface
     private function getBinaryName(Driver $driver): string
     {
         $operatingSystem = $driver->operatingSystem();
-        switch ($this->isJsonVersion($driver)) {
-            case true:
-                if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                    return 'win32/' . self::BINARY_WINDOWS_JSON;
-                }
+        if ($this->isJsonVersion($driver)) {
+            if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+                return 'win32/' . self::BINARY_WINDOWS_JSON;
+            }
 
-                if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                    return 'mac-x64/' . self::BINARY_MAC_JSON;
-                }
+            if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+                return 'mac-x64/' . self::BINARY_MAC_JSON;
+            }
 
-                if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-                    return 'linux64/' . self::BINARY_LINUX_JSON;
-                }
+            if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+                return 'linux64/' . self::BINARY_LINUX_JSON;
+            }
+        } else {
+            if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+                return self::BINARY_WINDOWS;
+            }
 
-                break;
-            default:
-                if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                    return self::BINARY_WINDOWS;
-                }
+            if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+                return self::BINARY_MAC;
+            }
 
-                if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                    return self::BINARY_MAC;
-                }
-
-                if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-                    return self::BINARY_LINUX;
-                }
-
-                break;
+            if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+                return self::BINARY_LINUX;
+            }
         }
 
         throw NotImplemented::feature(
