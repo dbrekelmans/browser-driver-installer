@@ -9,6 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
+use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use RuntimeException;
 use Safe\Exceptions\FilesystemException;
@@ -24,6 +25,7 @@ use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function Safe\sprintf;
+use function str_replace;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
@@ -192,10 +194,11 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        $filePath       = $this->getFilePath($unzipLocation, $driver->operatingSystem());
         if ($this->isJsonVersion($driver)) {
-            $filePath = $this->getTmpFilePath($unzipLocation, $driver->operatingSystem());
+            $extractedFiles = $this->cleanArchiveStructure($driver, $unzipLocation, $extractedFiles);
         }
+
+        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem());
 
         if (
             ! in_array(
@@ -222,29 +225,6 @@ final class Downloader implements DownloaderInterface
         return $location . DIRECTORY_SEPARATOR . $this->getFileName($operatingSystem);
     }
 
-    private function getTmpFilePath(string $location, OperatingSystem $operatingSystem): string
-    {
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return $location . DIRECTORY_SEPARATOR . self::BINARY_WINDOWS_JSON . '/' . $this->getFileName($operatingSystem);
-        }
-
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-            return implode(
-                DIRECTORY_SEPARATOR,
-                [$location, self::BINARY_MAC_JSON, $this->getFileName($operatingSystem)]
-            );
-        }
-
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-            return implode(
-                DIRECTORY_SEPARATOR,
-                [$location, self::BINARY_LINUX_JSON, $this->getFileName($operatingSystem)]
-            );
-        }
-
-        return $location . DIRECTORY_SEPARATOR . $this->getFileName($operatingSystem);
-    }
-
     private function getFileName(OperatingSystem $operatingSystem): string
     {
         $fileName = 'chromedriver';
@@ -256,13 +236,52 @@ final class Downloader implements DownloaderInterface
         return $fileName;
     }
 
-    public function isJsonVersion(Driver $driver): bool
+    private function isJsonVersion(Driver $driver): bool
     {
         return $driver->version()->major() >= VersionResolver::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
     }
 
-    public function getDownloadEndpoint(Driver $driver): string
+    private function getDownloadEndpoint(Driver $driver): string
     {
         return $this->isJsonVersion($driver) ? self::DOWNLOAD_ENDPOINT_JSON : self::DOWNLOAD_ENDPOINT;
+    }
+
+    private function getArchiveDirectory(OperatingSystem $operatingSystem): string
+    {
+        switch ($operatingSystem->getValue()) {
+            case OperatingSystem::LINUX:
+                return self::BINARY_LINUX_JSON;
+
+            case OperatingSystem::WINDOWS:
+                return self::BINARY_WINDOWS_JSON;
+
+            case OperatingSystem::MACOS:
+                return self::BINARY_MAC_JSON;
+
+            default:
+                throw new Unsupported('Operating system is not supported');
+        }
+    }
+
+    /**
+     * @param  string[] $extractedFiles
+     *
+     * @return string[]
+     */
+    public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
+    {
+        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
+        $this->filesystem->rename(
+            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'chromedriver',
+            $unzipLocation . DIRECTORY_SEPARATOR . 'chromedriver',
+            true
+        );
+        $this->filesystem->rename(
+            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
+            $unzipLocation . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
+            true
+        );
+
+        return str_replace(DIRECTORY_SEPARATOR . $archiveDirectory, '', $extractedFiles);
     }
 }
