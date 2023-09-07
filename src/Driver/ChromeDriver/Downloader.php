@@ -19,7 +19,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
-use function implode;
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -274,11 +273,6 @@ final class Downloader implements DownloaderInterface
         $this->filesystem->rename(
             $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'chromedriver',
             $unzipLocation . DIRECTORY_SEPARATOR . 'chromedriver',
-            true
-        );
-        $this->filesystem->rename(
-            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
-            $unzipLocation . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
             true
         );
 
