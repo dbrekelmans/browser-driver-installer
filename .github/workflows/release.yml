@@ -24,7 +24,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-composer-
       - run: composer install --no-interaction --no-dev --optimize-autoloader
-      - run: phive install --force-accept-unsigned
+      - run: phive --no-progress install --force-accept-unsigned --trust-gpg-keys 2DF45277AEF09A2F
       - run: .phive/tools/box compile
       - name: Smoke test PHAR
         run: .dist/bdi.phar
