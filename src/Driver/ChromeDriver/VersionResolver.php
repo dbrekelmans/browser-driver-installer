@@ -17,11 +17,14 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
+use function array_key_exists;
 use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    private const VERSION_ENDPOINT = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    public const MAJOR_VERSION_ENDPOINT_BREAKPOINT = 115;
+    private const VERSION_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
     /** @var HttpClientInterface */
     private $httpClient;
@@ -38,7 +41,7 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         try {
-            $content = $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
+            $versionString =  $this->getVersionString($browser);
         } catch (
             ClientExceptionInterface
                 | RedirectionExceptionInterface
@@ -54,7 +57,7 @@ final class VersionResolver implements VersionResolverInterface
         }
 
         try {
-            return Version::fromString($content);
+            return Version::fromString($versionString);
         } catch (InvalidArgumentException $exception) {
             throw new UnexpectedValueException(
                 'Content received from chromedriver API could not be parsed into a version.',
@@ -74,7 +77,32 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        return $browser->name()->equals(BrowserName::GOOGLE_CHROME()) || $browser->name()->equals(BrowserName::CHROMIUM());
+        $browserName = $browser->name();
+
+        return $browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM());
+    }
+
+    /**
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     */
+    private function getVersionString(Browser $browser): string
+    {
+        if ($browser->version()->major() < self::MAJOR_VERSION_ENDPOINT_BREAKPOINT) {
+            return $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
+        }
+
+        $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
+        $versions = $response->toArray();
+        if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
+            throw new UnexpectedValueException(
+                sprintf('There is no build for version : %s', $browser->version()->toString())
+            );
+        }
+
+        return $versions['builds'][$browser->version()->toString()]['version'];
     }
 
     /**

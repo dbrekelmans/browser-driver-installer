@@ -16,6 +16,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
 
 use function in_array;
+use function Safe\json_encode;
 
 class VersionResolverTest extends TestCase
 {
@@ -24,6 +25,9 @@ class VersionResolverTest extends TestCase
 
     /** @var Browser */
     private $chrome;
+
+    /** @var Browser */
+    private $chromeJson;
 
     /** @var Browser */
     private $chromium;
@@ -55,6 +59,7 @@ class VersionResolverTest extends TestCase
     public function testFromGetVersionForChrome(): void
     {
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->fromBrowser($this->chrome));
+        self::assertEquals(Version::fromString('115.0.5751.20'), $this->versionResolver->fromBrowser($this->chromeJson));
     }
 
     public function testFromExceptionIfCanNotParseVersionReceived(): void
@@ -63,6 +68,10 @@ class VersionResolverTest extends TestCase
         $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
 
         $this->versionResolver->fromBrowser($wrongChrome);
+
+        $wrongChromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.0.0'), OperatingSystem::MACOS());
+
+        $this->versionResolver->fromBrowser($wrongChromeJson);
     }
 
     public function testFromGetBetaVersionForDevChrome(): void
@@ -94,6 +103,12 @@ class VersionResolverTest extends TestCase
                     if ($url === 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_87') {
                         return new MockResponse('87.0.4280.20');
                     }
+
+                    if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json') {
+                        return new MockResponse(
+                            json_encode(['builds' => ['115.0.5751' => ['version' => '115.0.5751.20']]])
+                        );
+                    }
                 }
 
                 return new MockResponse(
@@ -104,8 +119,9 @@ class VersionResolverTest extends TestCase
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 
-        $this->chrome   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->chromium = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
-        $this->firefox  = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
+        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.5751.2'), OperatingSystem::MACOS());
+        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
+        $this->firefox    = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
     }
 }
