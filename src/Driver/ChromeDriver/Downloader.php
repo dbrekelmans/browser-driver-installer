@@ -19,7 +19,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
-use function implode;
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -246,6 +245,23 @@ final class Downloader implements DownloaderInterface
         return $this->isJsonVersion($driver) ? self::DOWNLOAD_ENDPOINT_JSON : self::DOWNLOAD_ENDPOINT;
     }
 
+    /**
+     * @param  string[] $extractedFiles
+     *
+     * @return string[]
+     */
+    public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
+    {
+        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
+        $this->filesystem->rename(
+            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'chromedriver',
+            $unzipLocation . DIRECTORY_SEPARATOR . 'chromedriver',
+            true
+        );
+
+        return str_replace(DIRECTORY_SEPARATOR . $archiveDirectory, '', $extractedFiles);
+    }
+
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
         switch ($operatingSystem->getValue()) {
@@ -261,27 +277,5 @@ final class Downloader implements DownloaderInterface
             default:
                 throw new Unsupported('Operating system is not supported');
         }
-    }
-
-    /**
-     * @param  string[] $extractedFiles
-     *
-     * @return string[]
-     */
-    public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
-    {
-        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
-        $this->filesystem->rename(
-            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'chromedriver',
-            $unzipLocation . DIRECTORY_SEPARATOR . 'chromedriver',
-            true
-        );
-        $this->filesystem->rename(
-            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
-            $unzipLocation . DIRECTORY_SEPARATOR . 'LICENSE.chromedriver',
-            true
-        );
-
-        return str_replace(DIRECTORY_SEPARATOR . $archiveDirectory, '', $extractedFiles);
     }
 }
