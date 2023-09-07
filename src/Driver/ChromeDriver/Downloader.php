@@ -253,26 +253,27 @@ final class Downloader implements DownloaderInterface
     public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
     {
         $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
+        $filename         = $this->getFileName($driver->operatingSystem());
         $this->filesystem->rename(
-            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . DIRECTORY_SEPARATOR . 'chromedriver',
-            $unzipLocation . DIRECTORY_SEPARATOR . 'chromedriver',
+            $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . $filename,
+            $unzipLocation . DIRECTORY_SEPARATOR . $filename,
             true
         );
 
-        return str_replace(DIRECTORY_SEPARATOR . $archiveDirectory, '', $extractedFiles);
+        return str_replace($archiveDirectory, '', $extractedFiles);
     }
 
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
         switch ($operatingSystem->getValue()) {
             case OperatingSystem::LINUX:
-                return self::BINARY_LINUX_JSON;
+                return self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR;
 
             case OperatingSystem::WINDOWS:
-                return self::BINARY_WINDOWS_JSON;
+                return self::BINARY_WINDOWS_JSON . '/';
 
             case OperatingSystem::MACOS:
-                return self::BINARY_MAC_JSON;
+                return self::BINARY_MAC_JSON . DIRECTORY_SEPARATOR;
 
             default:
                 throw new Unsupported('Operating system is not supported');
