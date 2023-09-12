@@ -17,8 +17,9 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
-use function array_key_exists;
+use function Safe\ksort;
 use function Safe\sprintf;
+use function version_compare;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -26,8 +27,7 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
-    /** @var HttpClientInterface */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)
     {
@@ -96,13 +96,15 @@ final class VersionResolver implements VersionResolverInterface
 
         $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
         $versions = $response->toArray();
-        if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
-            throw new UnexpectedValueException(
-                sprintf('There is no build for version : %s', $browser->version()->toString())
-            );
+
+        ksort($versions['builds']);
+        foreach ($versions['builds'] as $build) {
+            if (version_compare($build['version'], $browser->version()->toString()) >= 0) {
+                return $build['version'];
+            }
         }
 
-        return $versions['builds'][$browser->version()->toString()]['version'];
+        throw new UnexpectedValueException(sprintf('There is no build for version : %s', $browser->version()->toString()));
     }
 
     /**
