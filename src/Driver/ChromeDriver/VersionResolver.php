@@ -27,7 +27,7 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
-    private HttpClientInterface $httpClient;
+    private $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)
     {
