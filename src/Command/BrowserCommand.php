@@ -21,17 +21,13 @@ abstract class BrowserCommand extends Command
 {
     public const PREFIX = 'browser';
 
-    /** @var Filesystem */
-    protected $filesystem;
+    protected Filesystem $filesystem;
 
-    /** @var BrowserFactory */
-    protected $browserFactory;
+    protected BrowserFactory $browserFactory;
 
-    /** @var DriverFactory */
-    protected $driverFactory;
+    protected DriverFactory $driverFactory;
 
-    /** @var DownloaderFactory */
-    protected $driverDownloaderFactory;
+    protected DownloaderFactory $driverDownloaderFactory;
 
     public function __construct(
         Filesystem $filesystem,

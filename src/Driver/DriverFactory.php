@@ -12,8 +12,7 @@ use function Safe\sprintf;
 
 final class DriverFactory
 {
-    /** @var VersionResolverFactory */
-    private $versionResolverFactory;
+    private VersionResolverFactory $versionResolverFactory;
 
     public function __construct(VersionResolverFactory $versionResolverFactory)
     {

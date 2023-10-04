@@ -22,10 +22,8 @@ use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
-    /** @var Downloader  */
-    private $downloader;
-    /** @var Driver  */
-    private $geckoMac;
+    private Downloader $downloader;
+    private Driver $geckoMac;
     /** @var Stub&Filesystem */
     private $filesystem;
     /** @var MockObject&HttpClientInterface */

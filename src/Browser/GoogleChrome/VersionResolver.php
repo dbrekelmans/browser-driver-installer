@@ -24,8 +24,7 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_REG_QUERY_LOCAL_MACHINE = 'reg query HKLM\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
     private const VERSION_REG_QUERY_CURRENT_USER  = 'reg query HKCU\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
 
-    /** @var CommandLineEnvironment */
-    private $commandLineEnvironment;
+    private CommandLineEnvironment $commandLineEnvironment;
 
     public function __construct(CommandLineEnvironment $commandLineEnvironment)
     {

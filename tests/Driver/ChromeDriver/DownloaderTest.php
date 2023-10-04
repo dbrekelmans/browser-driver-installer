@@ -22,8 +22,7 @@ use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
-    /** @var Downloader */
-    private $downloader;
+    private Downloader $downloader;
 
     /** @var Stub&Filesystem */
     private $filesystem;

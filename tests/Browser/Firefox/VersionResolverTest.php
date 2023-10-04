@@ -14,8 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 final class VersionResolverTest extends TestCase
 {
-    /** @var VersionResolver */
-    private $versionResolver;
+    private VersionResolver $versionResolver;
 
     /** @var MockObject&CommandLineEnvironment */
     private $commandLineEnvMock;

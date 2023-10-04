@@ -35,14 +35,11 @@ final class Downloader implements DownloaderInterface
     private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
     private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
-    /** @var Filesystem  */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var HttpClientInterface  */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
-    /** @var Extractor */
-    private $archiveExtractor;
+    private Extractor $archiveExtractor;
 
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {
