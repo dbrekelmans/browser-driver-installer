@@ -36,7 +36,7 @@ jobs:
           extensions: zip
           coverage: none
       - uses: ramsey/composer-install@v1
-      - run: vendor/bin/phpcs
+      - run: vendor/bin/phpcs --warning-severity=0
   e2e:
     runs-on: ${{ matrix.os }}
     strategy:

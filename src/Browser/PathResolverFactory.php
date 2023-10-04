@@ -11,9 +11,7 @@ use function Safe\sprintf;
 
 final class PathResolverFactory
 {
-    /**
-     * @var array<class-string<PathResolver>, PathResolver>
-     */
+    /** @var array<class-string<PathResolver>, PathResolver> */
     private array $pathResolvers = [];
 
     /**

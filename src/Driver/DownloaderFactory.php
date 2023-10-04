@@ -11,9 +11,7 @@ use function Safe\sprintf;
 
 final class DownloaderFactory
 {
-    /**
-     * @var array<string, Downloader>
-     */
+    /** @var array<string, Downloader> */
     private array $downloaders = [];
 
     public function createFromDriver(Driver $driver): Downloader

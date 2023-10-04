@@ -12,9 +12,7 @@ use function Safe\sprintf;
 
 final class VersionResolverFactory
 {
-    /**
-     * @var array<string, VersionResolver>
-     */
+    /** @var array<string, VersionResolver> */
     private array $versionResolvers = [];
 
     /**

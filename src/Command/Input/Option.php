@@ -19,7 +19,7 @@ interface Option
      *
      * @throws UnexpectedValueException
      *
-     * @return T
+     * @phpstan-return T
      */
     public static function value(InputInterface $input);
 

@@ -11,9 +11,7 @@ use function Safe\sprintf;
 
 final class VersionResolverFactory
 {
-    /**
-     * @var array<class-string<VersionResolver>, VersionResolver>
-     */
+    /** @var array<class-string<VersionResolver>, VersionResolver> */
     private array $versionResolvers = [];
 
     /**
