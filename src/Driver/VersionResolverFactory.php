@@ -13,8 +13,7 @@ use function Safe\sprintf;
 final class VersionResolverFactory
 {
     /**
-     * @psalm-var array<string, VersionResolver>
-     * @var VersionResolver[]
+     * @var array<string, VersionResolver>
      */
     private array $versionResolvers = [];
 
