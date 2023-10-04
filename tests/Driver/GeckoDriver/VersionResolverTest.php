@@ -18,14 +18,10 @@ use function Safe\file_get_contents;
 
 class VersionResolverTest extends TestCase
 {
-    /** @var MockHttpClient */
-    private $httpClient;
-    /** @var VersionResolver */
-    private $versionResolver;
-    /** @var Browser */
-    private $chrome;
-    /** @var Browser */
-    private $firefox;
+    private MockHttpClient $httpClient;
+    private VersionResolver $versionResolver;
+    private Browser $chrome;
+    private Browser $firefox;
 
     protected function setUp(): void
     {

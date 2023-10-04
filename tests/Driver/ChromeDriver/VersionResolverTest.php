@@ -20,20 +20,15 @@ use function Safe\json_encode;
 
 class VersionResolverTest extends TestCase
 {
-    /** @var VersionResolver */
-    private $versionResolver;
+    private VersionResolver $versionResolver;
 
-    /** @var Browser */
-    private $chrome;
+    private Browser $chrome;
 
-    /** @var Browser */
-    private $chromeJson;
+    private Browser $chromeJson;
 
-    /** @var Browser */
-    private $chromium;
+    private Browser $chromium;
 
-    /** @var Browser */
-    private $firefox;
+    private Browser $firefox;
 
     public function testSupportChrome(): void
     {

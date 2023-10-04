@@ -11,11 +11,8 @@ use function Safe\sprintf;
 
 final class PathResolverFactory
 {
-    /**
-     * @psalm-var array<class-string<PathResolver>, PathResolver>
-     * @var PathResolver[]
-     */
-    private $pathResolvers = [];
+    /** @var array<class-string<PathResolver>, PathResolver> */
+    private array $pathResolvers = [];
 
     /**
      * @throws NotImplemented If no path resolver is implemented for browser.

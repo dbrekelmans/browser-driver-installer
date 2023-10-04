@@ -21,11 +21,9 @@ abstract class DriverCommand extends Command
 {
     public const PREFIX = 'driver';
 
-    /** @var VersionResolver */
-    private $versionResolver;
+    private VersionResolver $versionResolver;
 
-    /** @var DownloaderFactory */
-    private $downloaderFactory;
+    private DownloaderFactory $downloaderFactory;
 
     public function __construct(
         VersionResolver $versionResolver,

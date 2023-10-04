@@ -14,7 +14,6 @@ use MyCLabs\Enum\Enum;
  * @method static self LINUX()
  * @method static self UNKNOWN()
  * @extends Enum<string>
- * @psalm-immutable
  */
 final class Family extends Enum
 {

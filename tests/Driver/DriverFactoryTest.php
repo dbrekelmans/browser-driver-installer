@@ -46,9 +46,7 @@ final class DriverFactoryTest extends TestCase
     }
 
     /**
-     * @return array<string, array<mixed>>
-     *
-     * @psalm-return array<string, array{Driver, Browser}>
+     * @return array<string, array{Driver, Browser}>
      */
     public function createFromBrowserDataProvider(): array
     {

@@ -9,14 +9,11 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 
 final class Browser
 {
-    /** @var BrowserName */
-    private $name;
+    private BrowserName $name;
 
-    /** @var Version */
-    private $version;
+    private Version $version;
 
-    /** @var OperatingSystem */
-    private $operatingSystem;
+    private OperatingSystem $operatingSystem;
 
     public function __construct(BrowserName $name, Version $version, OperatingSystem $operatingSystem)
     {

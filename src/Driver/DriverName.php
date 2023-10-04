@@ -10,7 +10,6 @@ use MyCLabs\Enum\Enum;
  * @method static self CHROME()
  * @method static self GECKO()
  * @extends Enum<string>
- * @psalm-immutable
  */
 final class DriverName extends Enum
 {

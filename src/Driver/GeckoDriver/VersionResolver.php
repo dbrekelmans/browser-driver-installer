@@ -30,8 +30,7 @@ final class VersionResolver implements VersionResolverInterface
         52 => '0.17.0',
     ];
 
-    /** @var HttpClientInterface */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
     public function __construct(HttpClientInterface $httpClient)
     {
