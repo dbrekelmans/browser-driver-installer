@@ -11,8 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 final class PathResolverTest extends TestCase
 {
-    /** @var PathResolver */
-    private $pathResolver;
+    private PathResolver $pathResolver;
 
     public function testFromKnownOs(): void
     {

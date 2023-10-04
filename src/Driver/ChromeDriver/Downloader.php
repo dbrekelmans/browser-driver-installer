@@ -41,17 +41,13 @@ final class Downloader implements DownloaderInterface
     private const BINARY_WINDOWS_JSON    = 'chromedriver-win32';
 
 
-    /** @var Filesystem */
-    private $filesystem;
+    private Filesystem $filesystem;
 
-    /** @var HttpClientInterface */
-    private $httpClient;
+    private HttpClientInterface $httpClient;
 
-    /** @var Extractor */
-    private $archiveExtractor;
+    private Extractor $archiveExtractor;
 
-    /** @var string */
-    private $tempDir;
+    private string $tempDir;
 
     public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
     {

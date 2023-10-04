@@ -11,7 +11,6 @@ use MyCLabs\Enum\Enum;
  * @method static self MACOS()
  * @method static self LINUX()
  * @extends Enum<string>
- * @psalm-immutable
  */
 final class OperatingSystem extends Enum
 {

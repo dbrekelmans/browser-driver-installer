@@ -16,8 +16,7 @@ use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    /** @var CommandLineEnvironment */
-    private $commandLineEnvironment;
+    private CommandLineEnvironment $commandLineEnvironment;
 
     public function __construct(CommandLineEnvironment $commandLineEnvironment)
     {

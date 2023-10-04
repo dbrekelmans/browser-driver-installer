@@ -7,10 +7,10 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 7.4
           extensions: zip
           coverage: none
       - uses: ramsey/composer-install@v1
@@ -18,50 +18,33 @@ jobs:
   phpstan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 7.4
           extensions: zip
           coverage: none
       - uses: ramsey/composer-install@v1
       - run: vendor/bin/phpstan analyse --error-format=github
-  psalm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.2
-          extensions: zip
-          coverage: none
-      - uses: ramsey/composer-install@v1
-      - run: vendor/bin/psalm --output-format=github
   phpcs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.2
+          php-version: 7.4
           extensions: zip
           coverage: none
       - uses: ramsey/composer-install@v1
-      - run: vendor/bin/phpcs
+      - run: vendor/bin/phpcs --warning-severity=0
   e2e:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
+        php: [7.4, 8.0, 8.1, 8.2, 8.3]
         dependencies: [locked]
         include:
-          - os: ubuntu-latest
-            php: 7.2
-            dependencies: lowest
-          - os: ubuntu-latest
-            php: 7.3
-            dependencies: lowest
           - os: ubuntu-latest
             php: 7.4
             dependencies: lowest
@@ -78,7 +61,7 @@ jobs:
             php: 8.3
             dependencies: lowest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}

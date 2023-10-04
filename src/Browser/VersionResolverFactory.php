@@ -11,11 +11,8 @@ use function Safe\sprintf;
 
 final class VersionResolverFactory
 {
-    /**
-     * @psalm-var array<class-string<VersionResolver>, VersionResolver>
-     * @var VersionResolver[]
-     */
-    private $versionResolvers = [];
+    /** @var array<class-string<VersionResolver>, VersionResolver> */
+    private array $versionResolvers = [];
 
     /**
      * @throws NotImplemented If no version resolver is implemented for browser.
