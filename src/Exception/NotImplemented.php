@@ -6,7 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Exception;
 
 use LogicException;
 
-use function Safe\sprintf;
+
 
 /** @internal */
 final class NotImplemented extends LogicException

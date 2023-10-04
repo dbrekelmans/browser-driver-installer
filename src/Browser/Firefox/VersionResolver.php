@@ -12,7 +12,6 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 
-use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -25,31 +24,31 @@ final class VersionResolver implements VersionResolverInterface
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
     {
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+        if ($operatingSystem=== OperatingSystem::LINUX) {
             return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
         }
 
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+        if ($operatingSystem=== OperatingSystem::MACOS) {
             return $this->getVersionFromCommandLine(
                 sprintf('%s/Contents/MacOS/firefox --version', $path)
             );
         }
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem=== OperatingSystem::WINDOWS) {
             return $this->getVersionFromCommandLine(sprintf('"%s" --version | more', $path));
         }
 
         throw NotImplemented::feature(
             sprintf(
                 'Resolving version on %s',
-                $operatingSystem->getValue()
+                $operatingSystem->value
             )
         );
     }
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName->equals(BrowserName::FIREFOX());
+        return $browserName=== BrowserName::FIREFOX;
     }
 
     private function getVersionFromCommandLine(string $command): Version

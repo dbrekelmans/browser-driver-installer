@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
 use function get_class;
-use function Safe\sprintf;
+
 
 final class PathResolverFactory
 {
@@ -26,7 +25,7 @@ final class PathResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Resolving %s path', $browserName->getValue())
+            sprintf('Resolving %s path', $browserName->value)
         );
     }
 

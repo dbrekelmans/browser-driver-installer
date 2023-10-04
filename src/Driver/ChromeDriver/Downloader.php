@@ -62,7 +62,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()->equals(DriverName::CHROME());
+        return $driver->name()=== DriverName::CHROME;
     }
 
     /**
@@ -185,7 +185,7 @@ final class Downloader implements DownloaderInterface
     {
         $fileName = 'chromedriver';
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem=== OperatingSystem::WINDOWS) {
             $fileName .= '.exe';
         }
 
@@ -212,7 +212,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
-        switch ($operatingSystem->getValue()) {
+        switch ($operatingSystem->value) {
             case OperatingSystem::LINUX:
                 return self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR;
 

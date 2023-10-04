@@ -9,7 +9,7 @@ use Safe\Exceptions\PcreException;
 
 use function implode;
 use function Safe\preg_match;
-use function Safe\sprintf;
+
 
 final class Version
 {

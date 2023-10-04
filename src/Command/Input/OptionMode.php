@@ -4,19 +4,10 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static self NONE()
- * @method static self REQUIRED()
- * @method static self OPTIONAL()
- * @method static self IS_ARRAY()
- * @extends Enum<int>
- */
-final class OptionMode extends Enum
+enum OptionMode: int
 {
-    public const NONE     = 1;
-    public const REQUIRED = 2;
-    public const OPTIONAL = 4;
-    public const IS_ARRAY = 8;
+    case NONE     = 1;
+    case REQUIRED = 2;
+    case OPTIONAL = 4;
+    case IS_ARRAY = 8;
 }

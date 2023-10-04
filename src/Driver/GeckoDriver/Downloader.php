@@ -16,16 +16,13 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
 use function basename;
 use function dirname;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
-use function Safe\sprintf;
 use function strpos;
 use function sys_get_temp_dir;
-
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
@@ -83,7 +80,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()->equals(DriverName::GECKO());
+        return $driver->name()=== DriverName::GECKO;
     }
 
     /**
@@ -132,20 +129,20 @@ final class Downloader implements DownloaderInterface
     {
         $operatingSystem = $driver->operatingSystem();
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem=== OperatingSystem::WINDOWS) {
             return self::DOWNLOAD_PATH_OS_PART_WINDOWS;
         }
 
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+        if ($operatingSystem=== OperatingSystem::MACOS) {
             return self::DOWNLOAD_PATH_OS_PART_MACOS;
         }
 
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+        if ($operatingSystem=== OperatingSystem::LINUX) {
             return self::DOWNLOAD_PATH_OS_PART_LINUX;
         }
 
         throw NotImplemented::feature(
-            sprintf('Downloading %s for %s', $driver->name()->getValue(), $operatingSystem->getValue())
+            sprintf('Downloading %s for %s', $driver->name()->value, $operatingSystem->value)
         );
     }
 
@@ -164,7 +161,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveExtension(Driver $driver): string
     {
-        if ($driver->operatingSystem()->equals(OperatingSystem::WINDOWS())) {
+        if ($driver->operatingSystem()=== OperatingSystem::WINDOWS) {
             return '.zip';
         }
 

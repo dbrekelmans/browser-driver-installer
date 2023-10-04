@@ -10,12 +10,10 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
-
 use function implode;
 use function is_string;
-use function Safe\sprintf;
-
 use const PHP_OS_FAMILY;
+
 
 /**
  * @implements Option<OperatingSystem>
@@ -27,7 +25,7 @@ final class OperatingSystemOption extends InputOption implements Option
         parent::__construct(
             self::name(),
             $this->shortcut(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
             $this->default()
         );
@@ -45,20 +43,20 @@ final class OperatingSystemOption extends InputOption implements Option
 
     public function mode(): OptionMode
     {
-        return OptionMode::REQUIRED();
+        return OptionMode::REQUIRED;
     }
 
     public function description(): string
     {
         return sprintf(
             'Operating system for which to install the driver (%s)',
-            implode('|', OperatingSystem::toArray())
+            implode('|', OperatingSystem::cases())
         );
     }
 
     public function default(): ?string
     {
-        return OperatingSystem::fromFamily(new Family(PHP_OS_FAMILY))->getValue();
+        return OperatingSystem::fromFamily(Family::from(PHP_OS_FAMILY))->value;
     }
 
     /**
@@ -72,16 +70,16 @@ final class OperatingSystemOption extends InputOption implements Option
             throw UnexpectedType::expected('string', $value);
         }
 
-        if (! OperatingSystem::isValid($value)) {
+        if (OperatingSystem::tryFrom($value) === null) {
             throw new UnexpectedValueException(
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
                     $value,
-                    implode(', ', OperatingSystem::toArray())
+                    implode(', ', OperatingSystem::cases())
                 )
             );
         }
 
-        return new OperatingSystem($value);
+        return OperatingSystem::from($value);
     }
 }

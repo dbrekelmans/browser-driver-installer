@@ -11,11 +11,10 @@ use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
 use function is_string;
 use function Safe\json_decode;
 use function Safe\krsort;
-use function Safe\sprintf;
+
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -66,7 +65,7 @@ final class VersionResolver implements VersionResolverInterface
     public function latest(): Version
     {
         $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
-        /** @var array<mixed> $data */
+        /** @var array $data */
         $data = json_decode($response->getContent(), true);
         if (! isset($data['name'])) {
             throw new RuntimeException('Can not find latest release name');
@@ -77,6 +76,6 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        return $browser->name()->equals(BrowserName::FIREFOX());
+        return $browser->name()=== BrowserName::FIREFOX;
     }
 }

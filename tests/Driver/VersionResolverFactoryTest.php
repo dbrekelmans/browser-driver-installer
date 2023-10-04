@@ -25,16 +25,16 @@ final class VersionResolverFactoryTest extends TestCase
         $this->expectException(NotImplemented::class);
         $factory->createFromBrowser(
             new Browser(
-                BrowserName::GOOGLE_CHROME(),
+                BrowserName::GOOGLE_CHROME,
                 Version::fromString('1.0.0'),
-                OperatingSystem::LINUX()
+                OperatingSystem::LINUX
             )
         );
     }
 
     public function testRegisteredVersionResolverIsReturned(): void
     {
-        $versionResolver = $this->createStub(VersionResolver::class);
+        $versionResolver = self::createStub(VersionResolver::class);
         $versionResolver->method('supports')->willReturn(true);
 
         $factory = new VersionResolverFactory();
@@ -44,9 +44,9 @@ final class VersionResolverFactoryTest extends TestCase
             $versionResolver,
             $factory->createFromBrowser(
                 new Browser(
-                    BrowserName::GOOGLE_CHROME(),
+                    BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX()
+                    OperatingSystem::LINUX
                 )
             )
         );
@@ -78,9 +78,9 @@ final class VersionResolverFactoryTest extends TestCase
             $versionResolverB,
             $factory->createFromBrowser(
                 new Browser(
-                    BrowserName::GOOGLE_CHROME(),
+                    BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX()
+                    OperatingSystem::LINUX
                 )
             )
         );
@@ -106,9 +106,9 @@ final class VersionResolverFactoryTest extends TestCase
             $versionResolverA,
             $factory->createFromBrowser(
                 new Browser(
-                    BrowserName::GOOGLE_CHROME(),
+                    BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX()
+                    OperatingSystem::LINUX
                 )
             )
         );

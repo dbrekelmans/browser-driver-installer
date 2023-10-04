@@ -15,7 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
-use function Safe\sprintf;
 
 abstract class BrowserCommand extends Command
 {
@@ -40,14 +39,14 @@ abstract class BrowserCommand extends Command
         $this->driverFactory           = $driverFactory;
         $this->driverDownloaderFactory = $driverDownloaderFactory;
 
-        parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->getValue()));
+        parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->value));
     }
 
     abstract protected static function browserName(): BrowserName;
 
     final protected function configure(): void
     {
-        $this->setDescription(sprintf('Helps you install the driver for %s.', static::browserName()->getValue()));
+        $this->setDescription(sprintf('Helps you install the driver for %s.', static::browserName()->value));
 
         $this->setDefinition(
             new InputDefinition(
@@ -81,14 +80,14 @@ abstract class BrowserCommand extends Command
         }
 
         if ($io->isVerbose()) {
-            $io->writeln(sprintf('Found %s %s.', $browser->name()->getValue(), $browser->version()->toBuildString()));
+            $io->writeln(sprintf('Found %s %s.', $browser->name()->value, $browser->version()->toBuildString()));
         }
 
         $driver = $this->driverFactory->createFromBrowser($browser);
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->getValue(), $driver->version()->toBuildString())
+                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString())
             );
         }
 
@@ -96,7 +95,7 @@ abstract class BrowserCommand extends Command
         $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
-            sprintf('%s %s installed to %s', $driver->name()->getValue(), $driver->version()->toBuildString(), $filePath)
+            sprintf('%s %s installed to %s', $driver->name()->value, $driver->version()->toBuildString(), $filePath)
         );
 
         return self::SUCCESS;

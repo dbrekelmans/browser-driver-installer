@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-
 use function Safe\file_get_contents;
 
 class VersionResolverTest extends TestCase
@@ -35,8 +34,8 @@ class VersionResolverTest extends TestCase
             }
         );
         $this->versionResolver = new VersionResolver($this->httpClient);
-        $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->firefox         = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('86.0.4240.80'), OperatingSystem::MACOS);
+        $this->firefox         = new Browser(BrowserName::FIREFOX, Version::fromString('81.0.2'), OperatingSystem::MACOS);
     }
 
     public function testDoesNotSupportChrome(): void
@@ -58,7 +57,7 @@ class VersionResolverTest extends TestCase
 
     public function testVersionForOldBrowser(): void
     {
-        $firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('57.0.0'), OperatingSystem::MACOS());
+        $firefox = new Browser(BrowserName::FIREFOX, Version::fromString('57.0.0'), OperatingSystem::MACOS);
 
         $geckoVersion = $this->versionResolver->fromBrowser($firefox);
 
@@ -67,9 +66,9 @@ class VersionResolverTest extends TestCase
 
     public function testNoVersionForVeryOldBrowser(): void
     {
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
-        $firefox = new Browser(BrowserName::FIREFOX(), Version::fromString('51.0.0'), OperatingSystem::MACOS());
+        $firefox = new Browser(BrowserName::FIREFOX, Version::fromString('51.0.0'), OperatingSystem::MACOS);
 
         $this->versionResolver->fromBrowser($firefox);
     }

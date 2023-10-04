@@ -20,18 +20,18 @@ final class VersionResolverFactoryTest extends TestCase
         $factory = new VersionResolverFactory();
 
         $this->expectException(NotImplemented::class);
-        $factory->createFromName(BrowserName::GOOGLE_CHROME());
+        $factory->createFromName(BrowserName::GOOGLE_CHROME);
     }
 
     public function testRegisteredVersionResolverIsReturned(): void
     {
-        $versionResolver = $this->createStub(VersionResolver::class);
+        $versionResolver = self::createStub(VersionResolver::class);
         $versionResolver->method('supports')->willReturn(true);
 
         $factory = new VersionResolverFactory();
         $factory->register($versionResolver);
 
-        self::assertSame($versionResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($versionResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 
     public function testSupportedVersionResolverIsReturned(): void
@@ -56,7 +56,7 @@ final class VersionResolverFactoryTest extends TestCase
         $factory->register($versionResolverB);
         $factory->register($versionResolverC);
 
-        self::assertSame($versionResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($versionResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 
     public function testFirstSupportedVersionResolverIsReturned(): void
@@ -75,6 +75,6 @@ final class VersionResolverFactoryTest extends TestCase
         $factory->register($versionResolverA);
         $factory->register($versionResolverB);
 
-        self::assertSame($versionResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($versionResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 }

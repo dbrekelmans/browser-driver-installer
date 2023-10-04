@@ -20,12 +20,10 @@ final class DriverFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    /**
-     * @dataProvider createFromBrowserDataProvider
-     */
+    /** @dataProvider createFromBrowserDataProvider */
     public function testCreateFromBrowser(Driver $expectedDriver, Browser $browser): void
     {
-        $versionResolver = $this->createStub(VersionResolver::class);
+        $versionResolver = self::createStub(VersionResolver::class);
         $versionResolver->method('fromBrowser')->willReturn(Version::fromString('1.0.0'));
         $versionResolver->method('supports')->willReturn(true);
 
@@ -40,28 +38,26 @@ final class DriverFactoryTest extends TestCase
 
     private static function assertSameDriver(Driver $expected, Driver $actual): void
     {
-        self::assertTrue($expected->name()->equals($actual->name()));
+        self::assertTrue($expected->name() === $actual->name());
         self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
-        self::assertTrue($expected->operatingSystem()->equals($actual->operatingSystem()));
+        self::assertTrue($expected->operatingSystem() === $actual->operatingSystem());
     }
 
-    /**
-     * @return array<string, array{Driver, Browser}>
-     */
-    public function createFromBrowserDataProvider(): array
+    /** @return array<string, array{Driver, Browser}> */
+    public static function createFromBrowserDataProvider(): array
     {
         return [
             'google_chrome' => [
-                new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
-                new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
             'chromium' => [
-                new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
-                new Browser(BrowserName::CHROMIUM(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Browser(BrowserName::CHROMIUM, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
             'firefox' => [
-                new Driver(DriverName::GECKO(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
-                new Browser(BrowserName::FIREFOX(), Version::fromString('1.0.0'), OperatingSystem::LINUX()),
+                new Driver(DriverName::GECKO, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Browser(BrowserName::FIREFOX, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
         ];
     }

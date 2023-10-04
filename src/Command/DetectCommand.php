@@ -14,7 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
 
-use function Safe\sprintf;
 
 final class DetectCommand extends Command
 {
@@ -53,13 +52,13 @@ final class DetectCommand extends Command
 
         $arguments = [
             Input\InstallPathArgument::name() => Input\InstallPathArgument::value($input),
-            '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->getValue(),
+            '--' . Input\OperatingSystemOption::name() => Input\OperatingSystemOption::value($input)->value,
         ];
 
         $returnCode = self::SUCCESS;
 
         foreach (BrowserName::values() as $browserName) {
-            $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->getValue());
+            $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->value);
 
             try {
                 $command = $application->find($commandName);

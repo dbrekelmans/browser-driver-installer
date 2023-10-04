@@ -16,9 +16,8 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-
 use function array_key_exists;
-use function Safe\sprintf;
+
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -42,7 +41,7 @@ final class VersionResolver implements VersionResolverInterface
     public function fromBrowser(Browser $browser): Version
     {
         if (! $this->supports($browser)) {
-            throw new Unsupported(sprintf('%s is not supported.', $browser->name()->getValue()));
+            throw new Unsupported(sprintf('%s is not supported.', $browser->name()->value));
         }
 
         try {
@@ -87,7 +86,7 @@ final class VersionResolver implements VersionResolverInterface
     {
         $browserName = $browser->name();
 
-        return $browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM());
+        return $browserName=== BrowserName::GOOGLE_CHROME || $browserName=== BrowserName::CHROMIUM;
     }
 
     private function latestBetaVersion(): Version

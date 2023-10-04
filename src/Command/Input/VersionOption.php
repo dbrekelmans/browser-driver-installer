@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-
 use function is_string;
 
 /**
@@ -22,7 +21,7 @@ final class VersionOption extends InputOption implements Option
         parent::__construct(
             self::name(),
             $this->shortcut(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
             $this->default()
         );

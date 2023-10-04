@@ -8,7 +8,7 @@ use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-use function Safe\sprintf;
+
 
 class ShellCommandLineEnvironment implements CommandLineEnvironment
 {

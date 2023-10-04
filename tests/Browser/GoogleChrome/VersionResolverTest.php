@@ -16,17 +16,16 @@ class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
 
-    /** @var MockObject&CommandLineEnvironment */
-    private $commandLineEnvMock;
+    private MockObject&CommandLineEnvironment $commandLineEnvMock;
 
     public function testSupportChrome(): void
     {
-        self::assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
+        self::assertTrue($this->versionResolver->supports(BrowserName::GOOGLE_CHROME));
     }
 
     public function testDoesNotSupportFirefox(): void
     {
-        self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
+        self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX));
     }
 
     public function testFromLinux(): void
@@ -35,7 +34,7 @@ class VersionResolverTest extends TestCase
 
         self::assertEquals(
             Version::fromString('86.0.4240.80'),
-            $this->versionResolver->from(OperatingSystem::LINUX(), 'google-chrome')
+            $this->versionResolver->from(OperatingSystem::LINUX, 'google-chrome'),
         );
     }
 
@@ -43,12 +42,12 @@ class VersionResolverTest extends TestCase
     {
         $this->mockCommandLineCommandOutput(
             '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --version',
-            'Google Chrome 86.0.4240.80'
+            'Google Chrome 86.0.4240.80',
         );
 
         self::assertEquals(
             Version::fromString('86.0.4240.80'),
-            $this->versionResolver->from(OperatingSystem::MACOS(), '/Applications/Google\ Chrome.app')
+            $this->versionResolver->from(OperatingSystem::MACOS, '/Applications/Google\ Chrome.app'),
         );
     }
 
@@ -57,15 +56,15 @@ class VersionResolverTest extends TestCase
         $this->mockCommandLineCommandOutput(
             'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
             'HKEY_LOCAL_MACHINE\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96}
-    pv    REG_SZ    86.0.4240.80'
+    pv    REG_SZ    86.0.4240.80',
         );
 
         self::assertEquals(
             Version::fromString('86.0.4240.80'),
             $this->versionResolver->from(
-                OperatingSystem::WINDOWS(),
-                'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
-            )
+                OperatingSystem::WINDOWS,
+                'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
+            ),
         );
     }
 

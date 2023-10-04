@@ -7,7 +7,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Archive;
 use RuntimeException;
 use ZipArchive;
 
-use function Safe\sprintf;
+
 
 use const DIRECTORY_SEPARATOR;
 

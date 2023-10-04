@@ -11,6 +11,6 @@ final class Command extends DriverCommand
 {
     protected static function driverName(): DriverName
     {
-        return DriverName::CHROME();
+        return DriverName::CHROME;
     }
 }

@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
-use function Safe\sprintf;
 
 final class DriverFactory
 {
@@ -36,14 +35,14 @@ final class DriverFactory
     {
         $browserName = $browser->name();
 
-        if ($browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM())) {
-            return DriverName::CHROME();
+        if ($browserName=== BrowserName::GOOGLE_CHROME || $browserName=== BrowserName::CHROMIUM) {
+            return DriverName::CHROME;
         }
 
-        if ($browserName->equals(BrowserName::FIREFOX())) {
-            return DriverName::GECKO();
+        if ($browserName=== BrowserName::FIREFOX) {
+            return DriverName::GECKO;
         }
 
-        throw NotImplemented::feature(sprintf('Driver for %s', $browserName->getValue()));
+        throw NotImplemented::feature(sprintf('Driver for %s', $browserName->value));
     }
 }

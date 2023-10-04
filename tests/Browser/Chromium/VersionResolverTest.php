@@ -16,29 +16,28 @@ class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
 
-    /** @var MockObject&CommandLineEnvironment */
-    private $commandLineEnvMock;
+    private MockObject&CommandLineEnvironment $commandLineEnvMock;
 
     public function testSupportChromium(): void
     {
-        self::assertTrue($this->versionResolver->supports(BrowserName::CHROMIUM()));
+        self::assertTrue($this->versionResolver->supports(BrowserName::CHROMIUM));
     }
 
     public function testDoesNotSupportFirefox(): void
     {
-        self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX()));
+        self::assertFalse($this->versionResolver->supports(BrowserName::FIREFOX));
     }
 
     public function testFromMac(): void
     {
         $this->mockCommandLineCommandOutput(
             '/Applications/Chromium.app/Contents/MacOS/Chromium --version',
-            'Chromium 88.0.4299.0'
+            'Chromium 88.0.4299.0',
         );
 
         self::assertEquals(
             Version::fromString('88.0.4299.0'),
-            $this->versionResolver->from(OperatingSystem::MACOS(), '/Applications/Chromium.app')
+            $this->versionResolver->from(OperatingSystem::MACOS, '/Applications/Chromium.app'),
         );
     }
 
@@ -48,7 +47,7 @@ class VersionResolverTest extends TestCase
 
         self::assertEquals(
             Version::fromString('88.0.4299.0'),
-            $this->versionResolver->from(OperatingSystem::LINUX(), 'chromium')
+            $this->versionResolver->from(OperatingSystem::LINUX, 'chromium'),
         );
     }
 
@@ -57,15 +56,15 @@ class VersionResolverTest extends TestCase
         $this->mockCommandLineCommandOutput(
             'reg query HKLM\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96} /v pv /reg:32 2> NUL',
             'HKEY_LOCAL_MACHINE\Software\Google\Update\Clients\{8A69D345-D564-463c-AFF1-A69D9E530F96}
-    pv    REG_SZ    88.0.4299.0'
+    pv    REG_SZ    88.0.4299.0',
         );
 
         self::assertEquals(
             Version::fromString('88.0.4299.0'),
             $this->versionResolver->from(
-                OperatingSystem::WINDOWS(),
-                'C:\Program Files (x86)\Chromium\Application\chrome.exe'
-            )
+                OperatingSystem::WINDOWS,
+                'C:\Program Files (x86)\Chromium\Application\chrome.exe',
+            ),
         );
     }
 

@@ -13,7 +13,6 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 use Safe\Exceptions\StringsException;
 
-use function Safe\sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -33,17 +32,17 @@ final class VersionResolver implements VersionResolverInterface
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
     {
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+        if ($operatingSystem=== OperatingSystem::LINUX) {
             return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
         }
 
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+        if ($operatingSystem=== OperatingSystem::MACOS) {
             return $this->getVersionFromCommandLine(
                 sprintf('%s/Contents/MacOS/Google\ Chrome --version', $path)
             );
         }
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem=== OperatingSystem::WINDOWS) {
             $previousException = null;
             foreach (self::getWindowsCommandsForVersion() as $possibleCommand) {
                 try {
@@ -59,14 +58,14 @@ final class VersionResolver implements VersionResolverInterface
         throw NotImplemented::feature(
             sprintf(
                 'Resolving version on %s',
-                $operatingSystem->getValue()
+                $operatingSystem->value
             )
         );
     }
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName->equals(BrowserName::GOOGLE_CHROME());
+        return $browserName=== BrowserName::GOOGLE_CHROME;
     }
 
     private function getVersionFromCommandLine(string $command): Version

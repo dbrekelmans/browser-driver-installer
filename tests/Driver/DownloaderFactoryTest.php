@@ -24,13 +24,13 @@ final class DownloaderFactoryTest extends TestCase
 
         $this->expectException(NotImplemented::class);
         $factory->createFromDriver(
-            new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX())
+            new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
         );
     }
 
     public function testRegisteredDownloaderIsReturned(): void
     {
-        $downloader = $this->createStub(Downloader::class);
+        $downloader = self::createStub(Downloader::class);
         $downloader->method('supports')->willReturn(true);
 
         $factory = new DownloaderFactory();
@@ -39,8 +39,8 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloader,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX())
-            )
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+            ),
         );
     }
 
@@ -69,8 +69,8 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderB,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX())
-            )
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+            ),
         );
     }
 
@@ -93,8 +93,8 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderA,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME(), Version::fromString('1.0.0'), OperatingSystem::LINUX())
-            )
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+            ),
         );
     }
 }

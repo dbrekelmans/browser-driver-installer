@@ -14,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
-
 use function in_array;
 use function Safe\json_encode;
 
@@ -60,18 +59,18 @@ class VersionResolverTest extends TestCase
     public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
+        $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('1.0.0.0'), OperatingSystem::MACOS);
 
         $this->versionResolver->fromBrowser($wrongChrome);
 
-        $wrongChromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.0.0'), OperatingSystem::MACOS());
+        $wrongChromeJson = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('115.0.0.0'), OperatingSystem::MACOS);
 
         $this->versionResolver->fromBrowser($wrongChromeJson);
     }
 
     public function testFromGetBetaVersionForDevChrome(): void
     {
-        $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('123.0.6300.3'), OperatingSystem::MACOS());
+        $devChrome = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('123.0.6300.3'), OperatingSystem::MACOS);
 
         self::assertEquals(Version::fromString('122.0.6261.39'), $this->versionResolver->fromBrowser($devChrome));
     }
@@ -136,9 +135,9 @@ class VersionResolverTest extends TestCase
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 
-        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.5751.2'), OperatingSystem::MACOS());
-        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
-        $this->firefox    = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('86.0.4240.80'), OperatingSystem::MACOS);
+        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('115.0.5751.2'), OperatingSystem::MACOS);
+        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::MACOS);
+        $this->firefox    = new Browser(BrowserName::FIREFOX, Version::fromString('81.0.2'), OperatingSystem::MACOS);
     }
 }

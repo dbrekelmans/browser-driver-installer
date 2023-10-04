@@ -4,17 +4,9 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static self GOOGLE_CHROME()
- * @method static self CHROMIUM()
- * @method static self FIREFOX()
- * @extends Enum<string>
- */
-final class BrowserName extends Enum
+enum BrowserName: string
 {
-    public const GOOGLE_CHROME = 'google-chrome';
-    public const CHROMIUM      = 'chromium';
-    public const FIREFOX       = 'firefox';
+    case GOOGLE_CHROME = 'google-chrome';
+    case CHROMIUM      = 'chromium';
+    case FIREFOX       = 'firefox';
 }

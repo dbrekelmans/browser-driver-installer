@@ -9,29 +9,28 @@ use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInter
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-use function Safe\sprintf;
 
 class PathResolver implements PathResolverInterface
 {
     public function from(OperatingSystem $operatingSystem): string
     {
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
+        if ($operatingSystem=== OperatingSystem::LINUX) {
             return 'chromium';
         }
 
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
+        if ($operatingSystem=== OperatingSystem::MACOS) {
             return '/Applications/Chromium.app';
         }
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem=== OperatingSystem::WINDOWS) {
             return 'C:\\Program Files (x86)\\Chromium\\Application\\chrome.exe';
         }
 
-        throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->getValue()));
+        throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->value));
     }
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName->equals(BrowserName::CHROMIUM());
+        return $browserName=== BrowserName::CHROMIUM;
     }
 }

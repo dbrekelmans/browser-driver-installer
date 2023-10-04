@@ -20,18 +20,18 @@ final class PathResolverFactoryTest extends TestCase
         $factory = new PathResolverFactory();
 
         $this->expectException(NotImplemented::class);
-        $factory->createFromName(BrowserName::GOOGLE_CHROME());
+        $factory->createFromName(BrowserName::GOOGLE_CHROME);
     }
 
     public function testRegisteredPathResolverIsReturned(): void
     {
-        $pathResolver = $this->createStub(PathResolver::class);
+        $pathResolver = self::createStub(PathResolver::class);
         $pathResolver->method('supports')->willReturn(true);
 
         $factory = new PathResolverFactory();
         $factory->register($pathResolver);
 
-        self::assertSame($pathResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($pathResolver, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 
     public function testSupportedPathResolverIsReturned(): void
@@ -56,7 +56,7 @@ final class PathResolverFactoryTest extends TestCase
         $factory->register($pathResolverB);
         $factory->register($pathResolverC);
 
-        self::assertSame($pathResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($pathResolverB, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 
     public function testFirstSupportedPathResolverIsReturned(): void
@@ -75,6 +75,6 @@ final class PathResolverFactoryTest extends TestCase
         $factory->register($pathResolverA);
         $factory->register($pathResolverB);
 
-        self::assertSame($pathResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME()));
+        self::assertSame($pathResolverA, $factory->createFromName(BrowserName::GOOGLE_CHROME));
     }
 }

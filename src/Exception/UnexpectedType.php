@@ -8,7 +8,7 @@ use Throwable;
 use UnexpectedValueException;
 
 use function get_debug_type;
-use function Safe\sprintf;
+
 
 final class UnexpectedType extends UnexpectedValueException
 {

@@ -10,7 +10,7 @@ use function array_merge;
 use function array_unique;
 use function in_array;
 use function pathinfo;
-use function Safe\sprintf;
+
 
 final class MultiExtractor implements Extractor
 {
