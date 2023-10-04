@@ -11,7 +11,6 @@ use MyCLabs\Enum\Enum;
  * @method static self CHROMIUM()
  * @method static self FIREFOX()
  * @extends Enum<string>
- * @psalm-immutable
  */
 final class BrowserName extends Enum
 {

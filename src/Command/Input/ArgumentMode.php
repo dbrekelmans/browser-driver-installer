@@ -11,7 +11,6 @@ use MyCLabs\Enum\Enum;
  * @method static self OPTIONAL()
  * @method static self IS_ARRAY()
  * @extends Enum<int>
- * @psalm-immutable
  */
 final class ArgumentMode extends Enum
 {

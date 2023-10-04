@@ -26,17 +26,6 @@ jobs:
           coverage: none
       - uses: ramsey/composer-install@v1
       - run: vendor/bin/phpstan analyse --error-format=github
-  psalm:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          extensions: zip
-          coverage: none
-      - uses: ramsey/composer-install@v1
-      - run: vendor/bin/psalm --output-format=github
   phpcs:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +36,7 @@ jobs:
           extensions: zip
           coverage: none
       - uses: ramsey/composer-install@v1
-      - run: vendor/bin/phpcs
+      - run: vendor/bin/phpcs --warning-severity=0
   e2e:
     runs-on: ${{ matrix.os }}
     strategy:

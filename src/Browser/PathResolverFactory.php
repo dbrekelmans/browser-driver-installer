@@ -11,10 +11,7 @@ use function Safe\sprintf;
 
 final class PathResolverFactory
 {
-    /**
-     * @psalm-var array<class-string<PathResolver>, PathResolver>
-     * @var PathResolver[]
-     */
+    /** @var array<class-string<PathResolver>, PathResolver> */
     private array $pathResolvers = [];
 
     /**
