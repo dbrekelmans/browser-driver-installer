@@ -15,10 +15,10 @@ use function Safe\sprintf;
 final class MultiExtractor implements Extractor
 {
     /** @var Extractor[] */
-    private $registeredExtractors = [];
+    private array $registeredExtractors = [];
 
     /** @var string[] */
-    private $supportedExtensions = [];
+    private array $supportedExtensions = [];
 
     /**
      * @inheritDoc

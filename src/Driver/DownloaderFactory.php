@@ -15,7 +15,7 @@ final class DownloaderFactory
      * @psalm-var array<string, Downloader>
      * @var Downloader[]
      */
-    private $downloaders = [];
+    private array $downloaders = [];
 
     public function createFromDriver(Driver $driver): Downloader
     {

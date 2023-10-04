@@ -15,7 +15,7 @@ final class VersionResolverFactory
      * @psalm-var array<class-string<VersionResolver>, VersionResolver>
      * @var VersionResolver[]
      */
-    private $versionResolvers = [];
+    private array $versionResolvers = [];
 
     /**
      * @throws NotImplemented If no version resolver is implemented for browser.
