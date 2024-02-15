@@ -35,7 +35,7 @@ final class Downloader implements DownloaderInterface
     private const BINARY_LINUX           = 'chromedriver_linux64';
     private const BINARY_MAC             = 'chromedriver_mac64';
     private const BINARY_WINDOWS         = 'chromedriver_win32';
-    private const DOWNLOAD_ENDPOINT_JSON = 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing';
+    private const DOWNLOAD_ENDPOINT_JSON = 'https://storage.googleapis.com/chrome-for-testing-public';
     private const BINARY_LINUX_JSON      = 'chromedriver-linux64';
     private const BINARY_MAC_JSON        = 'chromedriver-mac-x64';
     private const BINARY_WINDOWS_JSON    = 'chromedriver-win32';

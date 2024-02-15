@@ -67,7 +67,7 @@ class DownloaderTest extends TestCase
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/mac-x64/chromedriver-mac-x64.zip');
+            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/115.0.5790.170/mac-x64/chromedriver-mac-x64.zip');
 
         $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::MACOS());
         $filePath        = $this->downloader->download($chromeDriverMac, '.');
@@ -97,7 +97,7 @@ class DownloaderTest extends TestCase
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/linux64/chromedriver-linux64.zip');
+            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/115.0.5790.170/linux64/chromedriver-linux64.zip');
 
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::LINUX());
         $filePath          = $this->downloader->download($chromeDriverLinux, '.');
@@ -127,7 +127,7 @@ class DownloaderTest extends TestCase
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/win32/chromedriver-win32.zip');
+            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/115.0.5790.170/win32/chromedriver-win32.zip');
 
         $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS());
         $filePath            = $this->downloader->download($chromeDriverWindows, '.');
