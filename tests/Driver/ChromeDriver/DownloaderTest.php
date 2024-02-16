@@ -6,6 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver\ChromeDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver\Downloader;
+use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
@@ -30,6 +31,9 @@ class DownloaderTest extends TestCase
     /** @var Stub&Extractor */
     private $archiveExtractor;
 
+    /** @var MockObject&DownloadUrlResolver */
+    private $downloadUrlResolver;
+
     /** @var MockObject&HttpClientInterface */
     private $httpClient;
 
@@ -49,13 +53,20 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS());
 
+        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
+
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverMac, 'chromedriver_mac64')
+            ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
+
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
 
-        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
-        $filePath        = $this->downloader->download($chromeDriverMac, '.');
+        $filePath = $this->downloader->download($chromeDriverMac, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
@@ -64,28 +75,20 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS(), true);
 
-        $this->httpClient
-            ->expects(self::atLeastOnce())
-            ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/mac-x64/chromedriver-mac-x64.zip');
-
         $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::MACOS());
-        $filePath        = $this->downloader->download($chromeDriverMac, '.');
 
-        self::assertEquals('./chromedriver', $filePath);
-    }
-
-    public function testDownloadMacJsonNewEndpoint(): void
-    {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS(), true);
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverMac, 'mac-x64')
+            ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.0/mac-x64/chromedriver-mac-x64.zip');
+            ->with('GET', 'https://dynamic-download-url/driver.zip');
 
-        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('121.0.6167.0'), OperatingSystem::MACOS());
-        $filePath        = $this->downloader->download($chromeDriverMac, '.');
+        $filePath = $this->downloader->download($chromeDriverMac, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
@@ -94,13 +97,20 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX());
 
+        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
+
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverLinux, 'chromedriver_linux64')
+            ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
+
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
-        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
+        $filePath = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
@@ -109,28 +119,20 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX(), true);
 
-        $this->httpClient
-            ->expects(self::atLeastOnce())
-            ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/linux64/chromedriver-linux64.zip');
-
         $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::LINUX());
-        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
 
-        self::assertEquals('./chromedriver', $filePath);
-    }
-
-    public function testDownloadLinuxJsonNewEndpoint(): void
-    {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX(), true);
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverLinux, 'linux64')
+            ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.0/linux64/chromedriver-linux64.zip');
+            ->with('GET', 'https://dynamic-download-url/driver.zip');
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('121.0.6167.0'), OperatingSystem::LINUX());
-        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
+        $filePath = $this->downloader->download($chromeDriverLinux, '.');
 
         self::assertEquals('./chromedriver', $filePath);
     }
@@ -139,13 +141,20 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS());
 
+        $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS());
+
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverWindows, 'chromedriver_win32')
+            ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
+
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
             ->with('GET', 'https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS());
-        $filePath          = $this->downloader->download($chromeDriverLinux, '.');
+        $filePath = $this->downloader->download($chromeDriverWindows, '.');
 
         self::assertEquals('./chromedriver.exe', $filePath);
     }
@@ -154,38 +163,31 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS(), true);
 
-        $this->httpClient
-            ->expects(self::atLeastOnce())
-            ->method('request')
-            ->with('GET', 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/115.0.5790.170/win32/chromedriver-win32.zip');
-
         $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS());
-        $filePath            = $this->downloader->download($chromeDriverWindows, '.');
 
-        self::assertEquals('./chromedriver.exe', $filePath);
-    }
-
-    public function testDownloadWindowsJsonNewEndpoint(): void
-    {
-        $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS(), true);
+        $this->downloadUrlResolver
+            ->expects(self::once())
+            ->method('byDriver')
+            ->with($chromeDriverWindows, 'win32')
+            ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
             ->expects(self::atLeastOnce())
             ->method('request')
-            ->with('GET', 'https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.0/win32/chromedriver-win32.zip');
+            ->with('GET', 'https://dynamic-download-url/driver.zip');
 
-        $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('121.0.6167.0'), OperatingSystem::WINDOWS());
-        $filePath            = $this->downloader->download($chromeDriverWindows, '.');
+        $filePath = $this->downloader->download($chromeDriverWindows, '.');
 
         self::assertEquals('./chromedriver.exe', $filePath);
     }
 
     protected function setUp(): void
     {
-        $this->filesystem       = $this->createStub(Filesystem::class);
-        $this->httpClient       = $this->createMock(HttpClientInterface::class);
-        $this->archiveExtractor = $this->createStub(Extractor::class);
-        $this->downloader       = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor);
+        $this->filesystem          = $this->createStub(Filesystem::class);
+        $this->httpClient          = $this->createMock(HttpClientInterface::class);
+        $this->archiveExtractor    = $this->createStub(Extractor::class);
+        $this->downloadUrlResolver = $this->createMock(DownloadUrlResolver::class);
+        $this->downloader          = new Downloader($this->filesystem, $this->httpClient, $this->archiveExtractor, $this->downloadUrlResolver);
     }
 
     private function mockFsAndArchiveExtractorForSuccessfulDownload(
