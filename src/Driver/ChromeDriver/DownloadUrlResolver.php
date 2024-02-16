@@ -35,10 +35,7 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
             );
         }
 
-        $response = $this->httpClient->request(
-            'GET',
-            self::LATEST_PATCH_WITH_DOWNLOAD_ENDPOINT,
-        );
+        $response = $this->httpClient->request('GET', self::LATEST_PATCH_WITH_DOWNLOAD_ENDPOINT);
 
         $versions = $response->toArray();
         if (! isset($versions['builds'][$driver->version()->toString()]['downloads']['chromedriver'])) {
