@@ -6,6 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
+use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
@@ -31,17 +32,12 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const DOWNLOAD_ENDPOINT           = 'https://chromedriver.storage.googleapis.com';
     private const BINARY_LINUX                = 'chromedriver_linux64';
     private const BINARY_MAC                  = 'chromedriver_mac64';
     private const BINARY_WINDOWS              = 'chromedriver_win32';
-    private const DOWNLOAD_ENDPOINT_JSON      = 'https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing';
-    private const DOWNLOAD_ENDPOINT_JSON_NEW  = 'https://storage.googleapis.com/chrome-for-testing-public';
     private const BINARY_LINUX_JSON           = 'chromedriver-linux64';
     private const BINARY_MAC_JSON             = 'chromedriver-mac-x64';
     private const BINARY_WINDOWS_JSON         = 'chromedriver-win32';
-    private const NEW_JSON_API_ENDPOINT_MAJOR = 121;
-    private const NEW_JSON_API_ENDPOINT_PATCH = 6167;
 
 
     private Filesystem $filesystem;
@@ -52,11 +48,18 @@ final class Downloader implements DownloaderInterface
 
     private string $tempDir;
 
-    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
-    {
+    private DownloadUrlResolver $downloadUrlResolver;
+
+    public function __construct(
+        Filesystem $filesystem,
+        HttpClientInterface $httpClient,
+        Extractor $archiveExtractor,
+        DownloadUrlResolver $downloadUrlResolver
+    ) {
         $this->filesystem       = $filesystem;
         $this->httpClient       = $httpClient;
         $this->archiveExtractor = $archiveExtractor;
+        $this->downloadUrlResolver = $downloadUrlResolver;
         $this->tempDir          = sys_get_temp_dir();
     }
 
@@ -124,12 +127,7 @@ final class Downloader implements DownloaderInterface
 
         $response = $this->httpClient->request(
             'GET',
-            sprintf(
-                '%s/%s/%s.zip',
-                $this->getDownloadEndpoint($driver),
-                $driver->version()->toBuildString(),
-                $this->getBinaryName($driver)
-            )
+            $this->downloadUrlResolver->byDriver($driver, $this->getBinaryName($driver)),
         );
 
         $fileHandler = fopen($temporaryFile, 'wb');
@@ -153,17 +151,17 @@ final class Downloader implements DownloaderInterface
     private function getBinaryName(Driver $driver): string
     {
         $operatingSystem = $driver->operatingSystem();
-        if ($this->isJsonVersion($driver)) {
+        if (VersionResolver::isJsonVersion($driver->version())) {
             if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                return 'win32/' . self::BINARY_WINDOWS_JSON;
+                return 'win32';
             }
 
             if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                return 'mac-x64/' . self::BINARY_MAC_JSON;
+                return 'mac-x64';
             }
 
             if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-                return 'linux64/' . self::BINARY_LINUX_JSON;
+                return 'linux64';
             }
         } else {
             if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
@@ -192,7 +190,7 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        if ($this->isJsonVersion($driver)) {
+        if (VersionResolver::isJsonVersion($driver->version())) {
             $extractedFiles = $this->cleanArchiveStructure($driver, $unzipLocation, $extractedFiles);
         }
 
@@ -232,34 +230,6 @@ final class Downloader implements DownloaderInterface
         }
 
         return $fileName;
-    }
-
-    private function isJsonVersion(Driver $driver): bool
-    {
-        return $driver->version()->major() >= VersionResolver::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
-    }
-
-    private function getDownloadEndpoint(Driver $driver): string
-    {
-        if ($this->isJsonVersion($driver)) {
-            return $this->resolveJsonVersionEndpoint($driver);
-        }
-
-        return self::DOWNLOAD_ENDPOINT;
-    }
-
-    private function resolveJsonVersionEndpoint(Driver $driver): string
-    {
-        $version = $driver->version();
-        if ((int) $version->major() < self::NEW_JSON_API_ENDPOINT_MAJOR) {
-            return self::DOWNLOAD_ENDPOINT_JSON;
-        }
-
-        if ((int) $version->major() === self::NEW_JSON_API_ENDPOINT_MAJOR && (int) $version->patch() < self::NEW_JSON_API_ENDPOINT_PATCH) {
-            return self::DOWNLOAD_ENDPOINT_JSON;
-        }
-
-        return self::DOWNLOAD_ENDPOINT_JSON_NEW;
     }
 
     /**
