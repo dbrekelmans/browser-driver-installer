@@ -78,7 +78,7 @@ class VersionResolverTest extends TestCase
 
     public function testLatest(): void
     {
-        self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
+        self::assertEquals(Version::fromString('121.0.6167.184'), $this->versionResolver->latest());
     }
 
     protected function setUp(): void
@@ -97,6 +97,12 @@ class VersionResolverTest extends TestCase
 
                     if ($url === 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE_87') {
                         return new MockResponse('87.0.4280.20');
+                    }
+
+                    if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json') {
+                        return new MockResponse(
+                            json_encode(['channels' => ['Stable' => ['version' => '121.0.6167.184']]])
+                        );
                     }
 
                     if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json') {
