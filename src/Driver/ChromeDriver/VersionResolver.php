@@ -23,7 +23,8 @@ use function Safe\sprintf;
 final class VersionResolver implements VersionResolverInterface
 {
     public const MAJOR_VERSION_ENDPOINT_BREAKPOINT = 115;
-    private const LEGACY_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const LEGACY_ENDPOINT                  = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const LATEST_VERSION_ENDPOINT_JSON     = 'https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
     private HttpClientInterface $httpClient;
@@ -68,10 +69,13 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response      = $this->httpClient->request('GET', self::LEGACY_ENDPOINT);
-        $versionString = $response->getContent();
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT_JSON);
+        $versions = $response->toArray();
+        if (! isset($versions['channels']['Stable']['version'])) {
+            throw new UnexpectedValueException('Could not resolve the latest stable version.');
+        }
 
-        return Version::fromString($versionString);
+        return Version::fromString((string) $versions['channels']['Stable']['version']);
     }
 
     public function supports(Browser $browser): bool
