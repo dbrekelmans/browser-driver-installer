@@ -23,7 +23,7 @@ use function Safe\sprintf;
 final class VersionResolver implements VersionResolverInterface
 {
     public const MAJOR_VERSION_ENDPOINT_BREAKPOINT = 115;
-    private const VERSION_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const LEGACY_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
     private HttpClientInterface $httpClient;
@@ -68,7 +68,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response      = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
+        $response      = $this->httpClient->request('GET', self::LEGACY_ENDPOINT);
         $versionString = $response->getContent();
 
         return Version::fromString($versionString);
@@ -109,13 +109,13 @@ final class VersionResolver implements VersionResolverInterface
      */
     private function getBrowserVersionEndpoint(Browser $browser): string
     {
-        $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
+        $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, $browser->version()->toString());
 
         $stableVersion    = $this->latest();
         $betaVersionMajor = (int) $stableVersion->major() + 1;
 
         if ((int) $browser->version()->major() > $betaVersionMajor) {
-            $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, (string) $betaVersionMajor);
+            $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, (string) $betaVersionMajor);
         }
 
         return $versionEndpoint;
