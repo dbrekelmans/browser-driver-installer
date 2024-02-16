@@ -32,12 +32,12 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const BINARY_LINUX                = 'chromedriver_linux64';
-    private const BINARY_MAC                  = 'chromedriver_mac64';
-    private const BINARY_WINDOWS              = 'chromedriver_win32';
-    private const BINARY_LINUX_JSON           = 'chromedriver-linux64';
-    private const BINARY_MAC_JSON             = 'chromedriver-mac-x64';
-    private const BINARY_WINDOWS_JSON         = 'chromedriver-win32';
+    private const BINARY_LINUX        = 'chromedriver_linux64';
+    private const BINARY_MAC          = 'chromedriver_mac64';
+    private const BINARY_WINDOWS      = 'chromedriver_win32';
+    private const BINARY_LINUX_JSON   = 'chromedriver-linux64';
+    private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
+    private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
 
 
     private Filesystem $filesystem;
@@ -56,11 +56,11 @@ final class Downloader implements DownloaderInterface
         Extractor $archiveExtractor,
         DownloadUrlResolver $downloadUrlResolver
     ) {
-        $this->filesystem       = $filesystem;
-        $this->httpClient       = $httpClient;
-        $this->archiveExtractor = $archiveExtractor;
+        $this->filesystem          = $filesystem;
+        $this->httpClient          = $httpClient;
+        $this->archiveExtractor    = $archiveExtractor;
         $this->downloadUrlResolver = $downloadUrlResolver;
-        $this->tempDir          = sys_get_temp_dir();
+        $this->tempDir             = sys_get_temp_dir();
     }
 
     public function supports(Driver $driver): bool
