@@ -81,6 +81,12 @@ class VersionResolverTest extends TestCase
         self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
     }
 
+    public function testIsJsonVersion(): void
+    {
+        self::assertFalse(VersionResolver::isJsonVersion(Version::fromString('114.0.5735.90')));
+        self::assertTrue(VersionResolver::isJsonVersion(Version::fromString('115.0.5751')));
+    }
+
     protected function setUp(): void
     {
         $httpClientMock        = new MockHttpClient(
