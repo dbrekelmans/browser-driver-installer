@@ -85,6 +85,17 @@ final class VersionResolver implements VersionResolverInterface
         return $browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM());
     }
 
+    private function latestBetaVersion(): Version
+    {
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT_JSON);
+        $versions = $response->toArray();
+        if (! isset($versions['channels']['Beta']['version'])) {
+            throw new UnexpectedValueException('Could not resolve the latest beta version.');
+        }
+
+        return Version::fromString((string) $versions['channels']['Beta']['version']);
+    }
+
     /**
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
@@ -99,13 +110,21 @@ final class VersionResolver implements VersionResolverInterface
 
         $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
         $versions = $response->toArray();
-        if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
+
+        $latestBeta     = $this->latestBetaVersion();
+        $versionToFetch = $browser->version();
+        if ((int) $versionToFetch->major() > (int) $latestBeta->major()) {
+            // In this case we're dealing with a Dev or Canary version, so we will take the last Beta version.
+            $versionToFetch = $latestBeta;
+        }
+
+        if (! array_key_exists($versionToFetch->toString(), $versions['builds'])) {
             throw new UnexpectedValueException(
-                sprintf('There is no build for version : %s', $browser->version()->toString())
+                sprintf('There is no build for version : %s', $versionToFetch->toString())
             );
         }
 
-        return $versions['builds'][$browser->version()->toString()]['version'];
+        return $versions['builds'][$versionToFetch->toString()]['version'];
     }
 
     /**
