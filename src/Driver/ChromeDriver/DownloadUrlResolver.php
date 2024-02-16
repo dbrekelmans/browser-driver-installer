@@ -6,10 +6,10 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver as DownloadUrlResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
 
+use function is_string;
 use function Safe\sprintf;
 
 final class DownloadUrlResolver implements DownloadUrlResolverInterface
@@ -47,13 +47,17 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
 
         $downloads = $versions['builds'][$driver->version()->toString()]['downloads']['chromedriver'];
         foreach ($downloads as $download) {
-            if ($download['platform'] === $binaryName) {
-                return (string) $download['url'];
+            if ($download['platform'] === $binaryName && isset($download['url']) && is_string($download['url'])) {
+                return $download['url'];
             }
         }
 
         $operatingSystem = $driver->operatingSystem();
 
-        throw NotImplemented::feature(sprintf('Downloading %s for %s', $driver->name()->getValue(), $operatingSystem->getValue()));
+        throw new UnexpectedValueException(sprintf(
+            'Could not resolve chromedriver download url for version %s with binary %s',
+            $driver->version()->toString(),
+            $operatingSystem->getValue()
+        ));
     }
 }
