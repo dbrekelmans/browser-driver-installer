@@ -71,14 +71,14 @@ class VersionResolverTest extends TestCase
 
     public function testFromGetBetaVersionForDevChrome(): void
     {
-        $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4302.0'), OperatingSystem::MACOS());
+        $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('123.0.6300.3'), OperatingSystem::MACOS());
 
-        self::assertEquals(Version::fromString('87.0.4280.20'), $this->versionResolver->fromBrowser($devChrome));
+        self::assertEquals(Version::fromString('122.0.6261.39'), $this->versionResolver->fromBrowser($devChrome));
     }
 
     public function testLatest(): void
     {
-        self::assertEquals(Version::fromString('86.0.4240.22'), $this->versionResolver->latest());
+        self::assertEquals(Version::fromString('121.0.6167.184'), $this->versionResolver->latest());
     }
 
     protected function setUp(): void
@@ -99,9 +99,25 @@ class VersionResolverTest extends TestCase
                         return new MockResponse('87.0.4280.20');
                     }
 
+                    if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json') {
+                        return new MockResponse(
+                            json_encode([
+                                'channels' => [
+                                    'Stable' => ['version' => '121.0.6167.184'],
+                                    'Beta' => ['version' => '122.0.6261.39'],
+                                ],
+                            ])
+                        );
+                    }
+
                     if ($url === 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json') {
                         return new MockResponse(
-                            json_encode(['builds' => ['115.0.5751' => ['version' => '115.0.5751.20']]])
+                            json_encode([
+                                'builds' => [
+                                    '115.0.5751' => ['version' => '115.0.5751.20'],
+                                    '122.0.6261' => ['version' => '122.0.6261.39'],
+                                ],
+                            ])
                         );
                     }
                 }

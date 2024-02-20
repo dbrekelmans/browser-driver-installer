@@ -23,7 +23,8 @@ use function Safe\sprintf;
 final class VersionResolver implements VersionResolverInterface
 {
     public const MAJOR_VERSION_ENDPOINT_BREAKPOINT = 115;
-    private const VERSION_ENDPOINT                 = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const LEGACY_ENDPOINT                  = 'https://chromedriver.storage.googleapis.com/LATEST_RELEASE';
+    private const LATEST_VERSION_ENDPOINT_JSON     = 'https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
     private HttpClientInterface $httpClient;
@@ -68,10 +69,13 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response      = $this->httpClient->request('GET', self::VERSION_ENDPOINT);
-        $versionString = $response->getContent();
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT_JSON);
+        $versions = $response->toArray();
+        if (! isset($versions['channels']['Stable']['version'])) {
+            throw new UnexpectedValueException('Could not resolve the latest stable version.');
+        }
 
-        return Version::fromString($versionString);
+        return Version::fromString((string) $versions['channels']['Stable']['version']);
     }
 
     public function supports(Browser $browser): bool
@@ -79,6 +83,17 @@ final class VersionResolver implements VersionResolverInterface
         $browserName = $browser->name();
 
         return $browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM());
+    }
+
+    private function latestBetaVersion(): Version
+    {
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT_JSON);
+        $versions = $response->toArray();
+        if (! isset($versions['channels']['Beta']['version'])) {
+            throw new UnexpectedValueException('Could not resolve the latest beta version.');
+        }
+
+        return Version::fromString((string) $versions['channels']['Beta']['version']);
     }
 
     /**
@@ -95,13 +110,21 @@ final class VersionResolver implements VersionResolverInterface
 
         $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
         $versions = $response->toArray();
-        if (! array_key_exists($browser->version()->toString(), $versions['builds'])) {
+
+        $latestBeta     = $this->latestBetaVersion();
+        $versionToFetch = $browser->version();
+        if ((int) $versionToFetch->major() > (int) $latestBeta->major()) {
+            // In this case we're dealing with a Dev or Canary version, so we will take the last Beta version.
+            $versionToFetch = $latestBeta;
+        }
+
+        if (! array_key_exists($versionToFetch->toString(), $versions['builds'])) {
             throw new UnexpectedValueException(
-                sprintf('There is no build for version : %s', $browser->version()->toString())
+                sprintf('There is no build for version : %s', $versionToFetch->toString())
             );
         }
 
-        return $versions['builds'][$browser->version()->toString()]['version'];
+        return $versions['builds'][$versionToFetch->toString()]['version'];
     }
 
     /**
@@ -109,13 +132,13 @@ final class VersionResolver implements VersionResolverInterface
      */
     private function getBrowserVersionEndpoint(Browser $browser): string
     {
-        $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, $browser->version()->toString());
+        $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, $browser->version()->toString());
 
         $stableVersion    = $this->latest();
         $betaVersionMajor = (int) $stableVersion->major() + 1;
 
         if ((int) $browser->version()->major() > $betaVersionMajor) {
-            $versionEndpoint = sprintf('%s_%s', self::VERSION_ENDPOINT, (string) $betaVersionMajor);
+            $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, (string) $betaVersionMajor);
         }
 
         return $versionEndpoint;
