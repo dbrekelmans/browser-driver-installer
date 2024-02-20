@@ -6,11 +6,12 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests\OperatingSystem;
 
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\Family;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class OperatingSystemTest extends TestCase
 {
-    /** @dataProvider fromFamilyDataProvider */
+    #[DataProvider('fromFamilyDataProvider')]
     public function testFromFamily(OperatingSystem $expected, Family $family): void
     {
         self::assertSame($expected, OperatingSystem::fromFamily($family));

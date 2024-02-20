@@ -14,13 +14,14 @@ use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolverFactory;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
 use DBrekelmans\BrowserDriverInstaller\Version;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class DriverFactoryTest extends TestCase
 {
     use UniqueClassName;
 
-    /** @dataProvider createFromBrowserDataProvider */
+    #[DataProvider('createFromBrowserDataProvider')]
     public function testCreateFromBrowser(Driver $expectedDriver, Browser $browser): void
     {
         $versionResolver = self::createStub(VersionResolver::class);

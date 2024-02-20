@@ -9,10 +9,10 @@ use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
-
 use function Safe\json_encode;
 
 final class DownloadUrlResolverTest extends TestCase
@@ -53,7 +53,7 @@ final class DownloadUrlResolverTest extends TestCase
         ];
     }
 
-    /** @dataProvider byDriverDataProvider */
+    #[DataProvider('byDriverDataProvider')]
     public function testByDriver(Driver $driver, string $expectedUrl): void
     {
         self::assertSame($expectedUrl, $this->urlResolver->byDriver($driver));
