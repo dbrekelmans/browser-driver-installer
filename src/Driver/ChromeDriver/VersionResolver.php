@@ -11,6 +11,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -101,6 +102,7 @@ final class VersionResolver implements VersionResolverInterface
      * @throws ClientExceptionInterface
      * @throws TransportExceptionInterface
      * @throws ServerExceptionInterface
+     * @throws DecodingExceptionInterface
      */
     private function getVersionString(Browser $browser): string
     {
@@ -111,20 +113,20 @@ final class VersionResolver implements VersionResolverInterface
         $response = $this->httpClient->request('GET', self::VERSION_ENDPOINT_JSON);
         $versions = $response->toArray();
 
-        $latestBeta     = $this->latestBetaVersion();
-        $versionToFetch = $browser->version();
-        if ((int) $versionToFetch->major() > (int) $latestBeta->major()) {
+        $latestBeta = $this->latestBetaVersion();
+        $version    = $browser->version;
+        if ((int) $version->major() > (int) $latestBeta->major()) {
             // In this case we're dealing with a Dev or Canary version, so we will take the last Beta version.
-            $versionToFetch = $latestBeta;
+            $version = $latestBeta;
         }
 
-        if (! array_key_exists($versionToFetch->toString(), $versions['builds'])) {
+        if (! array_key_exists($version->toString(), $versions['builds'])) {
             throw new UnexpectedValueException(
-                sprintf('There is no build for version : %s', $versionToFetch->toString()),
+                sprintf('There is no build for version: %s', $version->toString()),
             );
         }
 
-        return $versions['builds'][$versionToFetch->toString()]['version'];
+        return $versions['builds'][$version->toString()]['version'];
     }
 
     /**

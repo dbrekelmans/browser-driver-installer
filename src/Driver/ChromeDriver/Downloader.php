@@ -35,22 +35,15 @@ final class Downloader implements DownloaderInterface
     private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
     private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
 
-
     private string $tempDir;
 
-    private DownloadUrlResolver $downloadUrlResolver;
-
     public function __construct(
-        Filesystem $filesystem,
-        HttpClientInterface $httpClient,
-        Extractor $archiveExtractor,
-        DownloadUrlResolver $downloadUrlResolver
+        private readonly Filesystem $filesystem,
+        private readonly HttpClientInterface $httpClient,
+        private readonly Extractor $archiveExtractor,
+        private readonly DownloadUrlResolver $downloadUrlResolver,
     ) {
-        $this->filesystem          = $filesystem;
-        $this->httpClient          = $httpClient;
-        $this->archiveExtractor    = $archiveExtractor;
-        $this->downloadUrlResolver = $downloadUrlResolver;
-        $this->tempDir             = sys_get_temp_dir();
+        $this->tempDir = sys_get_temp_dir();
     }
 
     public function supports(Driver $driver): bool
@@ -141,7 +134,7 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        if (VersionResolver::isJsonVersion($driver->version())) {
+        if (VersionResolver::isJsonVersion($driver->version)) {
             $extractedFiles = $this->cleanArchiveStructure($driver, $unzipLocation, $extractedFiles);
         }
 

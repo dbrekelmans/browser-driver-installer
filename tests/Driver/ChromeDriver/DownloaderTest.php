@@ -29,11 +29,9 @@ class DownloaderTest extends TestCase
 
     private Stub&Extractor $archiveExtractor;
 
-    /** @var MockObject&DownloadUrlResolver */
-    private $downloadUrlResolver;
+    private MockObject&DownloadUrlResolver $downloadUrlResolver;
 
-    /** @var MockObject&HttpClientInterface */
-    private $httpClient;
+    private MockObject&HttpClientInterface $httpClient;
 
     public function testSupportChrome(): void
     {
@@ -51,7 +49,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS);
 
-        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::MACOS());
+        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::MACOS);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -73,7 +71,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS, true);
 
-        $chromeDriverMac = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::MACOS());
+        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -95,7 +93,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX);
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::LINUX());
+        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::LINUX);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -117,7 +115,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX, true);
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::LINUX());
+        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::LINUX);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -139,7 +137,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS);
 
-        $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS());
+        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -161,7 +159,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS, true);
 
-        $chromeDriverWindows = new Driver(DriverName::CHROME(), Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS());
+        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS);
 
         $this->downloadUrlResolver
             ->expects(self::once())

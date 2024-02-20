@@ -112,7 +112,7 @@ class VersionResolverTest extends TestCase
                                     'Stable' => ['version' => '121.0.6167.184'],
                                     'Beta' => ['version' => '122.0.6261.39'],
                                 ],
-                            ])
+                            ]),
                         );
                     }
 
