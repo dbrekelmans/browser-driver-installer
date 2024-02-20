@@ -32,14 +32,14 @@ final class VersionResolver implements VersionResolverInterface
         return $version->major() >= self::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
     }
 
-    public function __construct(private HttpClientInterface $httpClient)
+    public function __construct(private readonly HttpClientInterface $httpClient)
     {
     }
 
     public function fromBrowser(Browser $browser): Version
     {
         if (! $this->supports($browser)) {
-            throw new Unsupported(sprintf('%s is not supported.', $browser->name()->value));
+            throw new Unsupported(sprintf('%s is not supported.', $browser->name->value));
         }
 
         try {
@@ -82,9 +82,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        $browserName = $browser->name();
-
-        return $browserName === BrowserName::GOOGLE_CHROME || $browserName === BrowserName::CHROMIUM;
+        return $browser->name === BrowserName::GOOGLE_CHROME || $browser->name === BrowserName::CHROMIUM;
     }
 
     private function latestBetaVersion(): Version
@@ -106,7 +104,7 @@ final class VersionResolver implements VersionResolverInterface
      */
     private function getVersionString(Browser $browser): string
     {
-        if ($browser->version()->major() < self::MAJOR_VERSION_ENDPOINT_BREAKPOINT) {
+        if ($browser->version->major() < self::MAJOR_VERSION_ENDPOINT_BREAKPOINT) {
             return $this->httpClient->request('GET', $this->getBrowserVersionEndpoint($browser))->getContent();
         }
 
@@ -134,12 +132,12 @@ final class VersionResolver implements VersionResolverInterface
      */
     private function getBrowserVersionEndpoint(Browser $browser): string
     {
-        $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, $browser->version()->toString());
+        $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, $browser->version->toString());
 
         $stableVersion    = $this->latest();
         $betaVersionMajor = (int) $stableVersion->major() + 1;
 
-        if ((int) $browser->version()->major() > $betaVersionMajor) {
+        if ((int) $browser->version->major() > $betaVersionMajor) {
             $versionEndpoint = sprintf('%s_%s', self::LEGACY_ENDPOINT, (string) $betaVersionMajor);
         }
 

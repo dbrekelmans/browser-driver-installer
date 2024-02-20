@@ -10,7 +10,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
 final class DriverFactory
 {
-    public function __construct(private VersionResolverFactory $versionResolverFactory)
+    public function __construct(private readonly VersionResolverFactory $versionResolverFactory)
     {
     }
 
@@ -21,13 +21,13 @@ final class DriverFactory
 
         $name = $this->getDriverNameForBrowser($browser);
 
-        return new Driver($name, $version, $browser->operatingSystem());
+        return new Driver($name, $version, $browser->operatingSystem);
     }
 
     /** @throws NotImplemented */
     private function getDriverNameForBrowser(Browser $browser): DriverName
     {
-        return match ($browser->name()) {
+        return match ($browser->name) {
             BrowserName::GOOGLE_CHROME, BrowserName::CHROMIUM => DriverName::CHROME,
             BrowserName::FIREFOX => DriverName::GECKO,
         };

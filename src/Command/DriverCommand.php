@@ -22,8 +22,8 @@ abstract class DriverCommand extends Command
     public const PREFIX = 'driver';
 
     public function __construct(
-        private VersionResolver $versionResolver,
-        private DownloaderFactory $downloaderFactory,
+        private readonly VersionResolver $versionResolver,
+        private readonly DownloaderFactory $downloaderFactory,
     ) {
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->value));
     }
@@ -72,7 +72,7 @@ abstract class DriverCommand extends Command
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString()),
+                sprintf('Downloading %s %s.', $driver->name->value, $driver->version->toBuildString()),
             );
         }
 
@@ -82,8 +82,8 @@ abstract class DriverCommand extends Command
         $io->success(
             sprintf(
                 '%s %s installed to %s',
-                $driver->name()->value,
-                $driver->version()->toBuildString(),
+                $driver->name->value,
+                $driver->version->toBuildString(),
                 $filePath,
             ),
         );

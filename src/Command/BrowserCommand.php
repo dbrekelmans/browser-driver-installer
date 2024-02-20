@@ -68,14 +68,14 @@ abstract class BrowserCommand extends Command
         }
 
         if ($io->isVerbose()) {
-            $io->writeln(sprintf('Found %s %s.', $browser->name()->value, $browser->version()->toBuildString()));
+            $io->writeln(sprintf('Found %s %s.', $browser->name->value, $browser->version->toBuildString()));
         }
 
         $driver = $this->driverFactory->createFromBrowser($browser);
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString()),
+                sprintf('Downloading %s %s.', $driver->name->value, $driver->version->toBuildString()),
             );
         }
 
@@ -83,7 +83,7 @@ abstract class BrowserCommand extends Command
         $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
-            sprintf('%s %s installed to %s', $driver->name()->value, $driver->version()->toBuildString(), $filePath),
+            sprintf('%s %s installed to %s', $driver->name->value, $driver->version->toBuildString(), $filePath),
         );
 
         return self::SUCCESS;

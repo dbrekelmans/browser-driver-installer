@@ -10,7 +10,6 @@ use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use RuntimeException;
 use Safe\Exceptions\FilesystemException;
@@ -56,7 +55,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name() === DriverName::CHROME;
+        return $driver->name === DriverName::CHROME;
     }
 
     /** @throws RuntimeException */
@@ -74,7 +73,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException('Something went wrong extracting the chromedriver archive.', 0, $exception);
         }
 
-        $filePath = $this->getFilePath($location, $driver->operatingSystem());
+        $filePath = $this->getFilePath($location, $driver->operatingSystem);
 
         if (! $this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
@@ -146,7 +145,7 @@ final class Downloader implements DownloaderInterface
             $extractedFiles = $this->cleanArchiveStructure($driver, $unzipLocation, $extractedFiles);
         }
 
-        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem());
+        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem);
 
         if (
             ! in_array(
@@ -191,8 +190,8 @@ final class Downloader implements DownloaderInterface
      */
     public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
     {
-        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
-        $filename         = $this->getFileName($driver->operatingSystem());
+        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem);
+        $filename         = $this->getFileName($driver->operatingSystem);
         $this->filesystem->rename(
             $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . $filename,
             $unzipLocation . DIRECTORY_SEPARATOR . $filename,
@@ -204,18 +203,10 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
-        switch ($operatingSystem) {
-            case OperatingSystem::LINUX:
-                return self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR;
-
-            case OperatingSystem::WINDOWS:
-                return self::BINARY_WINDOWS_JSON . '/';
-
-            case OperatingSystem::MACOS:
-                return self::BINARY_MAC_JSON . DIRECTORY_SEPARATOR;
-
-            default:
-                throw new Unsupported('Operating system is not supported');
-        }
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR,
+            OperatingSystem::WINDOWS => self::BINARY_WINDOWS_JSON . DIRECTORY_SEPARATOR,
+            OperatingSystem::MACOS => self::BINARY_MAC_JSON . DIRECTORY_SEPARATOR,
+        };
     }
 }

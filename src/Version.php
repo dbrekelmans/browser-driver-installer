@@ -15,8 +15,12 @@ final class Version
 {
     private const DELIMITER = '.';
 
-    private function __construct(private string $major, private string $minor, private string|null $patch = null, private string|null $build = null)
-    {
+    private function __construct(
+        private readonly string $major,
+        private readonly string $minor,
+        private readonly string|null $patch = null,
+        private readonly string|null $build = null,
+    ) {
     }
 
     /** @throws InvalidArgumentException */

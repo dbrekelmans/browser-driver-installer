@@ -15,7 +15,7 @@ use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    public function __construct(private CommandLineEnvironment $commandLineEnvironment)
+    public function __construct(private readonly CommandLineEnvironment $commandLineEnvironment)
     {
     }
 

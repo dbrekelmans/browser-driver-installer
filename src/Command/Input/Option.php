@@ -13,7 +13,7 @@ interface Option
     public static function name(): string;
 
     /**
-     * @phpstan-return T
+     * @return T
      *
      * @throws UnexpectedValueException
      */

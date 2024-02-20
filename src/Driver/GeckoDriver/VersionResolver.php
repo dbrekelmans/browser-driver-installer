@@ -30,14 +30,14 @@ final class VersionResolver implements VersionResolverInterface
         52 => '0.17.0',
     ];
 
-    public function __construct(private HttpClientInterface $httpClient)
+    public function __construct(private readonly HttpClientInterface $httpClient)
     {
     }
 
     /** @see https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html */
     public function fromBrowser(Browser $browser): Version
     {
-        $browserMajorVersion = (int) $browser->version()->major();
+        $browserMajorVersion = (int) $browser->version->major();
 
         if ($browserMajorVersion >= self::MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST) {
             return $this->latest();
@@ -55,12 +55,16 @@ final class VersionResolver implements VersionResolverInterface
             }
         }
 
-        throw new RuntimeException(sprintf('Could not find a geckodriver version for Firefox %s', $browser->version()->toString()));
+        throw new RuntimeException(sprintf(
+            'Could not find a geckodriver version for Firefox %s',
+            $browser->version->toString(),
+        ));
     }
 
     public function latest(): Version
     {
         $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
+
         /** @var array<scalar> $data */
         $data = json_decode($response->getContent(), true);
         if (! isset($data['name'])) {
@@ -72,6 +76,6 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        return $browser->name() === BrowserName::FIREFOX;
+        return $browser->name === BrowserName::FIREFOX;
     }
 }

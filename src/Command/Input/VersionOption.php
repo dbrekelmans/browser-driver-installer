@@ -31,8 +31,7 @@ final class VersionOption extends InputOption implements Option
         return 'driver-version';
     }
 
-    /** @inheritDoc */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): string
     {
         $value = $input->getOption(self::name());
 

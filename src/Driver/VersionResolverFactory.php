@@ -24,7 +24,7 @@ final class VersionResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Resolving %s version', $browser->name()->value),
+            sprintf('Resolving %s version', $browser->name->value),
         );
     }
 

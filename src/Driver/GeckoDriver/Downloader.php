@@ -23,7 +23,7 @@ use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
 use function sprintf;
-use function strpos;
+use function str_contains;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
@@ -35,8 +35,11 @@ final class Downloader implements DownloaderInterface
     private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
     private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
-    public function __construct(private Filesystem $filesystem, private HttpClientInterface $httpClient, private Extractor $archiveExtractor)
-    {
+    public function __construct(
+        private readonly Filesystem $filesystem,
+        private readonly HttpClientInterface $httpClient,
+        private readonly Extractor $archiveExtractor,
+    ) {
     }
 
     public function download(Driver $driver, string $location): string
@@ -74,7 +77,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name() === DriverName::GECKO;
+        return $driver->name === DriverName::GECKO;
     }
 
     /**
@@ -83,7 +86,11 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver): string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver', $this->getArchiveExtension($driver));
+        $temporaryFile = $this->filesystem->tempnam(
+            sys_get_temp_dir(),
+            'geckodriver',
+            $this->getArchiveExtension($driver),
+        );
 
         $response = $this->httpClient->request('GET', $this->getDownloadPath($driver));
 
@@ -107,8 +114,8 @@ final class Downloader implements DownloaderInterface
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
             'v%s/geckodriver-v%s-%s%s',
-            $driver->version()->toString(),
-            $driver->version()->toString(),
+            $driver->version->toString(),
+            $driver->version->toString(),
             $this->getOsForDownloadPath($driver),
             $this->getArchiveExtension($driver),
         );
@@ -117,7 +124,7 @@ final class Downloader implements DownloaderInterface
     /** @throws NotImplemented */
     private function getOsForDownloadPath(Driver $driver): string
     {
-        return match ($driver->operatingSystem()) {
+        return match ($driver->operatingSystem) {
             OperatingSystem::WINDOWS => self::DOWNLOAD_PATH_OS_PART_WINDOWS,
             OperatingSystem::MACOS => self::DOWNLOAD_PATH_OS_PART_MACOS,
             OperatingSystem::LINUX => self::DOWNLOAD_PATH_OS_PART_LINUX,
@@ -129,7 +136,7 @@ final class Downloader implements DownloaderInterface
         $extractedFiles = $this->archiveExtractor->extract($archive, dirname($archive));
 
         foreach ($extractedFiles as $filename) {
-            if (strpos($filename, 'geckodriver') !== false) {
+            if (str_contains($filename, 'geckodriver')) {
                 return $filename;
             }
         }
@@ -139,7 +146,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveExtension(Driver $driver): string
     {
-        if ($driver->operatingSystem() === OperatingSystem::WINDOWS) {
+        if ($driver->operatingSystem === OperatingSystem::WINDOWS) {
             return '.zip';
         }
 

@@ -49,8 +49,7 @@ final class BrowserPathOption extends InputOption implements Option
         return null;
     }
 
-    /** @inheritDoc */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): string|null
     {
         $value = $input->getOption(self::name());
 

@@ -19,9 +19,9 @@ final class BrowserFactoryTest extends TestCase
 {
     private static function assertBrowser(Browser $expected, Browser $actual): void
     {
-        self::assertSame($expected->name(), $actual->name());
-        self::assertSame($expected->operatingSystem(), $actual->operatingSystem());
-        self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
+        self::assertSame($expected->name, $actual->name);
+        self::assertSame($expected->operatingSystem, $actual->operatingSystem);
+        self::assertSame($expected->version->toBuildString(), $actual->version->toBuildString());
     }
 
     public function testCreateFromNameOperatingSystem(): void

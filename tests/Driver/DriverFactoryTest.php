@@ -38,9 +38,9 @@ final class DriverFactoryTest extends TestCase
 
     private static function assertSameDriver(Driver $expected, Driver $actual): void
     {
-        self::assertTrue($expected->name() === $actual->name());
-        self::assertSame($expected->version()->toBuildString(), $actual->version()->toBuildString());
-        self::assertTrue($expected->operatingSystem() === $actual->operatingSystem());
+        self::assertSame($expected->name, $actual->name);
+        self::assertSame($expected->version->toBuildString(), $actual->version->toBuildString());
+        self::assertSame($expected->operatingSystem, $actual->operatingSystem);
     }
 
     /** @return array<string, array{Driver, Browser}> */

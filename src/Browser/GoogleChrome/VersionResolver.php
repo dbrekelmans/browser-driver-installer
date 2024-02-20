@@ -10,7 +10,6 @@ use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
-use Safe\Exceptions\StringsException;
 
 use function sprintf;
 
@@ -23,7 +22,7 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_REG_QUERY_LOCAL_MACHINE = 'reg query HKLM\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
     private const VERSION_REG_QUERY_CURRENT_USER  = 'reg query HKCU\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
 
-    public function __construct(private CommandLineEnvironment $commandLineEnvironment)
+    public function __construct(private readonly CommandLineEnvironment $commandLineEnvironment)
     {
     }
 
@@ -77,8 +76,6 @@ final class VersionResolver implements VersionResolverInterface
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=158372
      *
      * @return string[]
-     *
-     * @throws StringsException
      */
     private static function getWindowsCommandsForVersion(): array
     {

@@ -13,7 +13,7 @@ use const DIRECTORY_SEPARATOR;
 
 final class ZipExtractor implements Extractor
 {
-    public function __construct(private ZipArchive $zipArchive)
+    public function __construct(private readonly ZipArchive $zipArchive)
     {
     }
 
