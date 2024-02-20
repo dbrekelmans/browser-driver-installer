@@ -58,7 +58,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverMac, 'chromedriver_mac64')
+            ->with($chromeDriverMac)
             ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_mac64.zip');
 
         $this->httpClient
@@ -80,7 +80,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverMac, 'mac-x64')
+            ->with($chromeDriverMac)
             ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
@@ -102,7 +102,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverLinux, 'chromedriver_linux64')
+            ->with($chromeDriverLinux)
             ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_linux64.zip');
 
         $this->httpClient
@@ -124,7 +124,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverLinux, 'linux64')
+            ->with($chromeDriverLinux)
             ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
@@ -146,7 +146,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverWindows, 'chromedriver_win32')
+            ->with($chromeDriverWindows)
             ->willReturn('https://chromedriver.storage.googleapis.com/86.0.4240.22/chromedriver_win32.zip');
 
         $this->httpClient
@@ -168,7 +168,7 @@ class DownloaderTest extends TestCase
         $this->downloadUrlResolver
             ->expects(self::once())
             ->method('byDriver')
-            ->with($chromeDriverWindows, 'win32')
+            ->with($chromeDriverWindows)
             ->willReturn('https://dynamic-download-url/driver.zip');
 
         $this->httpClient
