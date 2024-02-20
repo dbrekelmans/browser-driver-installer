@@ -6,5 +6,5 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 interface DownloadUrlResolver
 {
-    public function byDriver(Driver $driver, string $binaryName): string;
+    public function byDriver(Driver $driver): string;
 }

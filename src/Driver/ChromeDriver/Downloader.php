@@ -32,9 +32,6 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const BINARY_LINUX        = 'chromedriver_linux64';
-    private const BINARY_MAC          = 'chromedriver_mac64';
-    private const BINARY_WINDOWS      = 'chromedriver_win32';
     private const BINARY_LINUX_JSON   = 'chromedriver-linux64';
     private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
     private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
@@ -127,7 +124,7 @@ final class Downloader implements DownloaderInterface
 
         $response = $this->httpClient->request(
             'GET',
-            $this->downloadUrlResolver->byDriver($driver, $this->getBinaryName($driver)),
+            $this->downloadUrlResolver->byDriver($driver),
         );
 
         $fileHandler = fopen($temporaryFile, 'wb');
@@ -143,43 +140,6 @@ final class Downloader implements DownloaderInterface
         }
 
         return $temporaryFile;
-    }
-
-    /**
-     * @throws NotImplemented
-     */
-    private function getBinaryName(Driver $driver): string
-    {
-        $operatingSystem = $driver->operatingSystem();
-        if (VersionResolver::isJsonVersion($driver->version())) {
-            if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                return 'win32';
-            }
-
-            if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                return 'mac-x64';
-            }
-
-            if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-                return 'linux64';
-            }
-        } else {
-            if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-                return self::BINARY_WINDOWS;
-            }
-
-            if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-                return self::BINARY_MAC;
-            }
-
-            if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-                return self::BINARY_LINUX;
-            }
-        }
-
-        throw NotImplemented::feature(
-            sprintf('Downloading %s for %s', $driver->name()->getValue(), $operatingSystem->getValue())
-        );
     }
 
     /**
