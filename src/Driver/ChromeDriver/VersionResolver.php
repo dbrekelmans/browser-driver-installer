@@ -29,6 +29,11 @@ final class VersionResolver implements VersionResolverInterface
 
     private HttpClientInterface $httpClient;
 
+    public static function isJsonVersion(Version $version): bool
+    {
+        return $version->major() >= self::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
+    }
+
     public function __construct(HttpClientInterface $httpClient)
     {
         $this->httpClient = $httpClient;
