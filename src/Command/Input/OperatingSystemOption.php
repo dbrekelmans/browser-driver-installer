@@ -50,7 +50,7 @@ final class OperatingSystemOption extends InputOption implements Option
     {
         return sprintf(
             'Operating system for which to install the driver (%s)',
-            implode('|', OperatingSystem::cases())
+            implode('|', array_map(static fn ($case) => $case->value, OperatingSystem::cases()))
         );
     }
 
@@ -66,7 +66,7 @@ final class OperatingSystemOption extends InputOption implements Option
     {
         $value = $input->getOption(self::name());
 
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 
@@ -75,7 +75,7 @@ final class OperatingSystemOption extends InputOption implements Option
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
                     $value,
-                    implode(', ', OperatingSystem::cases())
+                    implode(', ', array_map(static fn ($case) => $case->value, OperatingSystem::cases()))
                 )
             );
         }

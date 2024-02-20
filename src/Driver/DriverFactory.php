@@ -33,16 +33,9 @@ final class DriverFactory
      */
     private function getDriverNameForBrowser(Browser $browser): DriverName
     {
-        $browserName = $browser->name();
-
-        if ($browserName=== BrowserName::GOOGLE_CHROME || $browserName=== BrowserName::CHROMIUM) {
-            return DriverName::CHROME;
-        }
-
-        if ($browserName=== BrowserName::FIREFOX) {
-            return DriverName::GECKO;
-        }
-
-        throw NotImplemented::feature(sprintf('Driver for %s', $browserName->value));
+        return match ($browser->name()) {
+            BrowserName::GOOGLE_CHROME, BrowserName::CHROMIUM => DriverName::CHROME,
+            BrowserName::FIREFOX => DriverName::GECKO,
+        };
     }
 }

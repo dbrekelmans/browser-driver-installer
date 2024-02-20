@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\Firefox;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
@@ -24,26 +23,11 @@ final class VersionResolver implements VersionResolverInterface
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
     {
-        if ($operatingSystem=== OperatingSystem::LINUX) {
-            return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
-        }
-
-        if ($operatingSystem=== OperatingSystem::MACOS) {
-            return $this->getVersionFromCommandLine(
-                sprintf('%s/Contents/MacOS/firefox --version', $path)
-            );
-        }
-
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
-            return $this->getVersionFromCommandLine(sprintf('"%s" --version | more', $path));
-        }
-
-        throw NotImplemented::feature(
-            sprintf(
-                'Resolving version on %s',
-                $operatingSystem->value
-            )
-        );
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => $this->getVersionFromCommandLine(sprintf('%s --version', $path)),
+            OperatingSystem::MACOS => $this->getVersionFromCommandLine(sprintf('%s/Contents/MacOS/firefox --version', $path)),
+            OperatingSystem::WINDOWS => $this->getVersionFromCommandLine(sprintf('"%s" --version | more', $path)),
+        };
     }
 
     public function supports(BrowserName $browserName): bool

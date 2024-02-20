@@ -57,7 +57,7 @@ final class DetectCommand extends Command
 
         $returnCode = self::SUCCESS;
 
-        foreach (BrowserName::values() as $browserName) {
+        foreach (BrowserName::cases() as $browserName) {
             $commandName = sprintf('%s:%s', BrowserCommand::PREFIX, $browserName->value);
 
             try {

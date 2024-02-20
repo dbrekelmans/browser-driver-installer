@@ -127,23 +127,11 @@ final class Downloader implements DownloaderInterface
      */
     private function getOsForDownloadPath(Driver $driver): string
     {
-        $operatingSystem = $driver->operatingSystem();
-
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
-            return self::DOWNLOAD_PATH_OS_PART_WINDOWS;
-        }
-
-        if ($operatingSystem=== OperatingSystem::MACOS) {
-            return self::DOWNLOAD_PATH_OS_PART_MACOS;
-        }
-
-        if ($operatingSystem=== OperatingSystem::LINUX) {
-            return self::DOWNLOAD_PATH_OS_PART_LINUX;
-        }
-
-        throw NotImplemented::feature(
-            sprintf('Downloading %s for %s', $driver->name()->value, $operatingSystem->value)
-        );
+        return match ($driver->operatingSystem()) {
+            OperatingSystem::WINDOWS => self::DOWNLOAD_PATH_OS_PART_WINDOWS,
+            OperatingSystem::MACOS => self::DOWNLOAD_PATH_OS_PART_MACOS,
+            OperatingSystem::LINUX => self::DOWNLOAD_PATH_OS_PART_LINUX,
+        };
     }
 
     private function extractArchive(string $archive): string

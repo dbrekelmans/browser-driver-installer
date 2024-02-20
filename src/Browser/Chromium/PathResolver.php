@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
 
@@ -14,23 +13,15 @@ class PathResolver implements PathResolverInterface
 {
     public function from(OperatingSystem $operatingSystem): string
     {
-        if ($operatingSystem=== OperatingSystem::LINUX) {
-            return 'chromium';
-        }
-
-        if ($operatingSystem=== OperatingSystem::MACOS) {
-            return '/Applications/Chromium.app';
-        }
-
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
-            return 'C:\\Program Files (x86)\\Chromium\\Application\\chrome.exe';
-        }
-
-        throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->value));
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => 'chromium',
+            OperatingSystem::MACOS => '/Applications/Chromium.app',
+            OperatingSystem::WINDOWS => 'C:\\Program Files (x86)\\Chromium\\Application\\chrome.exe',
+        };
     }
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::CHROMIUM;
+        return $browserName === BrowserName::CHROMIUM;
     }
 }

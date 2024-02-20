@@ -7,7 +7,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\Chromium;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\VersionResolver as VersionResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\CommandLine\CommandLineEnvironment;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
@@ -33,39 +32,29 @@ final class VersionResolver implements VersionResolverInterface
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
     {
-        if ($operatingSystem=== OperatingSystem::LINUX) {
-            return $this->getVersionFromCommandLine(sprintf('%s --version', $path));
-        }
-
-        if ($operatingSystem=== OperatingSystem::MACOS) {
-            return $this->getVersionFromCommandLine(
-                sprintf('%s/Contents/MacOS/Chromium --version', $path)
-            );
-        }
-
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
-            foreach (self::getWindowsCommandsForVersion() as $possibleCommand) {
-                try {
-                    return $this->getVersionFromCommandLine($possibleCommand);
-                } catch (InvalidArgumentException $exception) {
-                    // @ignoreException
-                }
-            }
-
-            throw new InvalidArgumentException('Version could not be determined.');
-        }
-
-        throw NotImplemented::feature(
-            sprintf(
-                'Resolving version on %s',
-                $operatingSystem->value
-            )
-        );
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => $this->getVersionFromCommandLine(sprintf('%s --version', $path)),
+            OperatingSystem::MACOS => $this->getVersionFromCommandLine(sprintf('%s/Contents/MacOS/Chromium --version', $path)),
+            OperatingSystem::WINDOWS => $this->getVersionFromWindows(),
+        };
     }
 
     public function supports(BrowserName $browserName): bool
     {
         return $browserName=== BrowserName::CHROMIUM;
+    }
+
+    private function getVersionFromWindows(): Version
+    {
+        foreach (self::getWindowsCommandsForVersion() as $possibleCommand) {
+            try {
+                return $this->getVersionFromCommandLine($possibleCommand);
+            } catch (InvalidArgumentException $exception) {
+                // @ignoreException
+            }
+        }
+
+        throw new InvalidArgumentException('Version could not be determined.');
     }
 
     private function getVersionFromCommandLine(string $command): Version

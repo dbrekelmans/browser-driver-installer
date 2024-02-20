@@ -212,7 +212,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
-        switch ($operatingSystem->value) {
+        switch ($operatingSystem) {
             case OperatingSystem::LINUX:
                 return self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR;
 

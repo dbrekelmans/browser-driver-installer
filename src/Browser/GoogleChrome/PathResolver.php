@@ -17,22 +17,11 @@ final class PathResolver implements PathResolverInterface
      */
     public function from(OperatingSystem $operatingSystem): string
     {
-        if ($operatingSystem=== OperatingSystem::LINUX) {
-            // TODO: command -v google-chrome
-            return 'google-chrome';
-        }
-
-        if ($operatingSystem=== OperatingSystem::MACOS) {
-            // TODO: check if file exists
-            return '/Applications/Google\ Chrome.app';
-        }
-
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
-            // phpcs:ignore TODO: (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo
-            return 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe';
-        }
-
-        throw NotImplemented::feature(sprintf('Resolving path on %s', $operatingSystem->value));
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => 'google-chrome', // TODO: command -v google-chrome
+            OperatingSystem::MACOS => '/Applications/Google\ Chrome.app', // TODO: check if file exists
+            OperatingSystem::WINDOWS => 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', // TODO: (Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo
+        };
     }
 
     public function supports(BrowserName $browserName): bool

@@ -53,7 +53,7 @@ final class VersionOption extends InputOption implements Option
 
     public function mode(): OptionMode
     {
-        return OptionMode::REQUIRED();
+        return OptionMode::REQUIRED;
     }
 
     public function description(): string
