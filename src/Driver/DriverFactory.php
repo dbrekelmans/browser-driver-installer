@@ -8,14 +8,10 @@ use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
-
 final class DriverFactory
 {
-    private VersionResolverFactory $versionResolverFactory;
-
-    public function __construct(VersionResolverFactory $versionResolverFactory)
+    public function __construct(private VersionResolverFactory $versionResolverFactory)
     {
-        $this->versionResolverFactory = $versionResolverFactory;
     }
 
     public function createFromBrowser(Browser $browser): Driver
@@ -28,9 +24,7 @@ final class DriverFactory
         return new Driver($name, $version, $browser->operatingSystem());
     }
 
-    /**
-     * @throws NotImplemented
-     */
+    /** @throws NotImplemented */
     private function getDriverNameForBrowser(Browser $browser): DriverName
     {
         return match ($browser->name()) {

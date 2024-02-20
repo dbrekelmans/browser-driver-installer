@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Browser;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-use function get_class;
 
+use function sprintf;
 
 final class VersionResolverFactory
 {
     /** @var array<class-string<VersionResolver>, VersionResolver> */
     private array $versionResolvers = [];
 
-    /**
-     * @throws NotImplemented If no version resolver is implemented for browser.
-     */
+    /** @throws NotImplemented If no version resolver is implemented for browser. */
     public function createFromName(BrowserName $browserName): VersionResolver
     {
         foreach ($this->versionResolvers as $versionResolver) {
@@ -25,12 +23,12 @@ final class VersionResolverFactory
         }
 
         throw NotImplemented::feature(
-            sprintf('Resolving %s version', $browserName->value)
+            sprintf('Resolving %s version', $browserName->value),
         );
     }
 
     public function register(VersionResolver $versionResolver): void
     {
-        $this->versionResolvers[get_class($versionResolver)] = $versionResolver;
+        $this->versionResolvers[$versionResolver::class] = $versionResolver;
     }
 }

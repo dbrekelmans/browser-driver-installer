@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-use function get_class;
 
+use function sprintf;
 
 final class DownloaderFactory
 {
@@ -26,6 +26,6 @@ final class DownloaderFactory
 
     public function register(Downloader $downloader): void
     {
-        $this->downloaders[get_class($downloader)] = $downloader;
+        $this->downloaders[$downloader::class] = $downloader;
     }
 }

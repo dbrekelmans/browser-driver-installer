@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+
 use function Safe\file_get_contents;
 
 class VersionResolverTest extends TestCase
@@ -31,7 +32,7 @@ class VersionResolverTest extends TestCase
                 }
 
                 return new MockResponse('Unknown page', ['http_code' => 404]);
-            }
+            },
         );
         $this->versionResolver = new VersionResolver($this->httpClient);
         $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('86.0.4240.80'), OperatingSystem::MACOS);

@@ -7,11 +7,10 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+
 use function is_string;
 
-/**
- * @implements Argument<string>
- */
+/** @implements Argument<string> */
 final class InstallPathArgument extends InputArgument implements Argument
 {
     public function __construct()
@@ -20,7 +19,7 @@ final class InstallPathArgument extends InputArgument implements Argument
             self::name(),
             $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -39,14 +38,12 @@ final class InstallPathArgument extends InputArgument implements Argument
         return 'Location where the driver will be installed';
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
         return '.';
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public static function value(InputInterface $input)
     {
         $value = $input->getArgument(self::name());

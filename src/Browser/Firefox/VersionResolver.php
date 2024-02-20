@@ -11,14 +11,12 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
-    private CommandLineEnvironment $commandLineEnvironment;
-
-    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    public function __construct(private CommandLineEnvironment $commandLineEnvironment)
     {
-        $this->commandLineEnvironment = $commandLineEnvironment;
     }
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
@@ -32,7 +30,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::FIREFOX;
+        return $browserName === BrowserName::FIREFOX;
     }
 
     private function getVersionFromCommandLine(string $command): Version
@@ -45,7 +43,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new InvalidArgumentException(
                 'Version could not be determined.',
                 0,
-                $exception
+                $exception,
             );
         }
     }

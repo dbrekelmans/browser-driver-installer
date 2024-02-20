@@ -15,30 +15,18 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
+use function sprintf;
 
 abstract class BrowserCommand extends Command
 {
     public const PREFIX = 'browser';
 
-    protected Filesystem $filesystem;
-
-    protected BrowserFactory $browserFactory;
-
-    protected DriverFactory $driverFactory;
-
-    protected DownloaderFactory $driverDownloaderFactory;
-
     public function __construct(
-        Filesystem $filesystem,
-        BrowserFactory $browserFactory,
-        DriverFactory $driverFactory,
-        DownloaderFactory $driverDownloaderFactory
+        protected Filesystem $filesystem,
+        protected BrowserFactory $browserFactory,
+        protected DriverFactory $driverFactory,
+        protected DownloaderFactory $driverDownloaderFactory,
     ) {
-        $this->filesystem              = $filesystem;
-        $this->browserFactory          = $browserFactory;
-        $this->driverFactory           = $driverFactory;
-        $this->driverDownloaderFactory = $driverDownloaderFactory;
-
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::browserName()->value));
     }
 
@@ -54,8 +42,8 @@ abstract class BrowserCommand extends Command
                     new Input\InstallPathArgument(),
                     new Input\OperatingSystemOption(),
                     new Input\BrowserPathOption(),
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -75,7 +63,7 @@ abstract class BrowserCommand extends Command
             $browser = $this->browserFactory->createFromNameOperatingSystemAndPath(
                 $browserName,
                 $operatingSystem,
-                $browserPath
+                $browserPath,
             );
         }
 
@@ -87,7 +75,7 @@ abstract class BrowserCommand extends Command
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString())
+                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString()),
             );
         }
 
@@ -95,7 +83,7 @@ abstract class BrowserCommand extends Command
         $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
-            sprintf('%s %s installed to %s', $driver->name()->value, $driver->version()->toBuildString(), $filePath)
+            sprintf('%s %s installed to %s', $driver->name()->value, $driver->version()->toBuildString(), $filePath),
         );
 
         return self::SUCCESS;

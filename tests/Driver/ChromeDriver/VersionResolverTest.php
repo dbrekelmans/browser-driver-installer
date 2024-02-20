@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use UnexpectedValueException;
+
 use function in_array;
 use function Safe\json_encode;
 
@@ -122,16 +123,16 @@ class VersionResolverTest extends TestCase
                                     '115.0.5751' => ['version' => '115.0.5751.20'],
                                     '122.0.6261' => ['version' => '122.0.6261.39'],
                                 ],
-                            ])
+                            ]),
                         );
                     }
                 }
 
                 return new MockResponse(
                     '<?xml version=\'1.0\' encoding=\'UTF-8\'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Details>No such object: chromedriver/LATEST_RELEASE_xxx</Details></Error>',
-                    ['http_code' => 404]
+                    ['http_code' => 404],
                 );
-            }
+            },
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 

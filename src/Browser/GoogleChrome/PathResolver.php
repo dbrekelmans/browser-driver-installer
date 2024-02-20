@@ -9,12 +9,9 @@ use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInter
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-
 final class PathResolver implements PathResolverInterface
 {
-    /**
-     * @throws NotImplemented
-     */
+    /** @throws NotImplemented */
     public function from(OperatingSystem $operatingSystem): string
     {
         return match ($operatingSystem) {
@@ -26,6 +23,6 @@ final class PathResolver implements PathResolverInterface
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::GOOGLE_CHROME;
+        return $browserName === BrowserName::GOOGLE_CHROME;
     }
 }

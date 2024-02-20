@@ -27,8 +27,8 @@ final class VersionResolverFactoryTest extends TestCase
             new Browser(
                 BrowserName::GOOGLE_CHROME,
                 Version::fromString('1.0.0'),
-                OperatingSystem::LINUX
-            )
+                OperatingSystem::LINUX,
+            ),
         );
     }
 
@@ -46,9 +46,9 @@ final class VersionResolverFactoryTest extends TestCase
                 new Browser(
                     BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX
-                )
-            )
+                    OperatingSystem::LINUX,
+                ),
+            ),
         );
     }
 
@@ -80,9 +80,9 @@ final class VersionResolverFactoryTest extends TestCase
                 new Browser(
                     BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX
-                )
-            )
+                    OperatingSystem::LINUX,
+                ),
+            ),
         );
     }
 
@@ -108,9 +108,9 @@ final class VersionResolverFactoryTest extends TestCase
                 new Browser(
                     BrowserName::GOOGLE_CHROME,
                     Version::fromString('1.0.0'),
-                    OperatingSystem::LINUX
-                )
-            )
+                    OperatingSystem::LINUX,
+                ),
+            ),
         );
     }
 }

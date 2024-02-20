@@ -9,17 +9,8 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 
 final class Browser
 {
-    private BrowserName $name;
-
-    private Version $version;
-
-    private OperatingSystem $operatingSystem;
-
-    public function __construct(BrowserName $name, Version $version, OperatingSystem $operatingSystem)
+    public function __construct(private BrowserName $name, private Version $version, private OperatingSystem $operatingSystem)
     {
-        $this->name            = $name;
-        $this->version         = $version;
-        $this->operatingSystem = $operatingSystem;
     }
 
     public function name(): BrowserName

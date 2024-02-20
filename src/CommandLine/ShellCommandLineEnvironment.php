@@ -8,7 +8,7 @@ use RuntimeException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-
+use function sprintf;
 
 class ShellCommandLineEnvironment implements CommandLineEnvironment
 {
@@ -21,7 +21,7 @@ class ShellCommandLineEnvironment implements CommandLineEnvironment
             throw new RuntimeException(
                 sprintf('Command %s failed', $command),
                 0,
-                new ProcessFailedException($process)
+                new ProcessFailedException($process),
             );
         }
 

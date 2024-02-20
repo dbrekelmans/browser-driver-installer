@@ -7,22 +7,17 @@ namespace DBrekelmans\BrowserDriverInstaller\Archive;
 use RuntimeException;
 use ZipArchive;
 
-
+use function sprintf;
 
 use const DIRECTORY_SEPARATOR;
 
 final class ZipExtractor implements Extractor
 {
-    private ZipArchive $zipArchive;
-
-    public function __construct(ZipArchive $zipArchive)
+    public function __construct(private ZipArchive $zipArchive)
     {
-        $this->zipArchive = $zipArchive;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function extract(string $archive, string $destination): array
     {
         $success = $this->zipArchive->open($archive);
@@ -51,9 +46,7 @@ final class ZipExtractor implements Extractor
         return $extractedFilenames;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getSupportedExtensions(): array
     {
         return ['zip'];

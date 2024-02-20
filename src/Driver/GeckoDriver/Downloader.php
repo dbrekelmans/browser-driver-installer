@@ -16,13 +16,16 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function basename;
 use function dirname;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
+use function sprintf;
 use function strpos;
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
@@ -32,17 +35,8 @@ final class Downloader implements DownloaderInterface
     private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
     private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
-    private Filesystem $filesystem;
-
-    private HttpClientInterface $httpClient;
-
-    private Extractor $archiveExtractor;
-
-    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
+    public function __construct(private Filesystem $filesystem, private HttpClientInterface $httpClient, private Extractor $archiveExtractor)
     {
-        $this->filesystem       = $filesystem;
-        $this->httpClient       = $httpClient;
-        $this->archiveExtractor = $archiveExtractor;
     }
 
     public function download(Driver $driver, string $location): string
@@ -71,7 +65,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong moving the geckodriver to %s.', $location),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -80,7 +74,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()=== DriverName::GECKO;
+        return $driver->name() === DriverName::GECKO;
     }
 
     /**
@@ -108,9 +102,7 @@ final class Downloader implements DownloaderInterface
         return $temporaryFile;
     }
 
-    /**
-     * @throws NotImplemented
-     */
+    /** @throws NotImplemented */
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
@@ -118,13 +110,11 @@ final class Downloader implements DownloaderInterface
             $driver->version()->toString(),
             $driver->version()->toString(),
             $this->getOsForDownloadPath($driver),
-            $this->getArchiveExtension($driver)
+            $this->getArchiveExtension($driver),
         );
     }
 
-    /**
-     * @throws NotImplemented
-     */
+    /** @throws NotImplemented */
     private function getOsForDownloadPath(Driver $driver): string
     {
         return match ($driver->operatingSystem()) {
@@ -149,7 +139,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveExtension(Driver $driver): string
     {
-        if ($driver->operatingSystem()=== OperatingSystem::WINDOWS) {
+        if ($driver->operatingSystem() === OperatingSystem::WINDOWS) {
             return '.zip';
         }
 

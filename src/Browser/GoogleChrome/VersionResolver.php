@@ -12,6 +12,7 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use InvalidArgumentException;
 use Safe\Exceptions\StringsException;
 
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -22,11 +23,8 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_REG_QUERY_LOCAL_MACHINE = 'reg query HKLM\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
     private const VERSION_REG_QUERY_CURRENT_USER  = 'reg query HKCU\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
 
-    private CommandLineEnvironment $commandLineEnvironment;
-
-    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    public function __construct(private CommandLineEnvironment $commandLineEnvironment)
     {
-        $this->commandLineEnvironment = $commandLineEnvironment;
     }
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
@@ -40,7 +38,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::GOOGLE_CHROME;
+        return $browserName === BrowserName::GOOGLE_CHROME;
     }
 
     private function getVersionFromCommandLine(string $command): Version
@@ -53,7 +51,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new InvalidArgumentException(
                 'Version could not be determined.',
                 0,
-                $exception
+                $exception,
             );
         }
     }

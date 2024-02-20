@@ -15,8 +15,6 @@ interface Extractor
      */
     public function extract(string $archive, string $destination): array;
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getSupportedExtensions(): array;
 }

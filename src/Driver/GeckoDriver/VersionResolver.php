@@ -11,10 +11,11 @@ use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function is_string;
 use function Safe\json_decode;
 use function Safe\krsort;
-
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -29,16 +30,11 @@ final class VersionResolver implements VersionResolverInterface
         52 => '0.17.0',
     ];
 
-    private HttpClientInterface $httpClient;
-
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(private HttpClientInterface $httpClient)
     {
-        $this->httpClient = $httpClient;
     }
 
-    /**
-     * @see https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html
-     */
+    /** @see https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html */
     public function fromBrowser(Browser $browser): Version
     {
         $browserMajorVersion = (int) $browser->version()->major();
@@ -76,6 +72,6 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        return $browser->name()=== BrowserName::FIREFOX;
+        return $browser->name() === BrowserName::FIREFOX;
     }
 }

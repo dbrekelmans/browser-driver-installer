@@ -16,8 +16,9 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-use function array_key_exists;
 
+use function array_key_exists;
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -26,16 +27,13 @@ final class VersionResolver implements VersionResolverInterface
     private const LATEST_VERSION_ENDPOINT_JSON     = 'https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json';
     private const VERSION_ENDPOINT_JSON            = 'https://googlechromelabs.github.io/chrome-for-testing/latest-patch-versions-per-build.json';
 
-    private HttpClientInterface $httpClient;
-
     public static function isJsonVersion(Version $version): bool
     {
         return $version->major() >= self::MAJOR_VERSION_ENDPOINT_BREAKPOINT;
     }
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(private HttpClientInterface $httpClient)
     {
-        $this->httpClient = $httpClient;
     }
 
     public function fromBrowser(Browser $browser): Version
@@ -56,7 +54,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new UnexpectedValueException(
                 'Something went wrong getting the driver version from the chromedriver API.',
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -66,7 +64,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new UnexpectedValueException(
                 'Content received from chromedriver API could not be parsed into a version.',
                 0,
-                $exception
+                $exception,
             );
         }
     }
@@ -86,7 +84,7 @@ final class VersionResolver implements VersionResolverInterface
     {
         $browserName = $browser->name();
 
-        return $browserName=== BrowserName::GOOGLE_CHROME || $browserName=== BrowserName::CHROMIUM;
+        return $browserName === BrowserName::GOOGLE_CHROME || $browserName === BrowserName::CHROMIUM;
     }
 
     private function latestBetaVersion(): Version
@@ -124,7 +122,7 @@ final class VersionResolver implements VersionResolverInterface
 
         if (! array_key_exists($versionToFetch->toString(), $versions['builds'])) {
             throw new UnexpectedValueException(
-                sprintf('There is no build for version : %s', $versionToFetch->toString())
+                sprintf('There is no build for version : %s', $versionToFetch->toString()),
             );
         }
 

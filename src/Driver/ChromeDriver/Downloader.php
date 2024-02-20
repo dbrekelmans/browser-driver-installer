@@ -24,7 +24,7 @@ use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
-use function Safe\sprintf;
+use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
 
@@ -36,12 +36,6 @@ final class Downloader implements DownloaderInterface
     private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
     private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
 
-
-    private Filesystem $filesystem;
-
-    private HttpClientInterface $httpClient;
-
-    private Extractor $archiveExtractor;
 
     private string $tempDir;
 
@@ -62,12 +56,10 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()=== DriverName::CHROME;
+        return $driver->name() === DriverName::CHROME;
     }
 
-    /**
-     * @throws RuntimeException
-     */
+    /** @throws RuntimeException */
     public function download(Driver $driver, string $location): string
     {
         try {
@@ -94,7 +86,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong moving the chromedriver to %s.', $location),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -105,7 +97,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong setting the permissions of the chromedriver to %d.', $mode),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -160,7 +152,7 @@ final class Downloader implements DownloaderInterface
             ! in_array(
                 $filePath,
                 $extractedFiles,
-                true
+                true,
             )
         ) {
             throw new UnexpectedValueException(sprintf('Could not find "%s" in the extracted files.', $filePath));
@@ -185,7 +177,7 @@ final class Downloader implements DownloaderInterface
     {
         $fileName = 'chromedriver';
 
-        if ($operatingSystem=== OperatingSystem::WINDOWS) {
+        if ($operatingSystem === OperatingSystem::WINDOWS) {
             $fileName .= '.exe';
         }
 
@@ -204,7 +196,7 @@ final class Downloader implements DownloaderInterface
         $this->filesystem->rename(
             $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . $filename,
             $unzipLocation . DIRECTORY_SEPARATOR . $filename,
-            true
+            true,
         );
 
         return str_replace($archiveDirectory, '', $extractedFiles);

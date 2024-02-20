@@ -15,19 +15,18 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
 {
     private Downloader $downloader;
     private Driver $geckoMac;
-    /** @var Stub&Filesystem */
-    private $filesystem;
-    /** @var MockObject&HttpClientInterface */
-    private $httpClient;
-    /** @var Extractor&MockObject */
-    private $archiveExtractor;
+    private Stub&Filesystem $filesystem;
+    private MockObject&HttpClientInterface $httpClient;
+    private Extractor&MockObject $archiveExtractor;
 
     public function setUp(): void
     {

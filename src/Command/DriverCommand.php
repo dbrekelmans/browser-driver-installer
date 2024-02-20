@@ -15,22 +15,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+use function sprintf;
 
 abstract class DriverCommand extends Command
 {
     public const PREFIX = 'driver';
 
-    private VersionResolver $versionResolver;
-
-    private DownloaderFactory $downloaderFactory;
-
     public function __construct(
-        VersionResolver $versionResolver,
-        DownloaderFactory $downloaderFactory
+        private VersionResolver $versionResolver,
+        private DownloaderFactory $downloaderFactory,
     ) {
-        $this->versionResolver   = $versionResolver;
-        $this->downloaderFactory = $downloaderFactory;
-
         parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->value));
     }
 
@@ -46,8 +40,8 @@ abstract class DriverCommand extends Command
                     new Input\InstallPathArgument(),
                     new Input\VersionOption(),
                     new Input\OperatingSystemOption(),
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -67,7 +61,7 @@ abstract class DriverCommand extends Command
 
             if ($io->isVerbose()) {
                 $io->writeln(
-                    sprintf('Latest %s version: %s.', $driverName->value, $version->toBuildString())
+                    sprintf('Latest %s version: %s.', $driverName->value, $version->toBuildString()),
                 );
             }
         } else {
@@ -78,7 +72,7 @@ abstract class DriverCommand extends Command
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString())
+                sprintf('Downloading %s %s.', $driver->name()->value, $driver->version()->toBuildString()),
             );
         }
 
@@ -90,8 +84,8 @@ abstract class DriverCommand extends Command
                 '%s %s installed to %s',
                 $driver->name()->value,
                 $driver->version()->toBuildString(),
-                $filePath
-            )
+                $filePath,
+            ),
         );
 
         return self::SUCCESS;

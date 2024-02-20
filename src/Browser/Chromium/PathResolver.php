@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-
 class PathResolver implements PathResolverInterface
 {
     public function from(OperatingSystem $operatingSystem): string

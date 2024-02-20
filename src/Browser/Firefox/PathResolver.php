@@ -8,7 +8,6 @@ use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
-
 final class PathResolver implements PathResolverInterface
 {
     public function from(OperatingSystem $operatingSystem): string
@@ -22,6 +21,6 @@ final class PathResolver implements PathResolverInterface
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::FIREFOX;
+        return $browserName === BrowserName::FIREFOX;
     }
 }

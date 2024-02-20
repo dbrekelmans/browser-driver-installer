@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
 
+use function sprintf;
 
 final class DetectCommand extends Command
 {
@@ -33,8 +34,8 @@ final class DetectCommand extends Command
                 [
                     new Input\InstallPathArgument(),
                     new Input\OperatingSystemOption(),
-                ]
-            )
+                ],
+            ),
         );
     }
 

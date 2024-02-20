@@ -10,14 +10,15 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
+
+use function array_map;
 use function implode;
 use function is_string;
+use function sprintf;
+
 use const PHP_OS_FAMILY;
 
-
-/**
- * @implements Option<OperatingSystem>
- */
+/** @implements Option<OperatingSystem> */
 final class OperatingSystemOption extends InputOption implements Option
 {
     public function __construct()
@@ -27,7 +28,7 @@ final class OperatingSystemOption extends InputOption implements Option
             $this->shortcut(),
             $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -36,7 +37,7 @@ final class OperatingSystemOption extends InputOption implements Option
         return 'os';
     }
 
-    public function shortcut(): ?string
+    public function shortcut(): string|null
     {
         return null;
     }
@@ -50,23 +51,21 @@ final class OperatingSystemOption extends InputOption implements Option
     {
         return sprintf(
             'Operating system for which to install the driver (%s)',
-            implode('|', array_map(static fn ($case) => $case->value, OperatingSystem::cases()))
+            implode('|', array_map(static fn ($case) => $case->value, OperatingSystem::cases())),
         );
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
         return OperatingSystem::fromFamily(Family::from(PHP_OS_FAMILY))->value;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public static function value(InputInterface $input)
     {
         $value = $input->getOption(self::name());
 
-        if (!is_string($value)) {
+        if (! is_string($value)) {
             throw UnexpectedType::expected('string', $value);
         }
 
@@ -75,8 +74,8 @@ final class OperatingSystemOption extends InputOption implements Option
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
                     $value,
-                    implode(', ', array_map(static fn ($case) => $case->value, OperatingSystem::cases()))
-                )
+                    implode(', ', array_map(static fn ($case) => $case->value, OperatingSystem::cases())),
+                ),
             );
         }
 

@@ -10,7 +10,7 @@ use function array_merge;
 use function array_unique;
 use function in_array;
 use function pathinfo;
-
+use function sprintf;
 
 final class MultiExtractor implements Extractor
 {
@@ -20,9 +20,7 @@ final class MultiExtractor implements Extractor
     /** @var string[] */
     private array $supportedExtensions = [];
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function extract(string $archive, string $destination): array
     {
         $pathParts = pathinfo($archive);
@@ -40,9 +38,7 @@ final class MultiExtractor implements Extractor
         throw new Unsupported(sprintf('No archive extractor found supporting %s archive', $pathParts['extension']));
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getSupportedExtensions(): array
     {
         return $this->supportedExtensions;

@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use Safe\Exceptions\StringsException;
 
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -23,11 +24,8 @@ final class VersionResolver implements VersionResolverInterface
     private const VERSION_REG_QUERY_LOCAL_MACHINE = 'reg query HKLM\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
     private const VERSION_REG_QUERY_CURRENT_USER  = 'reg query HKCU\Software\Google\Update\Clients\{%s} /v pv /reg:32 2> NUL';
 
-    private CommandLineEnvironment $commandLineEnvironment;
-
-    public function __construct(CommandLineEnvironment $commandLineEnvironment)
+    public function __construct(private CommandLineEnvironment $commandLineEnvironment)
     {
-        $this->commandLineEnvironment = $commandLineEnvironment;
     }
 
     public function from(OperatingSystem $operatingSystem, string $path): Version
@@ -41,7 +39,7 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(BrowserName $browserName): bool
     {
-        return $browserName=== BrowserName::CHROMIUM;
+        return $browserName === BrowserName::CHROMIUM;
     }
 
     private function getVersionFromWindows(): Version
@@ -49,7 +47,7 @@ final class VersionResolver implements VersionResolverInterface
         foreach (self::getWindowsCommandsForVersion() as $possibleCommand) {
             try {
                 return $this->getVersionFromCommandLine($possibleCommand);
-            } catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException) {
                 // @ignoreException
             }
         }
@@ -67,7 +65,7 @@ final class VersionResolver implements VersionResolverInterface
             throw new RuntimeException(
                 'Version could not be determined.',
                 0,
-                $exception
+                $exception,
             );
         }
     }
