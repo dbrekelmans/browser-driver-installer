@@ -10,7 +10,7 @@ use function sprintf;
 
 final class VersionResolverFactory
 {
-    /** @var array<class-string<VersionResolver>, VersionResolver> */
+    /** @var array<string, VersionResolver> */
     private array $versionResolvers = [];
 
     /** @throws NotImplemented If no version resolver is implemented for browser. */
@@ -27,8 +27,8 @@ final class VersionResolverFactory
         );
     }
 
-    public function register(VersionResolver $versionResolver): void
+    public function register(VersionResolver $versionResolver, string|null $identifier = null): void
     {
-        $this->versionResolvers[$versionResolver::class] = $versionResolver;
+        $this->versionResolvers[$identifier ?? $versionResolver::class] = $versionResolver;
     }
 }

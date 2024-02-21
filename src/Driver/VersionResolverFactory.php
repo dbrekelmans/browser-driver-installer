@@ -28,8 +28,8 @@ final class VersionResolverFactory
         );
     }
 
-    public function register(VersionResolver $versionResolver): void
+    public function register(VersionResolver $versionResolver, string|null $identifier = null): void
     {
-        $this->versionResolvers[$versionResolver::class] = $versionResolver;
+        $this->versionResolvers[$identifier ?? $versionResolver::class] = $versionResolver;
     }
 }

@@ -24,8 +24,8 @@ final class DownloaderFactory
         throw NotImplemented::feature(sprintf('Downloader for %s', $driver->name->value));
     }
 
-    public function register(Downloader $downloader): void
+    public function register(Downloader $downloader, string|null $identifier = null): void
     {
-        $this->downloaders[$downloader::class] = $downloader;
+        $this->downloaders[$identifier ?? $downloader::class] = $downloader;
     }
 }

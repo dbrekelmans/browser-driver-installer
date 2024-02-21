@@ -10,14 +10,11 @@ use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
-use DBrekelmans\BrowserDriverInstaller\Tests\UniqueClassName;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use PHPUnit\Framework\TestCase;
 
 final class DownloaderFactoryTest extends TestCase
 {
-    use UniqueClassName;
-
     public function testNoDownloaderImplemented(): void
     {
         $factory = new DownloaderFactory();
@@ -46,25 +43,19 @@ final class DownloaderFactoryTest extends TestCase
 
     public function testSupportedDownloaderIsReturned(): void
     {
-        $downloaderA = $this->getMockBuilder(Downloader::class)
-            ->setMockClassName(self::uniqueClassName(Downloader::class))
-            ->getMock();
+        $downloaderA = self::createStub(Downloader::class);
         $downloaderA->method('supports')->willReturn(false);
 
-        $downloaderB = $this->getMockBuilder(Downloader::class)
-            ->setMockClassName(self::uniqueClassName(Downloader::class))
-            ->getMock();
+        $downloaderB = self::createStub(Downloader::class);
         $downloaderB->method('supports')->willReturn(true);
 
-        $downloaderC = $this->getMockBuilder(Downloader::class)
-            ->setMockClassName(self::uniqueClassName(Downloader::class))
-            ->getMock();
+        $downloaderC = self::createStub(Downloader::class);
         $downloaderC->method('supports')->willReturn(false);
 
         $factory = new DownloaderFactory();
-        $factory->register($downloaderA);
-        $factory->register($downloaderB);
-        $factory->register($downloaderC);
+        $factory->register($downloaderA, 'A');
+        $factory->register($downloaderB, 'B');
+        $factory->register($downloaderC, 'C');
 
         self::assertSame(
             $downloaderB,
@@ -76,19 +67,15 @@ final class DownloaderFactoryTest extends TestCase
 
     public function testFirstSupportedDownloaderIsReturned(): void
     {
-        $downloaderA = $this->getMockBuilder(Downloader::class)
-            ->setMockClassName(self::uniqueClassName(Downloader::class))
-            ->getMock();
+        $downloaderA = self::createStub(Downloader::class);
         $downloaderA->method('supports')->willReturn(true);
 
-        $downloaderB = $this->getMockBuilder(Downloader::class)
-            ->setMockClassName(self::uniqueClassName(Downloader::class))
-            ->getMock();
+        $downloaderB = self::createStub(Downloader::class);
         $downloaderB->method('supports')->willReturn(true);
 
         $factory = new DownloaderFactory();
-        $factory->register($downloaderA);
-        $factory->register($downloaderB);
+        $factory->register($downloaderA, 'A');
+        $factory->register($downloaderB, 'B');
 
         self::assertSame(
             $downloaderA,

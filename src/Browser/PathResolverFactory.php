@@ -10,7 +10,7 @@ use function sprintf;
 
 final class PathResolverFactory
 {
-    /** @var array<class-string<PathResolver>, PathResolver> */
+    /** @var array<string, PathResolver> */
     private array $pathResolvers = [];
 
     /** @throws NotImplemented If no path resolver is implemented for browser. */
@@ -27,8 +27,8 @@ final class PathResolverFactory
         );
     }
 
-    public function register(PathResolver $pathResolver): void
+    public function register(PathResolver $pathResolver, string|null $identifier = null): void
     {
-        $this->pathResolvers[$pathResolver::class] = $pathResolver;
+        $this->pathResolvers[$identifier ?? $pathResolver::class] = $pathResolver;
     }
 }
