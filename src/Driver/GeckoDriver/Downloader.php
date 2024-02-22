@@ -109,7 +109,6 @@ final class Downloader implements DownloaderInterface
         return $temporaryFile;
     }
 
-    /** @throws NotImplemented */
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
@@ -121,7 +120,6 @@ final class Downloader implements DownloaderInterface
         );
     }
 
-    /** @throws NotImplemented */
     private function getOsForDownloadPath(Driver $driver): string
     {
         return match ($driver->operatingSystem) {

@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
 final class DriverFactory
 {
@@ -24,7 +23,6 @@ final class DriverFactory
         return new Driver($name, $version, $browser->operatingSystem);
     }
 
-    /** @throws NotImplemented */
     private function getDriverNameForBrowser(Browser $browser): DriverName
     {
         return match ($browser->name) {
