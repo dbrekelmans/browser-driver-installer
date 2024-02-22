@@ -10,9 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 use function is_string;
 
-/**
- * @implements Option<string>
- */
+/** @implements Option<string> */
 final class VersionOption extends InputOption implements Option
 {
     public const LATEST = 'latest';
@@ -22,9 +20,9 @@ final class VersionOption extends InputOption implements Option
         parent::__construct(
             self::name(),
             $this->shortcut(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -33,10 +31,7 @@ final class VersionOption extends InputOption implements Option
         return 'driver-version';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): string
     {
         $value = $input->getOption(self::name());
 
@@ -47,14 +42,14 @@ final class VersionOption extends InputOption implements Option
         return $value;
     }
 
-    public function shortcut(): ?string
+    public function shortcut(): string|null
     {
         return null;
     }
 
     public function mode(): OptionMode
     {
-        return OptionMode::REQUIRED();
+        return OptionMode::REQUIRED;
     }
 
     public function description(): string
@@ -62,7 +57,7 @@ final class VersionOption extends InputOption implements Option
         return 'Driver version to install';
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
         return self::LATEST;
     }

@@ -10,18 +10,16 @@ use Symfony\Component\Console\Input\InputInterface;
 
 use function is_string;
 
-/**
- * @implements Argument<string>
- */
+/** @implements Argument<string> */
 final class InstallPathArgument extends InputArgument implements Argument
 {
     public function __construct()
     {
         parent::__construct(
             self::name(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -32,7 +30,7 @@ final class InstallPathArgument extends InputArgument implements Argument
 
     public function mode(): ArgumentMode
     {
-        return ArgumentMode::OPTIONAL();
+        return ArgumentMode::OPTIONAL;
     }
 
     public function description(): string
@@ -40,15 +38,12 @@ final class InstallPathArgument extends InputArgument implements Argument
         return 'Location where the driver will be installed';
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
         return '.';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): string
     {
         $value = $input->getArgument(self::name());
 

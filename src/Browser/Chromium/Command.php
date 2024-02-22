@@ -11,6 +11,6 @@ final class Command extends BrowserCommand
 {
     protected static function browserName(): BrowserName
     {
-        return BrowserName::CHROMIUM();
+        return BrowserName::CHROMIUM;
     }
 }

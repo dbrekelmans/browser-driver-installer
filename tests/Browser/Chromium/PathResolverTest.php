@@ -15,22 +15,22 @@ final class PathResolverTest extends TestCase
 
     public function testFromKnownOs(): void
     {
-        self::assertSame('chromium', $this->pathResolver->from(OperatingSystem::LINUX()));
-        self::assertSame('/Applications/Chromium.app', $this->pathResolver->from(OperatingSystem::MACOS()));
+        self::assertSame('chromium', $this->pathResolver->from(OperatingSystem::LINUX));
+        self::assertSame('/Applications/Chromium.app', $this->pathResolver->from(OperatingSystem::MACOS));
         self::assertSame(
             'C:\Program Files (x86)\Chromium\Application\chrome.exe',
-            $this->pathResolver->from(OperatingSystem::WINDOWS())
+            $this->pathResolver->from(OperatingSystem::WINDOWS),
         );
     }
 
     public function testSupportChromium(): void
     {
-        self::assertTrue($this->pathResolver->supports(BrowserName::CHROMIUM()));
+        self::assertTrue($this->pathResolver->supports(BrowserName::CHROMIUM));
     }
 
     public function testDoesNotSupportFirefox(): void
     {
-        self::assertFalse($this->pathResolver->supports(BrowserName::FIREFOX()));
+        self::assertFalse($this->pathResolver->supports(BrowserName::FIREFOX));
     }
 
     protected function setUp(): void

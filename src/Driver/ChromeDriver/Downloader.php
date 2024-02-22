@@ -10,7 +10,6 @@ use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-use DBrekelmans\BrowserDriverInstaller\Exception\Unsupported;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use RuntimeException;
 use Safe\Exceptions\FilesystemException;
@@ -24,7 +23,7 @@ use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
-use function Safe\sprintf;
+use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
 
@@ -32,42 +31,23 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const BINARY_LINUX_JSON   = 'chromedriver-linux64';
-    private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
-    private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
-
-
-    private Filesystem $filesystem;
-
-    private HttpClientInterface $httpClient;
-
-    private Extractor $archiveExtractor;
-
     private string $tempDir;
 
-    private DownloadUrlResolver $downloadUrlResolver;
-
     public function __construct(
-        Filesystem $filesystem,
-        HttpClientInterface $httpClient,
-        Extractor $archiveExtractor,
-        DownloadUrlResolver $downloadUrlResolver
+        private readonly Filesystem $filesystem,
+        private readonly HttpClientInterface $httpClient,
+        private readonly Extractor $archiveExtractor,
+        private readonly DownloadUrlResolver $downloadUrlResolver,
     ) {
-        $this->filesystem          = $filesystem;
-        $this->httpClient          = $httpClient;
-        $this->archiveExtractor    = $archiveExtractor;
-        $this->downloadUrlResolver = $downloadUrlResolver;
-        $this->tempDir             = sys_get_temp_dir();
+        $this->tempDir = sys_get_temp_dir();
     }
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()->equals(DriverName::CHROME());
+        return $driver->name === DriverName::CHROME;
     }
 
-    /**
-     * @throws RuntimeException
-     */
+    /** @throws RuntimeException */
     public function download(Driver $driver, string $location): string
     {
         try {
@@ -82,7 +62,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException('Something went wrong extracting the chromedriver archive.', 0, $exception);
         }
 
-        $filePath = $this->getFilePath($location, $driver->operatingSystem());
+        $filePath = $this->getFilePath($location, $driver->operatingSystem);
 
         if (! $this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
@@ -94,7 +74,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong moving the chromedriver to %s.', $location),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -105,7 +85,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong setting the permissions of the chromedriver to %d.', $mode),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -150,17 +130,17 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'chromedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        if (VersionResolver::isJsonVersion($driver->version())) {
+        if (VersionResolver::isJsonVersion($driver->version)) {
             $extractedFiles = $this->cleanArchiveStructure($driver, $unzipLocation, $extractedFiles);
         }
 
-        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem());
+        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem);
 
         if (
             ! in_array(
                 $filePath,
                 $extractedFiles,
-                true
+                true,
             )
         ) {
             throw new UnexpectedValueException(sprintf('Could not find "%s" in the extracted files.', $filePath));
@@ -185,7 +165,7 @@ final class Downloader implements DownloaderInterface
     {
         $fileName = 'chromedriver';
 
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
+        if ($operatingSystem === OperatingSystem::WINDOWS) {
             $fileName .= '.exe';
         }
 
@@ -199,12 +179,12 @@ final class Downloader implements DownloaderInterface
      */
     public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
     {
-        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem());
-        $filename         = $this->getFileName($driver->operatingSystem());
+        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem);
+        $filename         = $this->getFileName($driver->operatingSystem);
         $this->filesystem->rename(
             $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . $filename,
             $unzipLocation . DIRECTORY_SEPARATOR . $filename,
-            true
+            true,
         );
 
         return str_replace($archiveDirectory, '', $extractedFiles);
@@ -212,18 +192,10 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
-        switch ($operatingSystem->getValue()) {
-            case OperatingSystem::LINUX:
-                return self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR;
-
-            case OperatingSystem::WINDOWS:
-                return self::BINARY_WINDOWS_JSON . '/';
-
-            case OperatingSystem::MACOS:
-                return self::BINARY_MAC_JSON . DIRECTORY_SEPARATOR;
-
-            default:
-                throw new Unsupported('Operating system is not supported');
-        }
+        return match ($operatingSystem) {
+            OperatingSystem::LINUX => 'chromedriver-linux64/',
+            OperatingSystem::WINDOWS => 'chromedriver-win32/', // This weirdly contains a forward slash on windows
+            OperatingSystem::MACOS => 'chromedriver-mac-x64/',
+        };
     }
 }

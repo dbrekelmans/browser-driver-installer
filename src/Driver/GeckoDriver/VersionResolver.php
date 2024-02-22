@@ -15,7 +15,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use function is_string;
 use function Safe\json_decode;
 use function Safe\krsort;
-use function Safe\sprintf;
+use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
 {
@@ -30,19 +30,14 @@ final class VersionResolver implements VersionResolverInterface
         52 => '0.17.0',
     ];
 
-    private HttpClientInterface $httpClient;
-
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(private readonly HttpClientInterface $httpClient)
     {
-        $this->httpClient = $httpClient;
     }
 
-    /**
-     * @see https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html
-     */
+    /** @see https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html */
     public function fromBrowser(Browser $browser): Version
     {
-        $browserMajorVersion = (int) $browser->version()->major();
+        $browserMajorVersion = (int) $browser->version->major();
 
         if ($browserMajorVersion >= self::MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST) {
             return $this->latest();
@@ -60,13 +55,17 @@ final class VersionResolver implements VersionResolverInterface
             }
         }
 
-        throw new RuntimeException(sprintf('Could not find a geckodriver version for Firefox %s', $browser->version()->toString()));
+        throw new RuntimeException(sprintf(
+            'Could not find a geckodriver version for Firefox %s',
+            $browser->version->toString(),
+        ));
     }
 
     public function latest(): Version
     {
         $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
-        /** @var array<mixed> $data */
+
+        /** @var array<scalar> $data */
         $data = json_decode($response->getContent(), true);
         if (! isset($data['name'])) {
             throw new RuntimeException('Can not find latest release name');
@@ -77,6 +76,6 @@ final class VersionResolver implements VersionResolverInterface
 
     public function supports(Browser $browser): bool
     {
-        return $browser->name()->equals(BrowserName::FIREFOX());
+        return $browser->name === BrowserName::FIREFOX;
     }
 }

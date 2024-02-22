@@ -11,6 +11,6 @@ final class Command extends BrowserCommand
 {
     protected static function browserName(): BrowserName
     {
-        return BrowserName::GOOGLE_CHROME();
+        return BrowserName::GOOGLE_CHROME;
     }
 }

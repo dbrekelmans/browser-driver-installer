@@ -16,17 +16,16 @@ final class VersionResolverTest extends TestCase
 {
     private VersionResolver $versionResolver;
 
-    /** @var MockObject&CommandLineEnvironment */
-    private $commandLineEnvMock;
+    private MockObject&CommandLineEnvironment $commandLineEnvMock;
 
     public function testDoesNotSupportChrome(): void
     {
-        self::assertFalse($this->versionResolver->supports(BrowserName::GOOGLE_CHROME()));
+        self::assertFalse($this->versionResolver->supports(BrowserName::GOOGLE_CHROME));
     }
 
     public function testSupportsFirefox(): void
     {
-        self::assertTrue($this->versionResolver->supports(BrowserName::FIREFOX()));
+        self::assertTrue($this->versionResolver->supports(BrowserName::FIREFOX));
     }
 
     public function testFromLinux(): void
@@ -35,7 +34,7 @@ final class VersionResolverTest extends TestCase
 
         self::assertEquals(
             Version::fromString('83.0'),
-            $this->versionResolver->from(OperatingSystem::LINUX(), 'firefox')
+            $this->versionResolver->from(OperatingSystem::LINUX, 'firefox'),
         );
     }
 
@@ -43,12 +42,12 @@ final class VersionResolverTest extends TestCase
     {
         $this->mockCommandLineCommandOutput(
             '/Applications/Firefox.app/Contents/MacOS/firefox --version',
-            'Mozilla Firefox 83.0'
+            'Mozilla Firefox 83.0',
         );
 
         self::assertEquals(
             Version::fromString('83.0'),
-            $this->versionResolver->from(OperatingSystem::MACOS(), '/Applications/Firefox.app')
+            $this->versionResolver->from(OperatingSystem::MACOS, '/Applications/Firefox.app'),
         );
     }
 
@@ -56,12 +55,12 @@ final class VersionResolverTest extends TestCase
     {
         $this->mockCommandLineCommandOutput(
             '"C:\\Program Files\\Mozilla Firefox\\firefox" --version | more',
-            'Mozilla Firefox 83.0'
+            'Mozilla Firefox 83.0',
         );
 
         self::assertEquals(
             Version::fromString('83.0'),
-            $this->versionResolver->from(OperatingSystem::WINDOWS(), 'C:\\Program Files\\Mozilla Firefox\\firefox')
+            $this->versionResolver->from(OperatingSystem::WINDOWS, 'C:\\Program Files\\Mozilla Firefox\\firefox'),
         );
     }
 

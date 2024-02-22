@@ -7,25 +7,21 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 use Symfony\Component\Console\Input\InputInterface;
 use UnexpectedValueException;
 
-/**
- * @template T
- */
+/** @template T */
 interface Argument
 {
     public static function name(): string;
 
     /**
-     * @return mixed
+     * @return T
      *
      * @throws UnexpectedValueException
-     *
-     * @phpstan-return T
      */
-    public static function value(InputInterface $input);
+    public static function value(InputInterface $input): mixed;
 
     public function description(): string;
 
     public function mode(): ArgumentMode;
 
-    public function default(): ?string;
+    public function default(): string|null;
 }

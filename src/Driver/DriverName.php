@@ -4,15 +4,8 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static self CHROME()
- * @method static self GECKO()
- * @extends Enum<string>
- */
-final class DriverName extends Enum
+enum DriverName: string
 {
-    public const CHROME = 'chromedriver';
-    public const GECKO  = 'geckodriver';
+    case CHROME = 'chromedriver';
+    case GECKO  = 'geckodriver';
 }

@@ -8,16 +8,10 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 
 final class BrowserFactory
 {
-    private PathResolverFactory $pathResolverFactory;
-
-    private VersionResolverFactory $versionResolverFactory;
-
     public function __construct(
-        PathResolverFactory $pathResolverFactory,
-        VersionResolverFactory $versionResolverFactory
+        private readonly PathResolverFactory $pathResolverFactory,
+        private readonly VersionResolverFactory $versionResolverFactory,
     ) {
-        $this->pathResolverFactory    = $pathResolverFactory;
-        $this->versionResolverFactory = $versionResolverFactory;
     }
 
     public function createFromNameAndOperatingSystem(BrowserName $name, OperatingSystem $operatingSystem): Browser
@@ -31,7 +25,7 @@ final class BrowserFactory
     public function createFromNameOperatingSystemAndPath(
         BrowserName $name,
         OperatingSystem $operatingSystem,
-        string $path
+        string $path,
     ): Browser {
         $versionResolver = $this->versionResolverFactory->createFromName($name);
         $version         = $versionResolver->from($operatingSystem, $path);

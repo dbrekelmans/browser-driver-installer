@@ -6,17 +6,11 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
-
-use function Safe\sprintf;
 
 final class DriverFactory
 {
-    private VersionResolverFactory $versionResolverFactory;
-
-    public function __construct(VersionResolverFactory $versionResolverFactory)
+    public function __construct(private readonly VersionResolverFactory $versionResolverFactory)
     {
-        $this->versionResolverFactory = $versionResolverFactory;
     }
 
     public function createFromBrowser(Browser $browser): Driver
@@ -26,24 +20,14 @@ final class DriverFactory
 
         $name = $this->getDriverNameForBrowser($browser);
 
-        return new Driver($name, $version, $browser->operatingSystem());
+        return new Driver($name, $version, $browser->operatingSystem);
     }
 
-    /**
-     * @throws NotImplemented
-     */
     private function getDriverNameForBrowser(Browser $browser): DriverName
     {
-        $browserName = $browser->name();
-
-        if ($browserName->equals(BrowserName::GOOGLE_CHROME()) || $browserName->equals(BrowserName::CHROMIUM())) {
-            return DriverName::CHROME();
-        }
-
-        if ($browserName->equals(BrowserName::FIREFOX())) {
-            return DriverName::GECKO();
-        }
-
-        throw NotImplemented::feature(sprintf('Driver for %s', $browserName->getValue()));
+        return match ($browser->name) {
+            BrowserName::GOOGLE_CHROME, BrowserName::CHROMIUM => DriverName::CHROME,
+            BrowserName::FIREFOX => DriverName::GECKO,
+        };
     }
 }

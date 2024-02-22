@@ -60,18 +60,18 @@ class VersionResolverTest extends TestCase
     public function testFromExceptionIfCanNotParseVersionReceived(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('1.0.0.0'), OperatingSystem::MACOS());
+        $wrongChrome = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('1.0.0.0'), OperatingSystem::MACOS);
 
         $this->versionResolver->fromBrowser($wrongChrome);
 
-        $wrongChromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.0.0'), OperatingSystem::MACOS());
+        $wrongChromeJson = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('115.0.0.0'), OperatingSystem::MACOS);
 
         $this->versionResolver->fromBrowser($wrongChromeJson);
     }
 
     public function testFromGetBetaVersionForDevChrome(): void
     {
-        $devChrome = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('123.0.6300.3'), OperatingSystem::MACOS());
+        $devChrome = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('123.0.6300.3'), OperatingSystem::MACOS);
 
         self::assertEquals(Version::fromString('122.0.6261.39'), $this->versionResolver->fromBrowser($devChrome));
     }
@@ -112,7 +112,7 @@ class VersionResolverTest extends TestCase
                                     'Stable' => ['version' => '121.0.6167.184'],
                                     'Beta' => ['version' => '122.0.6261.39'],
                                 ],
-                            ])
+                            ]),
                         );
                     }
 
@@ -123,22 +123,22 @@ class VersionResolverTest extends TestCase
                                     '115.0.5751' => ['version' => '115.0.5751.20'],
                                     '122.0.6261' => ['version' => '122.0.6261.39'],
                                 ],
-                            ])
+                            ]),
                         );
                     }
                 }
 
                 return new MockResponse(
                     '<?xml version=\'1.0\' encoding=\'UTF-8\'?><Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message><Details>No such object: chromedriver/LATEST_RELEASE_xxx</Details></Error>',
-                    ['http_code' => 404]
+                    ['http_code' => 404],
                 );
-            }
+            },
         );
         $this->versionResolver = new VersionResolver($httpClientMock);
 
-        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('86.0.4240.80'), OperatingSystem::MACOS());
-        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('115.0.5751.2'), OperatingSystem::MACOS());
-        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME(), Version::fromString('88.0.4299.0'), OperatingSystem::MACOS());
-        $this->firefox    = new Browser(BrowserName::FIREFOX(), Version::fromString('81.0.2'), OperatingSystem::MACOS());
+        $this->chrome     = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('86.0.4240.80'), OperatingSystem::MACOS);
+        $this->chromeJson = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('115.0.5751.2'), OperatingSystem::MACOS);
+        $this->chromium   = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::MACOS);
+        $this->firefox    = new Browser(BrowserName::FIREFOX, Version::fromString('81.0.2'), OperatingSystem::MACOS);
     }
 }

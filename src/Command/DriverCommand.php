@@ -15,31 +15,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-use function Safe\sprintf;
+use function sprintf;
 
 abstract class DriverCommand extends Command
 {
     public const PREFIX = 'driver';
 
-    private VersionResolver $versionResolver;
-
-    private DownloaderFactory $downloaderFactory;
-
     public function __construct(
-        VersionResolver $versionResolver,
-        DownloaderFactory $downloaderFactory
+        private readonly VersionResolver $versionResolver,
+        private readonly DownloaderFactory $downloaderFactory,
     ) {
-        $this->versionResolver   = $versionResolver;
-        $this->downloaderFactory = $downloaderFactory;
-
-        parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->getValue()));
+        parent::__construct(sprintf('%s:%s', self::PREFIX, static::driverName()->value));
     }
 
     abstract protected static function driverName(): DriverName;
 
     final protected function configure(): void
     {
-        $this->setDescription(sprintf('Helps you install the %s.', static::driverName()->getValue()));
+        $this->setDescription(sprintf('Helps you install the %s.', static::driverName()->value));
 
         $this->setDefinition(
             new InputDefinition(
@@ -47,8 +40,8 @@ abstract class DriverCommand extends Command
                     new Input\InstallPathArgument(),
                     new Input\VersionOption(),
                     new Input\OperatingSystemOption(),
-                ]
-            )
+                ],
+            ),
         );
     }
 
@@ -68,7 +61,7 @@ abstract class DriverCommand extends Command
 
             if ($io->isVerbose()) {
                 $io->writeln(
-                    sprintf('Latest %s version: %s.', $driverName->getValue(), $version->toBuildString())
+                    sprintf('Latest %s version: %s.', $driverName->value, $version->toBuildString()),
                 );
             }
         } else {
@@ -79,7 +72,7 @@ abstract class DriverCommand extends Command
 
         if ($io->isVerbose()) {
             $io->writeln(
-                sprintf('Downloading %s %s.', $driver->name()->getValue(), $driver->version()->toBuildString())
+                sprintf('Downloading %s %s.', $driver->name->value, $driver->version->toBuildString()),
             );
         }
 
@@ -89,10 +82,10 @@ abstract class DriverCommand extends Command
         $io->success(
             sprintf(
                 '%s %s installed to %s',
-                $driver->name()->getValue(),
-                $driver->version()->toBuildString(),
-                $filePath
-            )
+                $driver->name->value,
+                $driver->version->toBuildString(),
+                $filePath,
+            ),
         );
 
         return self::SUCCESS;

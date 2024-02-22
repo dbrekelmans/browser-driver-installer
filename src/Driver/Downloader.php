@@ -8,9 +8,7 @@ use RuntimeException;
 
 interface Downloader
 {
-    /**
-     * @throws RuntimeException
-     */
+    /** @throws RuntimeException */
     public function download(Driver $driver, string $location): string;
 
     public function supports(Driver $driver): bool;

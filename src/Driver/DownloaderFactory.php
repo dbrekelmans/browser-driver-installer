@@ -6,8 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 
-use function get_class;
-use function Safe\sprintf;
+use function sprintf;
 
 final class DownloaderFactory
 {
@@ -22,11 +21,11 @@ final class DownloaderFactory
             }
         }
 
-        throw NotImplemented::feature(sprintf('Downloader for %s', $driver->name()->getValue()));
+        throw NotImplemented::feature(sprintf('Downloader for %s', $driver->name->value));
     }
 
-    public function register(Downloader $downloader): void
+    public function register(Downloader $downloader, string|null $identifier = null): void
     {
-        $this->downloaders[get_class($downloader)] = $downloader;
+        $this->downloaders[$identifier ?? $downloader::class] = $downloader;
     }
 }

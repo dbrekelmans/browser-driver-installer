@@ -22,8 +22,8 @@ use function dirname;
 use function Safe\fclose;
 use function Safe\fopen;
 use function Safe\fwrite;
-use function Safe\sprintf;
-use function strpos;
+use function sprintf;
+use function str_contains;
 use function sys_get_temp_dir;
 
 use const DIRECTORY_SEPARATOR;
@@ -35,17 +35,11 @@ final class Downloader implements DownloaderInterface
     private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
     private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
-    private Filesystem $filesystem;
-
-    private HttpClientInterface $httpClient;
-
-    private Extractor $archiveExtractor;
-
-    public function __construct(Filesystem $filesystem, HttpClientInterface $httpClient, Extractor $archiveExtractor)
-    {
-        $this->filesystem       = $filesystem;
-        $this->httpClient       = $httpClient;
-        $this->archiveExtractor = $archiveExtractor;
+    public function __construct(
+        private readonly Filesystem $filesystem,
+        private readonly HttpClientInterface $httpClient,
+        private readonly Extractor $archiveExtractor,
+    ) {
     }
 
     public function download(Driver $driver, string $location): string
@@ -74,7 +68,7 @@ final class Downloader implements DownloaderInterface
             throw new RuntimeException(
                 sprintf('Something went wrong moving the geckodriver to %s.', $location),
                 0,
-                $exception
+                $exception,
             );
         }
 
@@ -83,7 +77,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        return $driver->name()->equals(DriverName::GECKO());
+        return $driver->name === DriverName::GECKO;
     }
 
     /**
@@ -92,7 +86,11 @@ final class Downloader implements DownloaderInterface
      */
     private function downloadArchive(Driver $driver): string
     {
-        $temporaryFile = $this->filesystem->tempnam(sys_get_temp_dir(), 'geckodriver', $this->getArchiveExtension($driver));
+        $temporaryFile = $this->filesystem->tempnam(
+            sys_get_temp_dir(),
+            'geckodriver',
+            $this->getArchiveExtension($driver),
+        );
 
         $response = $this->httpClient->request('GET', $this->getDownloadPath($driver));
 
@@ -111,42 +109,24 @@ final class Downloader implements DownloaderInterface
         return $temporaryFile;
     }
 
-    /**
-     * @throws NotImplemented
-     */
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
             'v%s/geckodriver-v%s-%s%s',
-            $driver->version()->toString(),
-            $driver->version()->toString(),
+            $driver->version->toString(),
+            $driver->version->toString(),
             $this->getOsForDownloadPath($driver),
-            $this->getArchiveExtension($driver)
+            $this->getArchiveExtension($driver),
         );
     }
 
-    /**
-     * @throws NotImplemented
-     */
     private function getOsForDownloadPath(Driver $driver): string
     {
-        $operatingSystem = $driver->operatingSystem();
-
-        if ($operatingSystem->equals(OperatingSystem::WINDOWS())) {
-            return self::DOWNLOAD_PATH_OS_PART_WINDOWS;
-        }
-
-        if ($operatingSystem->equals(OperatingSystem::MACOS())) {
-            return self::DOWNLOAD_PATH_OS_PART_MACOS;
-        }
-
-        if ($operatingSystem->equals(OperatingSystem::LINUX())) {
-            return self::DOWNLOAD_PATH_OS_PART_LINUX;
-        }
-
-        throw NotImplemented::feature(
-            sprintf('Downloading %s for %s', $driver->name()->getValue(), $operatingSystem->getValue())
-        );
+        return match ($driver->operatingSystem) {
+            OperatingSystem::WINDOWS => self::DOWNLOAD_PATH_OS_PART_WINDOWS,
+            OperatingSystem::MACOS => self::DOWNLOAD_PATH_OS_PART_MACOS,
+            OperatingSystem::LINUX => self::DOWNLOAD_PATH_OS_PART_LINUX,
+        };
     }
 
     private function extractArchive(string $archive): string
@@ -154,7 +134,7 @@ final class Downloader implements DownloaderInterface
         $extractedFiles = $this->archiveExtractor->extract($archive, dirname($archive));
 
         foreach ($extractedFiles as $filename) {
-            if (strpos($filename, 'geckodriver') !== false) {
+            if (str_contains($filename, 'geckodriver')) {
                 return $filename;
             }
         }
@@ -164,7 +144,7 @@ final class Downloader implements DownloaderInterface
 
     private function getArchiveExtension(Driver $driver): string
     {
-        if ($driver->operatingSystem()->equals(OperatingSystem::WINDOWS())) {
+        if ($driver->operatingSystem === OperatingSystem::WINDOWS) {
             return '.zip';
         }
 

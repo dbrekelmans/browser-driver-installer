@@ -9,31 +9,21 @@ use Safe\Exceptions\PcreException;
 
 use function implode;
 use function Safe\preg_match;
-use function Safe\sprintf;
+use function sprintf;
 
 final class Version
 {
     private const DELIMITER = '.';
 
-    private string $major;
-
-    private string $minor;
-
-    private ?string $patch = null;
-
-    private ?string $build = null;
-
-    private function __construct(string $major, string $minor, ?string $patch, ?string $build)
-    {
-        $this->major = $major;
-        $this->minor = $minor;
-        $this->patch = $patch;
-        $this->build = $build;
+    private function __construct(
+        private readonly string $major,
+        private readonly string $minor,
+        private readonly string|null $patch = null,
+        private readonly string|null $build = null,
+    ) {
     }
 
-    /**
-     * @throws InvalidArgumentException
-     */
+    /** @throws InvalidArgumentException */
     public static function fromString(string $versionString): self
     {
         try {
@@ -41,17 +31,17 @@ final class Version
                 preg_match(
                     "/(?'major'\d+)\.(?'minor'\d+)(\.(?'patch'\d+))?(\.(?'build'\d+))?/",
                     $versionString,
-                    $matches
+                    $matches,
                 ) === 0
             ) {
                 throw new InvalidArgumentException(
-                    sprintf('Could not parse version string "%s".', $versionString)
+                    sprintf('Could not parse version string "%s".', $versionString),
                 );
             }
 
             if (! isset($matches['major'], $matches['minor'])) {
                 throw new InvalidArgumentException(
-                    sprintf('Could not parse version string "%s".', $versionString)
+                    sprintf('Could not parse version string "%s".', $versionString),
                 );
             }
 
@@ -59,13 +49,13 @@ final class Version
                 (string) $matches['major'],
                 (string) $matches['minor'],
                 isset($matches['patch']) ? (string) $matches['patch'] : null,
-                isset($matches['build']) ? (string) $matches['build'] : null
+                isset($matches['build']) ? (string) $matches['build'] : null,
             );
         } catch (PcreException $exception) {
             throw new InvalidArgumentException(
                 sprintf('Could not parse version string "%s".', $versionString),
                 0,
-                $exception
+                $exception,
             );
         }
     }
@@ -80,12 +70,12 @@ final class Version
         return $this->minor;
     }
 
-    public function patch(): ?string
+    public function patch(): string|null
     {
         return $this->patch;
     }
 
-    public function build(): ?string
+    public function build(): string|null
     {
         return $this->build;
     }

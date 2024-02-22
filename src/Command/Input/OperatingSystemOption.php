@@ -11,15 +11,14 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
 
+use function array_map;
 use function implode;
 use function is_string;
-use function Safe\sprintf;
+use function sprintf;
 
 use const PHP_OS_FAMILY;
 
-/**
- * @implements Option<OperatingSystem>
- */
+/** @implements Option<OperatingSystem> */
 final class OperatingSystemOption extends InputOption implements Option
 {
     public function __construct()
@@ -27,9 +26,9 @@ final class OperatingSystemOption extends InputOption implements Option
         parent::__construct(
             self::name(),
             $this->shortcut(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -38,33 +37,30 @@ final class OperatingSystemOption extends InputOption implements Option
         return 'os';
     }
 
-    public function shortcut(): ?string
+    public function shortcut(): string|null
     {
         return null;
     }
 
     public function mode(): OptionMode
     {
-        return OptionMode::REQUIRED();
+        return OptionMode::REQUIRED;
     }
 
     public function description(): string
     {
         return sprintf(
             'Operating system for which to install the driver (%s)',
-            implode('|', OperatingSystem::toArray())
+            implode('|', array_map(static fn ($case) => $case->value, OperatingSystem::cases())),
         );
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
-        return OperatingSystem::fromFamily(new Family(PHP_OS_FAMILY))->getValue();
+        return OperatingSystem::fromFamily(Family::from(PHP_OS_FAMILY))->value;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): OperatingSystem
     {
         $value = $input->getOption(self::name());
 
@@ -72,16 +68,16 @@ final class OperatingSystemOption extends InputOption implements Option
             throw UnexpectedType::expected('string', $value);
         }
 
-        if (! OperatingSystem::isValid($value)) {
+        if (OperatingSystem::tryFrom($value) === null) {
             throw new UnexpectedValueException(
                 sprintf(
                     'Unexpected value %s. Expected one of: %s',
                     $value,
-                    implode(', ', OperatingSystem::toArray())
-                )
+                    implode(', ', array_map(static fn ($case) => $case->value, OperatingSystem::cases())),
+                ),
             );
         }
 
-        return new OperatingSystem($value);
+        return OperatingSystem::from($value);
     }
 }

@@ -12,9 +12,7 @@ use const DIRECTORY_SEPARATOR;
 
 final class TarGzExtractor implements Extractor
 {
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function extract(string $archive, string $destination): array
     {
         $tarGzData = new PharData($archive);
@@ -33,9 +31,7 @@ final class TarGzExtractor implements Extractor
         return $extractedFilenames;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getSupportedExtensions(): array
     {
         return ['gz'];

@@ -8,8 +8,6 @@ use RuntimeException;
 
 interface CommandLineEnvironment
 {
-    /**
-     * @throws RuntimeException If command is not successful.
-     */
+    /** @throws RuntimeException If command is not successful. */
     public function getCommandLineSuccessfulOutput(string $command): string;
 }

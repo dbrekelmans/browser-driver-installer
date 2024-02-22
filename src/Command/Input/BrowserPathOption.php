@@ -10,9 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 use function is_string;
 
-/**
- * @implements Option<string|null>
- */
+/** @implements Option<string|null> */
 final class BrowserPathOption extends InputOption implements Option
 {
     public function __construct()
@@ -20,9 +18,9 @@ final class BrowserPathOption extends InputOption implements Option
         parent::__construct(
             self::name(),
             $this->shortcut(),
-            $this->mode()->getValue(),
+            $this->mode()->value,
             $this->description(),
-            $this->default()
+            $this->default(),
         );
     }
 
@@ -31,14 +29,14 @@ final class BrowserPathOption extends InputOption implements Option
         return 'browser-path';
     }
 
-    public function shortcut(): ?string
+    public function shortcut(): string|null
     {
         return null;
     }
 
     public function mode(): OptionMode
     {
-        return OptionMode::REQUIRED();
+        return OptionMode::REQUIRED;
     }
 
     public function description(): string
@@ -46,15 +44,12 @@ final class BrowserPathOption extends InputOption implements Option
         return 'Path to the browser if it\'s not installed in the default location';
     }
 
-    public function default(): ?string
+    public function default(): string|null
     {
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public static function value(InputInterface $input)
+    public static function value(InputInterface $input): string|null
     {
         $value = $input->getOption(self::name());
 

@@ -4,30 +4,18 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\OperatingSystem;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static self WINDOWS()
- * @method static self MACOS()
- * @method static self LINUX()
- * @extends Enum<string>
- */
-final class OperatingSystem extends Enum
+enum OperatingSystem: string
 {
-    public const WINDOWS = 'windows';
-    public const MACOS   = 'macos';
-    public const LINUX   = 'linux';
+    case WINDOWS = 'windows';
+    case MACOS   = 'macos';
+    case LINUX   = 'linux';
 
     public static function fromFamily(Family $family): self
     {
-        if ($family->equals(Family::WINDOWS())) {
-            return self::WINDOWS();
-        }
-
-        if ($family->equals(Family::DARWIN())) {
-            return self::MACOS();
-        }
-
-        return self::LINUX();
+        return match ($family) {
+            Family::WINDOWS => self::WINDOWS,
+            Family::DARWIN => self::MACOS,
+            default => self::LINUX,
+        };
     }
 }
