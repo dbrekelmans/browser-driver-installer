@@ -31,10 +31,6 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const BINARY_LINUX_JSON   = 'chromedriver-linux64';
-    private const BINARY_MAC_JSON     = 'chromedriver-mac-x64';
-    private const BINARY_WINDOWS_JSON = 'chromedriver-win32';
-
     private string $tempDir;
 
     public function __construct(
@@ -197,9 +193,9 @@ final class Downloader implements DownloaderInterface
     private function getArchiveDirectory(OperatingSystem $operatingSystem): string
     {
         return match ($operatingSystem) {
-            OperatingSystem::LINUX => self::BINARY_LINUX_JSON . DIRECTORY_SEPARATOR,
-            OperatingSystem::WINDOWS => self::BINARY_WINDOWS_JSON . DIRECTORY_SEPARATOR,
-            OperatingSystem::MACOS => self::BINARY_MAC_JSON . DIRECTORY_SEPARATOR,
+            OperatingSystem::LINUX => 'chromedriver-linux64/',
+            OperatingSystem::WINDOWS => 'chromedriver-win32/', // This weirdly contains a forward slash on windows
+            OperatingSystem::MACOS => 'chromedriver-mac-x64/',
         };
     }
 }
