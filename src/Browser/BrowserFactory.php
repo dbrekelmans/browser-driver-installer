@@ -9,8 +9,8 @@ use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 final class BrowserFactory
 {
     public function __construct(
-        private PathResolverFactory $pathResolverFactory,
-        private VersionResolverFactory $versionResolverFactory,
+        private readonly PathResolverFactory $pathResolverFactory,
+        private readonly VersionResolverFactory $versionResolverFactory,
     ) {
     }
 
