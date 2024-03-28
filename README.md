@@ -34,7 +34,7 @@ Run `bdi` or `bdi detect` to automatically detect your installed browsers and in
 
 If you want to install any working driver for a specific browser, run `bdi browser:<browser-name>`.
 If you want to install a specific driver, run `bdi driver:<driver-name>` (defaults to the latest version. Use `--driver-version=<version>` to install a different version).
-You can specify a directory where the driver will be installed with `bdi detect <path-to-direcotry>`.
+You can specify a directory where the driver will be installed with `bdi detect <path-to-directory>`.
 
 For a full list of available commands, run `bdi list`.
 
