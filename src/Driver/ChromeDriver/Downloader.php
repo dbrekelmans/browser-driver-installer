@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
@@ -18,7 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
-
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -26,7 +26,6 @@ use function Safe\fwrite;
 use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
-
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
@@ -44,6 +43,9 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
+        if ($driver->cpuArchitecture === CpuArchitecture::ARM64 && $driver->operatingSystem === OperatingSystem::LINUX) {
+            return false;
+        }
         return $driver->name === DriverName::CHROME;
     }
 
@@ -179,7 +181,7 @@ final class Downloader implements DownloaderInterface
      */
     public function cleanArchiveStructure(Driver $driver, string $unzipLocation, array $extractedFiles): array
     {
-        $archiveDirectory = $this->getArchiveDirectory($driver->operatingSystem);
+        $archiveDirectory = $this->getArchiveDirectory($driver);
         $filename         = $this->getFileName($driver->operatingSystem);
         $this->filesystem->rename(
             $unzipLocation . DIRECTORY_SEPARATOR . $archiveDirectory . $filename,
@@ -190,9 +192,13 @@ final class Downloader implements DownloaderInterface
         return str_replace($archiveDirectory, '', $extractedFiles);
     }
 
-    private function getArchiveDirectory(OperatingSystem $operatingSystem): string
+    private function getArchiveDirectory(Driver $driver): string
     {
-        return match ($operatingSystem) {
+        if ($driver->operatingSystem === OperatingSystem::MACOS && $driver->cpuArchitecture === CpuArchitecture::ARM64) {
+            return 'chromedriver-mac-arm64/';
+        }
+
+        return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'chromedriver-linux64/',
             OperatingSystem::WINDOWS => 'chromedriver-win32/', // This weirdly contains a forward slash on windows
             OperatingSystem::MACOS => 'chromedriver-mac-x64/',

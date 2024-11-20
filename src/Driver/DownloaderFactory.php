@@ -21,7 +21,7 @@ final class DownloaderFactory
             }
         }
 
-        throw NotImplemented::feature(sprintf('Downloader for %s', $driver->name->value));
+        throw NotImplemented::feature(sprintf('Downloader for %s %s', $driver->name->value, $driver->cpuArchitecture->value));
     }
 
     public function register(Downloader $downloader, string|null $identifier = null): void

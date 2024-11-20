@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver;
 
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader;
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloaderFactory;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
@@ -21,7 +22,7 @@ final class DownloaderFactoryTest extends TestCase
 
         $this->expectException(NotImplemented::class);
         $factory->createFromDriver(
-            new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+            new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
         );
     }
 
@@ -36,7 +37,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloader,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
             ),
         );
     }
@@ -60,7 +61,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderB,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
             ),
         );
     }
@@ -80,7 +81,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderA,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
             ),
         );
     }

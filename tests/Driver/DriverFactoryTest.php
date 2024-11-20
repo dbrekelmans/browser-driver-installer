@@ -6,6 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverFactory;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
@@ -39,22 +40,25 @@ final class DriverFactoryTest extends TestCase
         self::assertSame($expected->name, $actual->name);
         self::assertSame($expected->version->toBuildString(), $actual->version->toBuildString());
         self::assertSame($expected->operatingSystem, $actual->operatingSystem);
+        self::assertSame($expected->cpuArchitecture, $actual->cpuArchitecture);
     }
 
     /** @return array<string, array{Driver, Browser}> */
     public static function createFromBrowserDataProvider(): array
     {
+        $cpuArchitecture = CpuArchitecture::detectFromPhp();
+
         return [
             'google_chrome' => [
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, $cpuArchitecture),
                 new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
             'chromium' => [
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, $cpuArchitecture),
                 new Browser(BrowserName::CHROMIUM, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
             'firefox' => [
-                new Driver(DriverName::GECKO, Version::fromString('1.0.0'), OperatingSystem::LINUX),
+                new Driver(DriverName::GECKO, Version::fromString('1.0.0'), OperatingSystem::LINUX, $cpuArchitecture),
                 new Browser(BrowserName::FIREFOX, Version::fromString('1.0.0'), OperatingSystem::LINUX),
             ],
         ];

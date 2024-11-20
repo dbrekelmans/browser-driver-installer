@@ -40,6 +40,7 @@ abstract class DriverCommand extends Command
                     new Input\InstallPathArgument(),
                     new Input\VersionOption(),
                     new Input\OperatingSystemOption(),
+                    new Input\CpuArchitectureOption(),
                 ],
             ),
         );
@@ -54,6 +55,7 @@ abstract class DriverCommand extends Command
         $installPath     = Input\InstallPathArgument::value($input);
         $versionString   = Input\VersionOption::value($input);
         $operatingSystem = Input\OperatingSystemOption::value($input);
+        $cpuArchitecture = Input\CpuArchitectureOption::value($input);
 
         // TODO: move this into VersionOption class
         if ($versionString === Input\VersionOption::LATEST) {
@@ -68,7 +70,7 @@ abstract class DriverCommand extends Command
             $version = Version::fromString($versionString);
         }
 
-        $driver = new Driver($driverName, $version, $operatingSystem);
+        $driver = new Driver($driverName, $version, $operatingSystem, $cpuArchitecture);
 
         if ($io->isVerbose()) {
             $io->writeln(
@@ -81,9 +83,10 @@ abstract class DriverCommand extends Command
 
         $io->success(
             sprintf(
-                '%s %s installed to %s',
+                '%s %s%s installed to %s',
                 $driver->name->value,
                 $driver->version->toBuildString(),
+                $driver->cpuArchitecture->toCommandOutput(),
                 $filePath,
             ),
         );

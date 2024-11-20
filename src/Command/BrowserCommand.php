@@ -83,7 +83,7 @@ abstract class BrowserCommand extends Command
         $filePath         = $driverDownloader->download($driver, $installPath);
 
         $io->success(
-            sprintf('%s %s installed to %s', $driver->name->value, $driver->version->toBuildString(), $filePath),
+            sprintf('%s %s%s installed to %s', $driver->name->value, $driver->version->toBuildString(), $driver->cpuArchitecture->toCommandOutput(), $filePath),
         );
 
         return self::SUCCESS;
