@@ -43,7 +43,7 @@ final class Downloader implements DownloaderInterface
 
     public function supports(Driver $driver): bool
     {
-        if ($driver->cpuArchitecture === CpuArchitecture::ARM64 && $driver->operatingSystem === OperatingSystem::LINUX) {
+        if ($driver->cpuArchitecture === CpuArchitecture::ARM64 && $driver->operatingSystem !== OperatingSystem::MACOS) {
             return false;
         }
         return $driver->name === DriverName::CHROME;
