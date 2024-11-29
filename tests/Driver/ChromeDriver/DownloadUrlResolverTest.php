@@ -43,9 +43,14 @@ final class DownloadUrlResolverTest extends TestCase
             'https://dynamic-url-2/',
         ];
 
-        yield 'new version macos' => [
+        yield 'new version macos x86_64' => [
             new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::X86_64),
             'https://dynamic-url-3/',
+        ];
+
+        yield 'new version macos arm64' => [
+            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::ARM64),
+            'https://dynamic-url-4/',
         ];
 
         yield 'new version windows' => [
@@ -75,6 +80,7 @@ final class DownloadUrlResolverTest extends TestCase
                                                 ['platform' => 'win32', 'url' => 'https://dynamic-url-1/'],
                                                 ['platform' => 'linux64', 'url' => 'https://dynamic-url-2/'],
                                                 ['platform' => 'mac-x64', 'url' => 'https://dynamic-url-3/'],
+                                                ['platform' => 'mac-arm64', 'url' => 'https://dynamic-url-4/'],
                                             ],
                                         ],
                                     ],
