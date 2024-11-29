@@ -86,7 +86,7 @@ abstract class DriverCommand extends Command
                 '%s %s%s installed to %s',
                 $driver->name->value,
                 $driver->version->toBuildString(),
-                $driver->cpuArchitecture->toCommandOutput(),
+                $driver->cpuArchitecture->toString(),
                 $filePath,
             ),
         );
