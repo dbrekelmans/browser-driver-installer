@@ -7,7 +7,7 @@ enum CpuArchitecture: string
     case X86_64 = 'x86_64';
     case ARM64  = 'arm64';
 
-    public function toCommandOutput(): string
+    public function toString(): string
     {
         return match ($this) {
             self::X86_64 => '',
