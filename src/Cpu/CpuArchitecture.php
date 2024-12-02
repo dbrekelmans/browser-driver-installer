@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DBrekelmans\BrowserDriverInstaller\Cpu;
+
+use function php_uname;
 
 enum CpuArchitecture: string
 {

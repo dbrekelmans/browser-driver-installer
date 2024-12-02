@@ -10,6 +10,7 @@ use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
+
 use function is_string;
 use function sprintf;
 
@@ -66,6 +67,7 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
         if ($driver->operatingSystem === OperatingSystem::MACOS && $driver->cpuArchitecture === CpuArchitecture::ARM64) {
             return 'chromedriver_mac_arm64';
         }
+
         return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'chromedriver_linux64',
             OperatingSystem::MACOS => 'chromedriver_mac64',
@@ -78,6 +80,7 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
         if ($driver->cpuArchitecture === CpuArchitecture::ARM64) {
             return 'mac-arm64';
         }
+
         return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'linux64',
             OperatingSystem::MACOS => 'mac-x64',

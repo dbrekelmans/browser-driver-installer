@@ -17,6 +17,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function basename;
 use function dirname;
 use function Safe\fclose;
@@ -25,38 +26,38 @@ use function Safe\fwrite;
 use function sprintf;
 use function str_contains;
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
     private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win';
-    private const DOWNLOAD_PATH_OS_PART_MACOS = 'macos';
-    private const DOWNLOAD_PATH_OS_PART_LINUX = 'linux';
-    private const DOWNLOAD_BASE_PATH = 'https://github.com/mozilla/geckodriver/releases/download/';
+    private const DOWNLOAD_PATH_OS_PART_MACOS   = 'macos';
+    private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux';
+    private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
     public function __construct(
-        private readonly Filesystem          $filesystem,
+        private readonly Filesystem $filesystem,
         private readonly HttpClientInterface $httpClient,
-        private readonly Extractor           $archiveExtractor,
-    )
-    {
+        private readonly Extractor $archiveExtractor,
+    ) {
     }
 
     public function download(Driver $driver, string $location): string
     {
         try {
             $archive = $this->downloadArchive($driver);
-        } catch (NotImplemented|FilesystemException|IOException|TransportExceptionInterface $exception) {
+        } catch (NotImplemented | FilesystemException | IOException | TransportExceptionInterface $exception) {
             throw new RuntimeException('Something went wrong downloading the geckodriver archive.', 0, $exception);
         }
 
         try {
             $binary = $this->extractArchive($archive);
-        } catch (IOException|RuntimeException $exception) {
+        } catch (IOException | RuntimeException $exception) {
             throw new RuntimeException('Something went wrong extracting the geckodriver archive.', 0, $exception);
         }
 
-        if (!$this->filesystem->exists($location)) {
+        if (! $this->filesystem->exists($location)) {
             $this->filesystem->mkdir($location);
         }
 
@@ -112,13 +113,13 @@ final class Downloader implements DownloaderInterface
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
-                'v%s/geckodriver-v%s-%s%s%s',
-                $driver->version->toString(),
-                $driver->version->toString(),
-                $this->getOsForDownloadPath($driver),
-                $this->getCpuArchForDownloadPath($driver),
-                $this->getArchiveExtension($driver),
-            );
+            'v%s/geckodriver-v%s-%s%s%s',
+            $driver->version->toString(),
+            $driver->version->toString(),
+            $this->getOsForDownloadPath($driver),
+            $this->getCpuArchForDownloadPath($driver),
+            $this->getArchiveExtension($driver),
+        );
     }
 
     private function getOsForDownloadPath(Driver $driver): string
@@ -138,12 +139,14 @@ final class Downloader implements DownloaderInterface
                 CpuArchitecture::ARM64 => '-aarch64',
             };
         }
+
         if ($driver->operatingSystem === OperatingSystem::MACOS) {
             return match ($driver->cpuArchitecture) {
                 CpuArchitecture::X86_64 => '',
                 CpuArchitecture::ARM64 => '-aarch64',
             };
         }
+
         // Windows
         return match ($driver->cpuArchitecture) {
             CpuArchitecture::X86_64 => '64',

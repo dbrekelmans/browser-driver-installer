@@ -19,6 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use UnexpectedValueException;
+
 use function in_array;
 use function Safe\fclose;
 use function Safe\fopen;
@@ -26,6 +27,7 @@ use function Safe\fwrite;
 use function sprintf;
 use function str_replace;
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
@@ -46,6 +48,7 @@ final class Downloader implements DownloaderInterface
         if ($driver->cpuArchitecture === CpuArchitecture::ARM64 && $driver->operatingSystem !== OperatingSystem::MACOS) {
             return false;
         }
+
         return $driver->name === DriverName::CHROME;
     }
 

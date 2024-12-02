@@ -9,6 +9,7 @@ use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
+
 use function array_map;
 use function implode;
 use function is_string;

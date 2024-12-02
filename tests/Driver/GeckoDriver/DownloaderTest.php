@@ -16,7 +16,9 @@ use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function sys_get_temp_dir;
+
 use const DIRECTORY_SEPARATOR;
 
 class DownloaderTest extends TestCase
