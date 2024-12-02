@@ -135,21 +135,21 @@ final class Downloader implements DownloaderInterface
     {
         if ($driver->operatingSystem === OperatingSystem::LINUX) {
             return match ($driver->cpuArchitecture) {
-                CpuArchitecture::X86_64 => '64',
+                CpuArchitecture::AMD64 => '64',
                 CpuArchitecture::ARM64 => '-aarch64',
             };
         }
 
         if ($driver->operatingSystem === OperatingSystem::MACOS) {
             return match ($driver->cpuArchitecture) {
-                CpuArchitecture::X86_64 => '',
+                CpuArchitecture::AMD64 => '',
                 CpuArchitecture::ARM64 => '-aarch64',
             };
         }
 
         // Windows
         return match ($driver->cpuArchitecture) {
-            CpuArchitecture::X86_64 => '64',
+            CpuArchitecture::AMD64 => '64',
             CpuArchitecture::ARM64 => '-aarch64',
         };
     }

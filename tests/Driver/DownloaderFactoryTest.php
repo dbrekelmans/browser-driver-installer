@@ -22,7 +22,7 @@ final class DownloaderFactoryTest extends TestCase
 
         $this->expectException(NotImplemented::class);
         $factory->createFromDriver(
-            new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
+            new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
         );
     }
 
@@ -37,7 +37,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloader,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
             ),
         );
     }
@@ -61,7 +61,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderB,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
             ),
         );
     }
@@ -81,7 +81,7 @@ final class DownloaderFactoryTest extends TestCase
         self::assertSame(
             $downloaderA,
             $factory->createFromDriver(
-                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64),
+                new Driver(DriverName::CHROME, Version::fromString('1.0.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
             ),
         );
     }

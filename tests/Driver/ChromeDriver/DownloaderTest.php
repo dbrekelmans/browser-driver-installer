@@ -36,7 +36,7 @@ class DownloaderTest extends TestCase
 
     public function testSupportChrome(): void
     {
-        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::LINUX, CpuArchitecture::X86_64);
+        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::LINUX, CpuArchitecture::AMD64);
         self::assertTrue($this->downloader->supports($chromeDriverLinux));
     }
 
@@ -48,7 +48,7 @@ class DownloaderTest extends TestCase
 
     public function testDoesNotSupportGecko(): void
     {
-        $geckoDriver = new Driver(DriverName::GECKO, Version::fromString('0.27.0'), OperatingSystem::LINUX, CpuArchitecture::X86_64);
+        $geckoDriver = new Driver(DriverName::GECKO, Version::fromString('0.27.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64);
         self::assertFalse($this->downloader->supports($geckoDriver));
     }
 
@@ -56,7 +56,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS);
 
-        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::MACOS, CpuArchitecture::X86_64);
+        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::MACOS, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -100,7 +100,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::MACOS, true);
 
-        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::X86_64);
+        $chromeDriverMac = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -122,7 +122,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX);
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::LINUX, CpuArchitecture::X86_64);
+        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::LINUX, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -144,7 +144,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::LINUX, true);
 
-        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::LINUX, CpuArchitecture::X86_64);
+        $chromeDriverLinux = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::LINUX, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -166,7 +166,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS);
 
-        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS, CpuArchitecture::X86_64);
+        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('86.0.4240.22'), OperatingSystem::WINDOWS, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
@@ -188,7 +188,7 @@ class DownloaderTest extends TestCase
     {
         $this->mockFsAndArchiveExtractorForSuccessfulDownload(OperatingSystem::WINDOWS, true);
 
-        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS, CpuArchitecture::X86_64);
+        $chromeDriverWindows = new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS, CpuArchitecture::AMD64);
 
         $this->downloadUrlResolver
             ->expects(self::once())
