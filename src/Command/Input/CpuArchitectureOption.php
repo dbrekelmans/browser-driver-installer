@@ -6,7 +6,6 @@ namespace DBrekelmans\BrowserDriverInstaller\Command\Input;
 
 use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
-use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use UnexpectedValueException;
@@ -15,7 +14,7 @@ use function implode;
 use function is_string;
 use function sprintf;
 
-/** @implements Option<OperatingSystem> */
+/** @implements Option<CpuArchitecture> */
 final class CpuArchitectureOption extends InputOption implements Option
 {
     public function __construct()
