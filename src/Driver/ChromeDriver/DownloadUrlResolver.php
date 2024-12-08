@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\DownloadUrlResolver as DownloadUrlResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
@@ -40,6 +41,10 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
             throw new UnexpectedValueException(sprintf('Could not find the chromedriver downloads for version %s', $driver->version->toString()));
         }
 
+        if ($driver->cpuArchitecture === CpuArchitecture::ARM64 && $driver->operatingSystem !== OperatingSystem::MACOS) {
+            throw new UnexpectedValueException('Chromedriver ARM64 is only available on macOS.');
+        }
+
         $platformName = $this->getPlatformName($driver);
         $downloads    = $versions['builds'][$driver->version->toString()]['downloads']['chromedriver'];
         foreach ($downloads as $download) {
@@ -59,6 +64,10 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
 
     private function getBinaryName(Driver $driver): string
     {
+        if ($driver->operatingSystem === OperatingSystem::MACOS && $driver->cpuArchitecture === CpuArchitecture::ARM64) {
+            return 'chromedriver_mac_arm64';
+        }
+
         return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'chromedriver_linux64',
             OperatingSystem::MACOS => 'chromedriver_mac64',
@@ -68,6 +77,10 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
 
     private function getPlatformName(Driver $driver): string
     {
+        if ($driver->cpuArchitecture === CpuArchitecture::ARM64) {
+            return 'mac-arm64';
+        }
+
         return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'linux64',
             OperatingSystem::MACOS => 'mac-x64',

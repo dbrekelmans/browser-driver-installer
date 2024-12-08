@@ -6,6 +6,7 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver;
 
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 
 final class DriverFactory
 {
@@ -20,7 +21,10 @@ final class DriverFactory
 
         $name = $this->getDriverNameForBrowser($browser);
 
-        return new Driver($name, $version, $browser->operatingSystem);
+        // Detect CPU arch
+        $cpuArchitecture = CpuArchitecture::detectFromPhp();
+
+        return new Driver($name, $version, $browser->operatingSystem, $cpuArchitecture);
     }
 
     private function getDriverNameForBrowser(Browser $browser): DriverName

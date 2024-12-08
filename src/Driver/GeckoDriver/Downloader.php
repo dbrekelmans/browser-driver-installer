@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 
 use DBrekelmans\BrowserDriverInstaller\Archive\Extractor;
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
@@ -30,9 +31,9 @@ use const DIRECTORY_SEPARATOR;
 
 final class Downloader implements DownloaderInterface
 {
-    private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win64';
+    private const DOWNLOAD_PATH_OS_PART_WINDOWS = 'win';
     private const DOWNLOAD_PATH_OS_PART_MACOS   = 'macos';
-    private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux64';
+    private const DOWNLOAD_PATH_OS_PART_LINUX   = 'linux';
     private const DOWNLOAD_BASE_PATH            = 'https://github.com/mozilla/geckodriver/releases/download/';
 
     public function __construct(
@@ -112,10 +113,11 @@ final class Downloader implements DownloaderInterface
     private function getDownloadPath(Driver $driver): string
     {
         return self::DOWNLOAD_BASE_PATH . sprintf(
-            'v%s/geckodriver-v%s-%s%s',
+            'v%s/geckodriver-v%s-%s%s%s',
             $driver->version->toString(),
             $driver->version->toString(),
             $this->getOsForDownloadPath($driver),
+            $this->getCpuArchForDownloadPath($driver),
             $this->getArchiveExtension($driver),
         );
     }
@@ -126,6 +128,29 @@ final class Downloader implements DownloaderInterface
             OperatingSystem::WINDOWS => self::DOWNLOAD_PATH_OS_PART_WINDOWS,
             OperatingSystem::MACOS => self::DOWNLOAD_PATH_OS_PART_MACOS,
             OperatingSystem::LINUX => self::DOWNLOAD_PATH_OS_PART_LINUX,
+        };
+    }
+
+    private function getCpuArchForDownloadPath(Driver $driver): string
+    {
+        if ($driver->operatingSystem === OperatingSystem::LINUX) {
+            return match ($driver->cpuArchitecture) {
+                CpuArchitecture::AMD64 => '64',
+                CpuArchitecture::ARM64 => '-aarch64',
+            };
+        }
+
+        if ($driver->operatingSystem === OperatingSystem::MACOS) {
+            return match ($driver->cpuArchitecture) {
+                CpuArchitecture::AMD64 => '',
+                CpuArchitecture::ARM64 => '-aarch64',
+            };
+        }
+
+        // Windows
+        return match ($driver->cpuArchitecture) {
+            CpuArchitecture::AMD64 => '64',
+            CpuArchitecture::ARM64 => '-aarch64',
         };
     }
 

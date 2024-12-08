@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DBrekelmans\BrowserDriverInstaller\Tests\Driver\ChromeDriver;
 
+use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\ChromeDriver\DownloadUrlResolver;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
@@ -24,32 +25,37 @@ final class DownloadUrlResolverTest extends TestCase
     public static function byDriverDataProvider(): iterable
     {
         yield 'legacy version linux' => [
-            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::LINUX),
+            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
             'https://chromedriver.storage.googleapis.com/88.0.4299.0/chromedriver_linux64.zip',
         ];
 
         yield 'legacy version macos' => [
-            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::MACOS),
+            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::MACOS, CpuArchitecture::AMD64),
             'https://chromedriver.storage.googleapis.com/88.0.4299.0/chromedriver_mac64.zip',
         ];
 
         yield 'legacy version windows' => [
-            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::WINDOWS),
+            new Driver(DriverName::CHROME, Version::fromString('88.0.4299.0'), OperatingSystem::WINDOWS, CpuArchitecture::AMD64),
             'https://chromedriver.storage.googleapis.com/88.0.4299.0/chromedriver_win32.zip',
         ];
 
         yield 'new version linux' => [
-            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::LINUX),
+            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::LINUX, CpuArchitecture::AMD64),
             'https://dynamic-url-2/',
         ];
 
-        yield 'new version macos' => [
-            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS),
+        yield 'new version macos x86_64' => [
+            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::AMD64),
             'https://dynamic-url-3/',
         ];
 
+        yield 'new version macos arm64' => [
+            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::MACOS, CpuArchitecture::ARM64),
+            'https://dynamic-url-4/',
+        ];
+
         yield 'new version windows' => [
-            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS),
+            new Driver(DriverName::CHROME, Version::fromString('115.0.5790.170'), OperatingSystem::WINDOWS, CpuArchitecture::AMD64),
             'https://dynamic-url-1/',
         ];
     }
@@ -75,6 +81,7 @@ final class DownloadUrlResolverTest extends TestCase
                                                 ['platform' => 'win32', 'url' => 'https://dynamic-url-1/'],
                                                 ['platform' => 'linux64', 'url' => 'https://dynamic-url-2/'],
                                                 ['platform' => 'mac-x64', 'url' => 'https://dynamic-url-3/'],
+                                                ['platform' => 'mac-arm64', 'url' => 'https://dynamic-url-4/'],
                                             ],
                                         ],
                                     ],
