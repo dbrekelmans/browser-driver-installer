@@ -7,14 +7,11 @@ namespace DBrekelmans\BrowserDriverInstaller\Driver\GeckoDriver;
 use DBrekelmans\BrowserDriverInstaller\Browser\Browser;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Driver\VersionResolver as VersionResolverInterface;
-use DBrekelmans\BrowserDriverInstaller\Exception\UnexpectedType;
 use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-use function is_string;
 use function Safe\json_decode;
-use function Safe\krsort;
 use function sprintf;
 
 final class VersionResolver implements VersionResolverInterface
@@ -46,10 +43,6 @@ final class VersionResolver implements VersionResolverInterface
         $minRequiredBrowserVersions = self::MIN_REQUIRED_BROWSER_VERSIONS;
         krsort($minRequiredBrowserVersions);
         foreach ($minRequiredBrowserVersions as $minReqVersion => $geckoVersion) {
-            if (! is_string($geckoVersion)) {
-                throw UnexpectedType::expected('string', $geckoVersion);
-            }
-
             if ($browserMajorVersion >= $minReqVersion) {
                 return Version::fromString($geckoVersion);
             }
