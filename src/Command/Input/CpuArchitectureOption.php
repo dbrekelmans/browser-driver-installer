@@ -54,7 +54,7 @@ final class CpuArchitectureOption extends InputOption implements Option
 
     public function default(): string|null
     {
-        return CpuArchitecture::AMD64->value;
+        return CpuArchitecture::detectFromPhp()->value;
     }
 
     public static function value(InputInterface $input): CpuArchitecture
