@@ -55,10 +55,19 @@ final class VersionResolver implements VersionResolverInterface
      */
     private static function getWindowsCommandsForVersion(): array
     {
-        return [
-            "powershell \"(Get-Item 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe').VersionInfo.ProductVersion\"",
-            'reg query HKCU\Software\Microsoft\Edge\BLBeacon /v version',
+        $versions = [
+            'Edge',
+            'Edge Beta',
+            'Edge Dev',
+            'Edge SxS',
         ];
+
+        $commands = [];
+        foreach ($versions as $version) {
+            $commands[] = sprintf('reg query HKCU\Software\Microsoft\%s\BLBeacon /v version', $version);
+        }
+
+        return $commands;
     }
 
     private function getVersionFromCommandLine(string $command): Version
