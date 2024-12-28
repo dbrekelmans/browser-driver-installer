@@ -48,7 +48,7 @@ final class VersionResolver implements VersionResolverInterface
                 $exception
         ) {
             throw new UnexpectedValueException(
-                'Something went wrong getting the driver version from the chromedriver API.',
+                'Something went wrong getting the driver version from the msedgedriver API.',
                 0,
                 $exception,
             );
@@ -58,7 +58,7 @@ final class VersionResolver implements VersionResolverInterface
             return Version::fromString($versionString);
         } catch (InvalidArgumentException $exception) {
             throw new UnexpectedValueException(
-                'Content received from chromedriver API could not be parsed into a version.',
+                'Content received from msedgedriver API could not be parsed into a version.',
                 0,
                 $exception,
             );
