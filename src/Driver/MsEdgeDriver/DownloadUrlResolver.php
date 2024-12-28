@@ -30,7 +30,7 @@ final class DownloadUrlResolver implements DownloadUrlResolverInterface
         return match ($driver->operatingSystem) {
             OperatingSystem::LINUX => 'edgedriver_linux64',
             OperatingSystem::MACOS => 'edgedriver_mac64',
-            OperatingSystem::WINDOWS => 'edgedriver_win32',
+            OperatingSystem::WINDOWS => 'edgedriver_win64', // TODO: 32bit?
         };
     }
 }

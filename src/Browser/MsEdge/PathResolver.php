@@ -16,7 +16,7 @@ class PathResolver implements PathResolverInterface
         return match ($operatingSystem) {
             OperatingSystem::LINUX => throw new RuntimeException('Not implemented yet.'),
             OperatingSystem::MACOS => '/Applications/Microsoft\ Edge.app',
-            OperatingSystem::WINDOWS => throw new RuntimeException('Not implemented yet.'),
+            OperatingSystem::WINDOWS => 'C:\Program Files (x86)\Microsoft\Edge\Application',
         };
     }
 
