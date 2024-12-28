@@ -71,7 +71,7 @@ final class VersionResolver implements VersionResolverInterface
         $version  = $response->getContent();
         $version  = str_replace(chr(0), '', substr($version, 2));
 
-        return Version::fromString((string) $version);
+        return Version::fromString($version);
     }
 
     public function supports(Browser $browser): bool
@@ -85,7 +85,7 @@ final class VersionResolver implements VersionResolverInterface
         $version  = $response->getContent();
         $version  = str_replace(chr(0), '', substr($version, 2));
 
-        return Version::fromString((string) $version);
+        return Version::fromString($version);
     }
 
     /**

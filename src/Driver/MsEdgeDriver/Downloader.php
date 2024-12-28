@@ -130,7 +130,7 @@ final class Downloader implements DownloaderInterface
     {
         $unzipLocation  = $this->tempDir . DIRECTORY_SEPARATOR . 'msedgedriver';
         $extractedFiles = $this->archiveExtractor->extract($archive, $unzipLocation);
-        $filePath = $this->getFilePath($unzipLocation, $driver->operatingSystem);
+        $filePath       = $this->getFilePath($unzipLocation, $driver->operatingSystem);
 
         if (
             ! in_array(

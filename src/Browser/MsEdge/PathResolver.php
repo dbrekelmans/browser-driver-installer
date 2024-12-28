@@ -7,17 +7,16 @@ namespace DBrekelmans\BrowserDriverInstaller\Browser\MsEdge;
 use DBrekelmans\BrowserDriverInstaller\Browser\BrowserName;
 use DBrekelmans\BrowserDriverInstaller\Browser\PathResolver as PathResolverInterface;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
+use RuntimeException;
 
 class PathResolver implements PathResolverInterface
 {
     public function from(OperatingSystem $operatingSystem): string
     {
         return match ($operatingSystem) {
-            // TODO
-//            OperatingSystem::LINUX => 'chromium',
+            OperatingSystem::LINUX => throw new RuntimeException('Not implemented yet.'),
             OperatingSystem::MACOS => '/Applications/Microsoft\ Edge.app',
-            // TODO
-//            OperatingSystem::WINDOWS => 'C:\\Program Files (x86)\\Chromium\\Application\\chrome.exe',
+            OperatingSystem::WINDOWS => throw new RuntimeException('Not implemented yet.'),
         };
     }
 

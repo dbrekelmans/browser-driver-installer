@@ -55,7 +55,7 @@ $driverVersionResolverFactory->register($msedgeDriverVersionResolver = new MsEdg
 $driverDownloaderFactory = new Driver\DownloaderFactory();
 $driverDownloaderFactory->register(new ChromeDriver\Downloader($filesystem, $httpClient, $multiExtractor, $chromeDriverDownloadUrlResolver = new ChromeDriver\DownloadUrlResolver($httpClient)));
 $driverDownloaderFactory->register(new GeckoDriver\Downloader($filesystem, $httpClient, $multiExtractor));
-$driverDownloaderFactory->register(new MsEdgeDriver\Downloader($filesystem, $httpClient, $multiExtractor, $msedgeDriverDownloadUrlResolver = new MsEdgeDriver\DownloadUrlResolver($httpClient)));
+$driverDownloaderFactory->register(new MsEdgeDriver\Downloader($filesystem, $httpClient, $multiExtractor, $msedgeDriverDownloadUrlResolver = new MsEdgeDriver\DownloadUrlResolver()));
 
 $browserFactory = new Browser\BrowserFactory($browserPathResolverFactory, $browserVersionResolverFactory);
 $driverFactory = new Driver\DriverFactory($driverVersionResolverFactory);
