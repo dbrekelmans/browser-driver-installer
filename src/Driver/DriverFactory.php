@@ -28,6 +28,7 @@ final class DriverFactory
         return match ($browser->name) {
             BrowserName::GOOGLE_CHROME, BrowserName::CHROMIUM => DriverName::CHROME,
             BrowserName::FIREFOX => DriverName::GECKO,
+            BrowserName::MSEDGE => DriverName::MSEDGE,
         };
     }
 }
