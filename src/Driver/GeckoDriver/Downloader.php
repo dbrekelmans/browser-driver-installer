@@ -9,7 +9,6 @@ use DBrekelmans\BrowserDriverInstaller\Cpu\CpuArchitecture;
 use DBrekelmans\BrowserDriverInstaller\Driver\Downloader as DownloaderInterface;
 use DBrekelmans\BrowserDriverInstaller\Driver\Driver;
 use DBrekelmans\BrowserDriverInstaller\Driver\DriverName;
-use DBrekelmans\BrowserDriverInstaller\Exception\NotImplemented;
 use DBrekelmans\BrowserDriverInstaller\OperatingSystem\OperatingSystem;
 use RuntimeException;
 use Safe\Exceptions\FilesystemException;
@@ -47,7 +46,7 @@ final class Downloader implements DownloaderInterface
     {
         try {
             $archive = $this->downloadArchive($driver);
-        } catch (NotImplemented | FilesystemException | IOException | TransportExceptionInterface $exception) {
+        } catch (FilesystemException | IOException | TransportExceptionInterface $exception) {
             throw new RuntimeException('Something went wrong downloading the geckodriver archive.', 0, $exception);
         }
 

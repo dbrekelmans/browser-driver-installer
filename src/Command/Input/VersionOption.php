@@ -57,7 +57,7 @@ final class VersionOption extends InputOption implements Option
         return 'Driver version to install';
     }
 
-    public function default(): string|null
+    public function default(): string
     {
         return self::LATEST;
     }

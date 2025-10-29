@@ -81,7 +81,7 @@ final class DetectCommand extends Command
                 if ($innerReturnCode > $returnCode) {
                     $returnCode = $innerReturnCode;
                 }
-            } catch (Throwable $exception) { // @phpstan-ignore-line
+            } catch (Throwable $exception) {
                 if ($io->isVerbose()) {
                     $io->warning(sprintf('Could not execute command "%s".', $commandName));
                 }

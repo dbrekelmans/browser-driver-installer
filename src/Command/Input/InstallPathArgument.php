@@ -38,7 +38,7 @@ final class InstallPathArgument extends InputArgument implements Argument
         return 'Location where the driver will be installed';
     }
 
-    public function default(): string|null
+    public function default(): string
     {
         return '.';
     }

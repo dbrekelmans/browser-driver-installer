@@ -55,7 +55,7 @@ final class OperatingSystemOption extends InputOption implements Option
         );
     }
 
-    public function default(): string|null
+    public function default(): string
     {
         return OperatingSystem::fromFamily(Family::from(PHP_OS_FAMILY))->value;
     }

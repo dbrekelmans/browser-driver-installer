@@ -11,6 +11,7 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function krsort;
 use function Safe\json_decode;
 use function sprintf;
 
