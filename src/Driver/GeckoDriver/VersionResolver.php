@@ -11,6 +11,7 @@ use DBrekelmans\BrowserDriverInstaller\Version;
 use RuntimeException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function getenv;
 use function krsort;
 use function Safe\json_decode;
 use function sprintf;
@@ -19,9 +20,15 @@ final class VersionResolver implements VersionResolverInterface
 {
     private const LATEST_VERSION_ENDPOINT = 'https://api.github.com/repos/mozilla/geckodriver/releases/latest';
 
-    private const MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST = 60;
+    private const MIN_REQUIRED_BROWSER_VERSION_FOR_LATEST = 128;
 
     private const MIN_REQUIRED_BROWSER_VERSIONS = [
+        128 => '0.36.0',
+        115 => '0.35.0',
+        102 => '0.33.0',
+        91 => '0.31.0',
+        78 => '0.30.0',
+        60 => '0.26.0',
         57 => '0.25.0',
         55 => '0.20.1',
         53 => '0.18.0',
@@ -57,7 +64,16 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
+        $options = [];
+
+        $token = getenv('GITHUB_TOKEN');
+        if ($token !== false && $token !== '') {
+            $options['headers'] = [
+                'Authorization' => sprintf('Bearer %s', $token),
+            ];
+        }
+
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT, $options);
 
         /** @var array<scalar> $data */
         $data = json_decode($response->getContent(), true);

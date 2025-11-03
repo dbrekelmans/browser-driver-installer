@@ -35,8 +35,8 @@ class VersionResolverTest extends TestCase
             },
         );
         $this->versionResolver = new VersionResolver($this->httpClient);
-        $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('86.0.4240.80'), OperatingSystem::MACOS);
-        $this->firefox         = new Browser(BrowserName::FIREFOX, Version::fromString('81.0.2'), OperatingSystem::MACOS);
+        $this->chrome          = new Browser(BrowserName::GOOGLE_CHROME, Version::fromString('142.0.7444.60'), OperatingSystem::MACOS);
+        $this->firefox         = new Browser(BrowserName::FIREFOX, Version::fromString('144.0.2'), OperatingSystem::MACOS);
     }
 
     public function testDoesNotSupportChrome(): void
@@ -53,7 +53,7 @@ class VersionResolverTest extends TestCase
     {
         $geckoVersion = $this->versionResolver->fromBrowser($this->firefox);
 
-        self::assertEquals(Version::fromString('0.28.0'), $geckoVersion);
+        self::assertEquals(Version::fromString('0.36.0'), $geckoVersion);
     }
 
     public function testVersionForOldBrowser(): void
