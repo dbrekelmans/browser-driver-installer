@@ -63,7 +63,16 @@ final class VersionResolver implements VersionResolverInterface
 
     public function latest(): Version
     {
-        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT);
+        $options = [];
+
+        $token = getenv('GITHUB_TOKEN');
+        if ($token !== false && $token !== '') {
+            $options['headers'] = [
+                'Authorization' => sprintf('Bearer %s', $token),
+            ];
+        }
+
+        $response = $this->httpClient->request('GET', self::LATEST_VERSION_ENDPOINT, $options);
 
         /** @var array<scalar> $data */
         $data = json_decode($response->getContent(), true);

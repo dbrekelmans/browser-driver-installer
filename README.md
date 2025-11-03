@@ -46,3 +46,6 @@ For a full list of available commands, run `bdi list`.
 * google-chrome
 * chromium
 * firefox
+
+### Environment variables
+* `GITHUB_TOKEN` - Geckodriver version resolver fetches the latest version from GitHub. You can set this environment variable to avoid rate limiting in CI environments.

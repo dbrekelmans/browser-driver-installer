@@ -39,6 +39,8 @@ jobs:
       - run: vendor/bin/phpcs --warning-severity=0
   e2e:
     runs-on: ${{ matrix.os }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.PAT }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
