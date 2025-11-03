@@ -46,10 +46,10 @@ final class Version
             }
 
             return new self(
-                (string) $matches['major'],
-                (string) $matches['minor'],
-                isset($matches['patch']) ? (string) $matches['patch'] : null,
-                isset($matches['build']) ? (string) $matches['build'] : null,
+                $matches['major'],
+                $matches['minor'],
+                $matches['patch'] ?? null,
+                $matches['build'] ?? null,
             );
         } catch (PcreException $exception) {
             throw new InvalidArgumentException(

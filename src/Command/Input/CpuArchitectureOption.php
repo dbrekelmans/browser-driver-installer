@@ -52,7 +52,7 @@ final class CpuArchitectureOption extends InputOption implements Option
         );
     }
 
-    public function default(): string|null
+    public function default(): string
     {
         return CpuArchitecture::detectFromPhp()->value;
     }
