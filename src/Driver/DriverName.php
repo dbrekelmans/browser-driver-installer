@@ -8,4 +8,5 @@ enum DriverName: string
 {
     case CHROME = 'chromedriver';
     case GECKO  = 'geckodriver';
+    case MSEDGE = 'msedgedriver';
 }

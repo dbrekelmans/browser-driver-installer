@@ -9,4 +9,5 @@ enum BrowserName: string
     case GOOGLE_CHROME = 'google-chrome';
     case CHROMIUM      = 'chromium';
     case FIREFOX       = 'firefox';
+    case MSEDGE        = 'msedge';
 }
